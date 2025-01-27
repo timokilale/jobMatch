@@ -1,0 +1,12 @@
+<!-- res/menu/navigation_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_today"
+        android:title="@string/today" />
+    <item
+        android:id="@+id/nav_week"
+        android:title="@string/this_week" />
+    <item
+        android:id="@+id/nav_month"
+        android:title="@string/this_month" />
+</menu>

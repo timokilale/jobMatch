@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- ListView for Today's Todos -->
+    <ListView
+        android:id="@+id/today_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/fab_add" /> <!-- Ensure the ListView stays above the FAB -->
+
+    <!-- Floating Action Button (FAB) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_add"
+        android:contentDescription="@string/fab_add_description"
+        android:scaleType="center"
+        android:padding="24dp"
+        app:maxImageSize="48dp"
+        app:fabSize="normal"
+        app:elevation="8dp"
+        app:tint="@android:color/white"
+        app:backgroundTint="@color/purple_500"
+        android:layout_centerHorizontal="true" /><!-- Center horizontally -->
+
+
+</RelativeLayout>
