@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Register = () => {
-  const [fullname, setFullname] = useState('');
-  const [nida, setNida] = useState('');
+const EmployerRegister = () => {
+  const [companyName, setCompanyName] = useState('');
   const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
@@ -33,16 +33,16 @@ const Register = () => {
   };
 
   return {
-    fullname,
-    setFullname,
-    nida,
-    setNida,
+    companyName,
+    setCompanyName,
     email,
     setEmail,
+    address,
+    setAddress,
     password,
     setPassword,
     handleRegister,
   };
 };
 
-export default Register;
+export default EmployerRegister;
