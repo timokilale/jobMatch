@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+
 import { Link } from 'react-router-dom';
 import Login from '../hooks/Login';
 
@@ -7,7 +7,7 @@ const LoginPage = () => {
  
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 pt-16 overflow-hidden">
-      <nav className="fixed top-0 left-0 right-0 flex items-center justify-start gap-5 px-10 py-4 bg-transparent shadow z-10">
+      <nav className="fixed top-0 left-0 right-0 flex items-center justify-start gap-5 px-10 py-4 bg-transparent ">
         <div className="logo-container mr-10">
           <img src="assets/logo.svg" alt="Logo" className="h-12 w-auto" />
         </div>
@@ -19,7 +19,7 @@ const LoginPage = () => {
           <Link to="/login" className="bg-green-700 text-white px-4 py-2 rounded-lg">
             log in
           </Link>
-          <Link to="/employer_register" className="border-2 border-green-700 text-green-700 px-4 py-2 rounded-lg bg-white">
+          <Link to="/employer_register" className="px-5 py-2 rounded-xl bg-white border border-green-700 text-green-700 hover:bg-green-50 transition-colors duration-300">
             Register
           </Link>
         </p>

@@ -6,28 +6,30 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleLogin =  (e) => {
     e.preventDefault();
+    alert('Login successful');
+    navigate('/applicant_dashboard');
 
-    try {
-      const response = await fetch('http://localhost:5000/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
+    // try {
+    //   const response = await fetch('http://localhost:5000/login', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ email, password })
+    //   });
 
-      const data = await response.json();
+    //   const data = await response.json();
 
-      if (data.success) {
-        alert('Login successful');
-        navigate('/dashboard'); // update this path if needed
-      } else {
-        alert('Login failed: ' + data.message);
-      }
-    } catch (err) {
-      console.error('Login error:', err);
-      alert('Something went wrong. Please try again later.');
-    }
+    //   if (data.success) {
+    //     alert('Login successful');
+    //     navigate('/Applicant-dashboard'); // update this path if needed
+    //   } else {
+    //     alert('Login failed: ' + data.message);
+    //   }
+    // } catch (err) {
+    //   console.error('Login error:', err);
+    //   alert('Something went wrong. Please try again later.');
+    // }
   };
 
   return {

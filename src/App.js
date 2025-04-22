@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import Login from './components/Login';
 import Register from './components/Register';
 import EmployerRegister from './components/EmployerRegister';
+import ApplicantDashboard from './components/ApplicantDashboard';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/employer_register" element={<EmployerRegister />} />
+        <Route path="/applicant_dashboard" element={<ApplicantDashboard />} />
       </Routes>
     </Router>
   );
