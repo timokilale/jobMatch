@@ -14,6 +14,36 @@ const ApplicantDashboard = () => {
 
   return (
     <div className="flex h-screen relative overflow-hidden">
+       <style>{`
+        .sidebar-scroll::-webkit-scrollbar {
+          width: 4px;
+          height: 4px;
+        }
+
+        .sidebar-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+          background: #9CA3AF;
+          border-radius: 4px;
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
+
+        .sidebar-scroll:hover::-webkit-scrollbar-thumb,
+        .sidebar-scroll:active::-webkit-scrollbar-thumb {
+          opacity: 1;
+        }
+
+        @supports (scrollbar-width: thin) {
+          .sidebar-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #9CA3AF transparent;
+          }
+        }
+      `}</style>
+
       {/* Sidebar */}
       <div
         className={`fixed top-0 left-0 h-full w-64 bg-gray-100 text-green-800 p-5 flex flex-col justify-between transform transition-transform duration-300 z-30 shadow-xl ${
@@ -31,42 +61,11 @@ const ApplicantDashboard = () => {
               />
               ) : (
                 <div className="h-24 w-24 rounded-full border-4 border-green-700 bg-gray-100 hover:border-green-900 transition-all duration-300 flex items-center justify-center">
-                   <svg 
-                     xmlns="http://www.w3.org/2000/svg" 
-                     className="h-16 w-16 text-green-700"
-                     fill="none" 
-                     viewBox="0 0 24 24" 
-                     stroke="currentColor" 
-                     strokeWidth="2"
-                   >
-                     <path 
-                       strokeLinecap="round" 
-                       strokeLinejoin="round" 
-                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
-                  />
-                   </svg>
+                   <i className="fas fa-user-circle text-6xl text-green-700"></i>
                 </div>
               )}
-               <div className="absolute bottom-0 right-0 bg-green-700 p-2 rounded-full border-2 border-white hover:bg-green-900 transition-colors z-10">
-                 <svg 
-                   xmlns="http://www.w3.org/2000/svg" 
-                   className="h-6 w-6 text-white"
-                   viewBox="0 0 24 24" 
-                   fill="none" 
-                   stroke="currentColor" 
-                   strokeWidth="2"
-                 > 
-                   <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" 
-                  />
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" 
-                  />
-                  </svg>
+               <div className="absolute -bottom-1 -right-1 bg-green-700 rounded-full border-2 border-white hover:bg-green-900 transition-colors z-10 w-8 h-8 flex items-center justify-center">
+               <i className="fas fa-camera text-white text-sm"></i>
               </div>
             </label>
 
@@ -96,37 +95,38 @@ const ApplicantDashboard = () => {
 
         <hr className="my-6 border-t border-green-700" />
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto sidebar-scroll">
           <ul className="space-y-4 px-4">
-             <li>
-              <button className="text-green-700 hover:bg-green-200 w-full text-left">
-                Academic Qualifications
+            {[
+               { title: "Academic Qualifications", icon: "graduation-cap" },
+               { title: "Professional Qualifications", 
+                 customIcon: {
+                   src: "/assets/certificate.svg",
+                   alt: "certificateicon",
+                   className: "w-5 h-5 object-contain hover:brightness-125 transition-all"} },
+               { title: "Work Experience", icon: "briefcase" },
+               { title: "Language Proficiency", icon: "language" },
+               { title: "Computer Skills", icon: "laptop-code" },
+               { title: "Logout", icon: "sign-out-alt" },
+            ].map((item, index) => (
+              <li 
+              key={index}
+              className="border-b border-green-700 last:border-b-0"
+            >
+              <button className="w-full text-left p-3 rounded-md hover:bg-green-100 transition-colors flex items-center gap-3 text-green-700">
+                {item.customIcon ? (
+                  <img
+                    src={item.customIcon.src}
+                    alt={item.customIcon.alt}
+                    className={`${item.customIcon.className} text-green-700`}
+                  />
+                ) : (
+                  <i className={`fas fa-${item.icon} text-green-700 w-5 text-center`}></i>
+                )}
+                  {item.title}
               </button>
             </li>
-            <hr className="my-6 border-t border-green-700" />
-            <li>
-              <button className="text-green-700 hover:bg-green-200 w-full text-left">
-                Work Experience
-              </button>
-            </li>
-            <hr className="my-6 border-t border-green-700" />
-            <li>
-              <button className="text-green-700 hover:bg-green-200 w-full text-left">
-                Language Proficiency
-              </button>
-            </li>
-            <hr className="my-6 border-t border-green-700" />
-            <li>
-              <button className="text-green-700 hover:bg-green-200 w-full text-left">
-                Computer Skills
-              </button>
-            </li>
-            <hr className="my-6 border-t border-green-700" />
-            <li>
-              <button className="text-green-700 hover:bg-green-100 w-full text-left">
-                Logout
-              </button>
-            </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -142,37 +142,7 @@ const ApplicantDashboard = () => {
               onClick={toggleSidebar}
               className="text-green-700 hover:text-green-900 p-2 rounded-lg transition-colors absolute left-0"
             >
-              {sidebarOpen ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              )}
+              <i className={`fas ${sidebarOpen ? "fa-times" : "fa-bars"} text-2xl`}></i>
             </button>
             <img 
               src="assets/logo.svg" 
@@ -185,13 +155,14 @@ const ApplicantDashboard = () => {
         {/* Main Content */}
         <div className={`flex-1 bg-gray-50 p-5 ${
           sidebarOpen ? "ml-64" : "ml-0"
-        } transition-all duration-300`}>
-          <h1 className="text-2xl font-bold mb-4 text-green-800">
-            Welcome to your Dashboard
-          </h1>
-          <p className="text-gray-600">
-            Here you can manage your applications and settings.
-          </p>
+        } transition-all duration-300 flex flex-col justify-center items-center min-h-[calc(100vh-4rem)]`}>
+          <div className="text-center space-y-4">
+            <img src="assets/empty folder.svg" alt="No Jobs" className="w-1/2 h-auto mx-auto mb-4" />
+          {/* <i className="fas fa-folder-open text-8xl text-green-700 mb-4"></i> */}
+          <h2 className="text-xl font-semibold text-gray-600">
+            No matching jobs yet
+          </h2>
+          </div>
         </div>
       </div>
     </div>
