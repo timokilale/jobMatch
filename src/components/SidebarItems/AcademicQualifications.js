@@ -1,70 +1,83 @@
 import React from 'react';
+import AcademicQualificationsLogic from '../../hooks/AcademicQualifications';
+
 
 const AcademicQualifications = () => {
+  const { formData, handleChange, handleSubmit, qualifications } = AcademicQualificationsLogic();
+
+
   return (
     <div className="p-8">
       <h1 className="text-xl font-bold text-green-800 mb-6">Add New Academic Qualification</h1>
       
-      <form className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 mb-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
           {/* Education Level */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-green-800">Education Level *</label>
             <select 
-              className="w-full p-2 border border-green-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              name="educationLevel"
+              value={formData.educationLevel}
+              onChange={handleChange}
+              className="w-full p-2 border border-green-300 rounded-md  focus:border-green-600 focus:outline-none"
               required
             >
               <option value="">--Select--</option>
+              <option>PhD</option>
               <option>Bachelor's Degree</option>
               <option>Master's Degree</option>
-              <option>PhD</option>
+              <option>Post Graduate Diploma</option>
+              <option>Advanced Diploma</option>
+              <option>Diploma</option>
+              <option>Full Technician certificate</option>
+              <option>Higher Diploma</option>
+              <option>Basic Technician Diploma</option>
+              <option>Bachelor's Degree</option>
+              <option>Certificate</option>
+              <option>Advanced certificate</option>
+              <option>Advanced Level (ACSE)</option>
+              <option>Ordinary Level (CSE)</option>
             </select>
           </div>
 
           {/* Country */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-green-800">Country *</label>
-            <select 
-              className="w-full p-2 border border-green-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            <input
+              type="text" 
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              className="w-full p-2 border border-green-300 rounded-md  focus:border-green-500 focus:outline-none"
+              defaultValue="Tanzania, United Republic of"
               required
-            >
-              <option value="">Tanzania, United Republic of</option>
-            </select>
+            />    
           </div>
 
-          {/* Institution Name */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-green-800">Institution Name *</label>
-            <select 
-              className="w-full p-2 border border-green-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
-              required
-            >
-              <option value="">--Select--</option>
-              <option>University of Dar es Salaam</option>
-              <option>Nelson Mandela African Institution of Science and Technology</option>
-            </select>
-          </div>
-        </div>
 
         {/* Programme Details */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-green-800">Programme Category *</label>
-            <select 
-              className="w-full p-2 border border-green-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            <label className="block text-sm font-medium text-green-800">Institution Name *</label>
+            <input
+              type="text" 
+              name="institution"
+              value={formData.institution}
+              onChange={handleChange}
+              className="w-full p-2 border border-green-300 rounded-md  focus:border-green-500 focus:outline-none"
               required
-            >
-              <option value="">--Select--</option>
-              <option>Science & Technology</option>
-              <option>Business & Economics</option>
-            </select>
-          </div>
+            />    
+         </div>
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-green-800">Programme Name *</label>
             <input
               type="text"
-              className="w-full p-2 border border-green-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              name="program"
+              value={formData.program}
+              onChange={handleChange}
+              className="w-full p-2 border border-green-300 rounded-md  focus:border-green-500 focus:outline-none"
               required
             />
           </div>
@@ -73,19 +86,25 @@ const AcademicQualifications = () => {
         {/* Date Range */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-green-800">Date From *</label>
+            <label className="block text-sm font-medium text-green-800">Start date *</label>
             <input
               type="date"
-              className="w-full p-2 border border-green-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              name="startDate"
+              value={formData.startDate}
+              onChange={handleChange}
+              className="w-full p-2 border border-green-300 rounded-md   focus:border-green-500 focus:outline-none"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-green-800">Date To *</label>
+            <label className="block text-sm font-medium text-green-800">End date *</label>
             <input
               type="date"
-              className="w-full p-2 border border-green-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              name="endDate"
+              value={formData.endDate}
+              onChange={handleChange}
+              className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
               required
             />
           </div>
@@ -102,10 +121,9 @@ const AcademicQualifications = () => {
               className="absolute opacity-0 w-full h-full cursor-pointer"
               id="certificate-upload"
               accept=".pdf,.doc,.docx"
-              required
             />
             <div className="flex items-center gap-2 p-2 border border-green-300 rounded-md">
-              <span className="px-4 py-2 bg-green-100 text-green-800 rounded-md">
+              <span className="px-4 py-2  bg-green-100 text-green-800 rounded-md">
                 Choose File
               </span>
               <span className="text-gray-500">No file chosen</span>
@@ -122,7 +140,39 @@ const AcademicQualifications = () => {
             Save
           </button>
         </div>
+      </div>
       </form>
+
+       {/* Qualifications Table */}
+       {qualifications.length > 0 && (
+        <div className=" mt-8">
+          <h2 className="text-lg font-bold text-green-800 mb-4">Academic Qualifications</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full bg-white border border-green-300 rounded-md shadow-md">
+              <thead className="bg-green-50">
+                <tr>
+                  <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Education Level</th>
+                  <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Country</th>
+                  <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Institution</th>
+                  <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Program</th>
+                  <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Time Period</th>
+                </tr>
+              </thead>
+              <tbody>
+                {qualifications.map((qualification, index) => (
+                  <tr key={index} className="hover:bg-green-50">
+                    <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.educationLevel}</td>
+                    <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.country}</td>
+                    <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.institution}</td>
+                    <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.program}</td>
+                    <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.time}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
