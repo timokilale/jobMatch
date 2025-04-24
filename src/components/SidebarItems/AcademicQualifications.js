@@ -14,15 +14,20 @@ const AcademicQualifications = () => {
 
   return (
     <div className="p-8">
-      <h1 className="text-xl font-bold text-green-800 mb-6">Add New Academic Qualification</h1>
-      
+
+      {showForm && (
+        <h1 className="text-xl font-bold text-green-800 mb-6">Add New Academic Qualification</h1>
+      )}
       {!showForm && qualifications.length > 0 && (
+        <div className="flex justify-end mb-6">
         <button
           onClick={() => setShowForm(true)}
           className="mb-6 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
         >
+          <i className="fas fa-plus"></i>
           Add New Qualification
         </button>
+        </div>
       )}
 
       {showForm && (
