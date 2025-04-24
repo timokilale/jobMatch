@@ -1,16 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AcademicQualificationsLogic from '../../hooks/AcademicQualifications';
 
 
 const AcademicQualifications = () => {
   const { formData, handleChange, handleSubmit, qualifications } = AcademicQualificationsLogic();
+  const [showForm, setShowForm] = useState(qualifications.length === 0);
 
+  const handleSave = (e) => {
+    e.preventDefault();
+    handleSubmit(e);
+    setShowForm(false);
+  };
 
   return (
     <div className="p-8">
       <h1 className="text-xl font-bold text-green-800 mb-6">Add New Academic Qualification</h1>
       
-      <form onSubmit={handleSubmit} className="space-y-6 mb-24">
+      {!showForm && qualifications.length > 0 && (
+        <button
+          onClick={() => setShowForm(true)}
+          className="mb-6 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+        >
+          Add New Qualification
+        </button>
+      )}
+
+      {showForm && (
+      <form onSubmit={handleSave} className="space-y-6 mb-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Education Level */}
@@ -33,7 +49,7 @@ const AcademicQualifications = () => {
               <option>Full Technician certificate</option>
               <option>Higher Diploma</option>
               <option>Basic Technician Diploma</option>
-              <option>Bachelor's Degree</option>
+              <option>Ordinary Diploma</option>
               <option>Certificate</option>
               <option>Advanced certificate</option>
               <option>Advanced Level (ACSE)</option>
@@ -140,8 +156,9 @@ const AcademicQualifications = () => {
             Save
           </button>
         </div>
-      </div>
+        </div>
       </form>
+      )}
 
        {/* Qualifications Table */}
        {qualifications.length > 0 && (
