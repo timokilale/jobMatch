@@ -1,15 +1,79 @@
 import React, { useState } from "react";
+import AcademicQualifications from "./SidebarItems/AcademicQualifications";
+import ProfessionalQualifications from "./SidebarItems/ProfessionalQualifications";
+import WorkExperience from "./SidebarItems/WorkExperience";
+import LanguageProficiency from "./SidebarItems/LanguageProficiency";
+import ComputerSkills from "./SidebarItems/ComputerSkills";
+
 
 const ApplicantDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState(null);
   const [user, setUser] = useState({
     name: 'John Doe',
     email: 'john.doe@example.com',
     avatar: null
   });
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+  const sections = [
+    {
+      key: "home",
+      title: "Dashboard",
+      icon: "dashboard",
+      component: null,
+    },
+    {
+      key: "academic",
+      title: "Academic Qualifications",
+      icon: "graduation-cap",
+      component: <AcademicQualifications />,
+    },
+    {
+      key: "professional",
+      title: "Professional Qualifications",
+      customIcon: {
+        src: "/assets/certificate.svg",
+        alt: "certificateicon",
+        className: "w-5 h-5 object-contain hover:brightness-125 transition-all"
+      },
+      component: <ProfessionalQualifications />,
+    },
+    {
+      key: "work",
+      title: "Work Experience",
+      icon: "briefcase",
+      component: <WorkExperience />,
+    },
+    {
+      key: "language",
+      title: "Language Proficiency",
+      icon: "language",
+      component: <LanguageProficiency />,
+    },
+    {
+      key: "computer",
+      title: "Computer Skills",
+      icon: "laptop-code",
+      component: <ComputerSkills />,
+    },
+    {
+      key: "logout",
+      title: "Logout",
+      icon: "sign-out-alt",
+      isAction: true
+    },
+  ];
+
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
+  const handleSectionClick = (section) => {
+    if (section.isAction) {
+      console.log("Logging out...");
+    } else if (section.key === "home") {
+      setActiveSection(null);
+    } else {
+      setActiveSection(section.key);
+    }
   };
 
   return (
@@ -97,33 +161,22 @@ const ApplicantDashboard = () => {
 
         <div className="flex-1 overflow-y-auto sidebar-scroll">
           <ul className="space-y-4 px-4">
-            {[
-               { title: "Academic Qualifications", icon: "graduation-cap" },
-               { title: "Professional Qualifications", 
-                 customIcon: {
-                   src: "/assets/certificate.svg",
-                   alt: "certificateicon",
-                   className: "w-5 h-5 object-contain hover:brightness-125 transition-all"} },
-               { title: "Work Experience", icon: "briefcase" },
-               { title: "Language Proficiency", icon: "language" },
-               { title: "Computer Skills", icon: "laptop-code" },
-               { title: "Logout", icon: "sign-out-alt" },
-            ].map((item, index) => (
-              <li 
-              key={index}
-              className="border-b border-green-700 last:border-b-0"
-            >
-              <button className="w-full text-left p-3 rounded-md hover:bg-green-100 transition-colors flex items-center gap-3 text-green-700">
-                {item.customIcon ? (
+            {sections.map((section, index) => (
+             <li key={index} className="border-b border-green-700 last:border-b-0">
+               <button
+                 onClick={() => handleSectionClick(section)} 
+                 className="w-full text-left p-3 rounded-md hover:bg-green-100 transition-colors flex items-center gap-3 text-green-700">
+                 
+                 {section.customIcon ? (
                   <img
-                    src={item.customIcon.src}
-                    alt={item.customIcon.alt}
-                    className={`${item.customIcon.className} text-green-700`}
+                    src={section.customIcon.src}
+                    alt={section.customIcon.alt}
+                    className={`${section.customIcon.className} text-green-700`}
                   />
                 ) : (
-                  <i className={`fas fa-${item.icon} text-green-700 w-5 text-center`}></i>
+                  <i className={`fas fa-${section.icon} text-green-700 w-5 text-center`}></i>
                 )}
-                  {item.title}
+                  {section.title}
               </button>
             </li>
             ))}
@@ -136,19 +189,30 @@ const ApplicantDashboard = () => {
         {/* Navbar */}
         <div className={`h-16 bg-gray-100 flex items-center px-5 shadow-md z-20 ${
           sidebarOpen ? "ml-64" : "ml-0"
-        } transition-all duration-300`}>
-          <div className="flex items-center gap-4 relative">
-            <button
-              onClick={toggleSidebar}
-              className="text-green-700 hover:text-green-900 p-2 rounded-lg transition-colors absolute left-0"
-            >
-              <i className={`fas ${sidebarOpen ? "fa-times" : "fa-bars"} text-2xl`}></i>
-            </button>
-            <img 
-              src="assets/logo.svg" 
-              alt="Logo" 
-              className="h-12 w-auto ml-12"
-            />
+        } transition-all duration-300 `}>
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-4 relative">
+              <button
+                onClick={toggleSidebar}
+                className="text-green-700 hover:text-green-900 p-2 rounded-lg transition-colors absolute left-0"
+              >
+                <i className={`fas ${sidebarOpen ? "fa-times" : "fa-bars"} text-2xl`}></i>
+              </button>
+              <img 
+                src="assets/logo.svg" 
+                alt="Logo" 
+                className="h-12 w-auto ml-12"
+              />
+            </div>
+
+            <div className="flex items-center gap-4">
+              <button className="text-green-700 hover:text-green-900 relative p-2 rounded-lg transition-colors">
+                <i className="fas fa-bell text-xl"></i>
+                <span className="absolute -top-1 -right-1 bg-white border-2  border-green-700  text-green-700 text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  3
+                </span>
+              </button>
+             </div>
           </div>
         </div>
 
@@ -156,13 +220,19 @@ const ApplicantDashboard = () => {
         <div className={`flex-1 bg-gray-50 p-5 ${
           sidebarOpen ? "ml-64" : "ml-0"
         } transition-all duration-300 flex flex-col justify-center items-center min-h-[calc(100vh-4rem)]`}>
+          
+          {activeSection ? (
+            sections.find(s => s.key === activeSection)?.component
+          ) : (
+
           <div className="text-center space-y-4">
             <img src="assets/empty folder.svg" alt="No Jobs" className="w-1/2 h-auto mx-auto mb-4" />
           {/* <i className="fas fa-folder-open text-8xl text-green-700 mb-4"></i> */}
           <h2 className="text-xl font-semibold text-gray-600">
-            No matching jobs yet
+           {activeSection ? '' : 'No matching jobs yet'}
           </h2>
           </div>
+          )}
         </div>
       </div>
     </div>

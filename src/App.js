@@ -5,6 +5,8 @@ import Login from './components/Login';
 import Register from './components/Register';
 import EmployerRegister from './components/EmployerRegister';
 import ApplicantDashboard from './components/ApplicantDashboard';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 function App() {
   return (
