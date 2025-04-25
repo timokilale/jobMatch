@@ -9,7 +9,7 @@ const LoginPage = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 pt-16 overflow-hidden">
       <nav className="fixed top-0 left-0 right-0 flex items-center justify-start gap-5 px-10 py-4 bg-transparent ">
         <div className="logo-container mr-10">
-          <img src="assets/logo.svg" alt="Logo" className="h-12 w-auto" />
+          <img src="assets/logo.png" alt="Logo" className="h-12 w-auto" />
         </div>
         <Link to="/" className="ml-auto text-green-700 font-bold hover:underline">
           Home
@@ -36,7 +36,7 @@ const LoginPage = () => {
       <div className="w-4/5 md:flex rounded-lg shadow-2xl bg-green-700 h-[auto] max-h-[600px] overflow-hidden">
         <div className="flex-1 bg-white p-8 flex flex-col justify-between rounded-l-lg overflow-auto">
           <div className="flex flex-col gap-5 items-start overflow-auto">
-            <img src="assets/logo.svg" alt="Logo" className="w-36 h-36" />
+            <img src="assets/logo.png" alt="Logo" className="w-36 h-36" />
             <p className="text-2xl font-bold text-green-700">
               Welcome back! <br />
               <span className="text-sm font-light text-gray-600">Please enter your details</span>

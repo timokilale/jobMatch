@@ -208,7 +208,7 @@ const ApplicantDashboard = () => {
                 <i className={`fas ${sidebarOpen ? "fa-times" : "fa-bars"} text-2xl`}></i>
               </button>
               <img 
-                src="assets/logo.svg" 
+                src="assets/logo.png" 
                 alt="Logo" 
                 className="h-12 w-auto ml-12"
               />
