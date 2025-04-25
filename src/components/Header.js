@@ -6,7 +6,7 @@ const Header = () => {
     <header className="transparent text-white py-5">
       <nav className="container mx-auto flex justify-between items-center px-4">
         <div className="w-48">
-          <img src="/assets/logo.svg" alt="Logo" className="w-full h-auto" />
+          <img src="/assets/logo.png" alt="Logo" className="w-full h-auto" />
         </div>
         <div className="flex gap-4">
           <Link 
