@@ -13,25 +13,12 @@ const AcademicQualifications = () => {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-8 min-h-screen flex flex-col">
+      {showForm ? (
+        <>
+        <h1 className="text-xl font-bold text-green-800 mt-12">Add New Academic Qualification</h1>
 
-      {showForm && (
-        <h1 className="text-xl font-bold text-green-800 mb-6">Add New Academic Qualification</h1>
-      )}
-      {!showForm && qualifications.length > 0 && (
-        <div className="flex justify-end mb-6">
-        <button
-          onClick={() => setShowForm(true)}
-          className="mb-6 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
-        >
-          <i className="fas fa-plus"></i>
-          Add New Qualification
-        </button>
-        </div>
-      )}
-
-      {showForm && (
-      <form onSubmit={handleSave} className="space-y-6 mb-24">
+        <form onSubmit={handleSave} className="space-y-6 flex-1 mt-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Education Level */}
@@ -163,14 +150,17 @@ const AcademicQualifications = () => {
         </div>
         </div>
       </form>
-      )}
-
-       {/* Qualifications Table */}
-       {qualifications.length > 0 && (
-        <div className=" mt-8">
-          <h2 className="text-lg font-bold text-green-800 mb-4">Academic Qualifications</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full bg-white border border-green-300 rounded-md shadow-md">
+    </>
+      ) : (
+        <>
+      {qualifications.length > 0 && (
+        <div className="flex-1">
+          <div className="flex justify-between items-center mb-6">
+          <h2 className="text-lg font-bold text-green-800 mt-8">Academic Qualifications</h2>
+          </div>
+          
+          <div className="overflow-x-auto h-full">
+            <table className="w-full bg-transparent shadow-md">
               <thead className="bg-green-50">
                 <tr>
                   <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Education Level</th>
@@ -187,13 +177,21 @@ const AcademicQualifications = () => {
                     <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.country}</td>
                     <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.institution}</td>
                     <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.program}</td>
-                    <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.time}</td>
+                    <td className="p-3 text-sm text-green-800 border border-green-200 whitespace-nowrap">{qualification.time}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         </div>
+      )}
+         <button
+            onClick={() => setShowForm(true)}
+            className="fixed bottom-8 right-8 w-14 h-14 bg-green-600 text-white rounded-full hover:bg-green-700 transition shadow-lg flex items-center justify-center text-2xl"
+          >
+            <i className="fas fa-plus"></i>
+          </button>
+          </>
       )}
     </div>
   );

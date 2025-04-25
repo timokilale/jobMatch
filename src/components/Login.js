@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Login from '../hooks/Login';
 
 const LoginPage = () => {
-    const { email, setEmail, password, setPassword, handleLogin } = Login();
+    const { email, setEmail, password, setPassword, handleLogin, loading } = Login();
  
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 pt-16 overflow-hidden">
@@ -24,6 +24,14 @@ const LoginPage = () => {
           </Link>
         </p>
       </nav>
+
+      {loading ? (
+          <div className="flex flex-col items-center justify-center w-full h-full space-y-6">
+           <div className="w-20 h-20 border-8 border-green-300 border-t-green-700 rounded-full animate-spin"></div>
+           <p className="text-green-700 text-xl font-semibold">Logging in...</p>
+           </div>
+      ) : (
+        <div className="w-4/5 md:flex rounded-lg shadow-2xl bg-green-700 h-[auto] max-h-[600px] overflow-hidden">
 
       <div className="w-4/5 md:flex rounded-lg shadow-2xl bg-green-700 h-[auto] max-h-[600px] overflow-hidden">
         <div className="flex-1 bg-white p-8 flex flex-col justify-between rounded-l-lg overflow-auto">
@@ -72,6 +80,8 @@ const LoginPage = () => {
           <img src="assets/pattern.svg" alt="Pattern" className="w-full h-full object-cover rounded-r-lg" />
         </div>
       </div>
+      </div>
+      )}
     </div>
   );
 };

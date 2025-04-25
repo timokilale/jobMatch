@@ -4,12 +4,17 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin =  (e) => {
     e.preventDefault();
-    alert('Login successful');
-    navigate('/applicant_dashboard');
+    setLoading(true);
+    
+    setTimeout(() => {
+      setLoading(false);
+      navigate('/applicant_dashboard');
+    }, 1500);
 
     // try {
     //   const response = await fetch('http://localhost:5000/login', {
@@ -37,6 +42,7 @@ const Login = () => {
     setEmail,
     password,
     setPassword,
+    loading,
     handleLogin,
   };
 };

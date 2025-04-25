@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import AcademicQualifications from "./SidebarItems/AcademicQualifications";
 import ProfessionalQualifications from "./SidebarItems/ProfessionalQualifications";
 import WorkExperience from "./SidebarItems/WorkExperience";
@@ -7,6 +8,9 @@ import ComputerSkills from "./SidebarItems/ComputerSkills";
 
 
 const ApplicantDashboard = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(null);
   const [user, setUser] = useState({
@@ -68,7 +72,12 @@ const ApplicantDashboard = () => {
 
   const handleSectionClick = (section) => {
     if (section.isAction) {
-      console.log("Logging out...");
+      setLoading(true);
+      setLoadingText('Logging out...');
+      setTimeout(() => {
+        setLoading(false);
+        navigate('/login');
+      }, 1500); 
     } else if (section.key === "home") {
       setActiveSection(null);
     } else {
@@ -220,8 +229,12 @@ const ApplicantDashboard = () => {
         <div className={`flex-1 bg-gray-50 p-5 ${
           sidebarOpen ? "ml-64" : "ml-0"
         } transition-all duration-300 flex flex-col justify-center items-center min-h-[calc(100vh-4rem)]`}>
-          
-          {activeSection ? (
+          {loading ? (
+             <div className="flex flex-col items-center justify-center w-full h-full space-y-6">
+               <div className="w-20 h-20 border-8 border-green-300 border-t-green-700 rounded-full animate-spin"></div>
+               <p className="text-green-700 text-xl font-semibold">{loadingText}</p>
+             </div>
+          ) : activeSection ? (
             sections.find(s => s.key === activeSection)?.component
           ) : (
 
@@ -232,7 +245,7 @@ const ApplicantDashboard = () => {
            {activeSection ? '' : 'No matching jobs yet'}
           </h2>
           </div>
-          )}
+          )} 
         </div>
       </div>
     </div>
