@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import AcademicQualifications from "./SidebarItems/AcademicQualifications";
-import ProfessionalQualifications from "./SidebarItems/ProfessionalQualifications";
+import AcademicQualifications from "./SidebarItems/AcademicQualifications"
 import WorkExperience from "./SidebarItems/WorkExperience";
 import LanguageProficiency from "./SidebarItems/LanguageProficiency";
 import ComputerSkills from "./SidebarItems/ComputerSkills";
@@ -31,16 +30,6 @@ const ApplicantDashboard = () => {
       title: "Academic Qualifications",
       icon: "graduation-cap",
       component: <AcademicQualifications />,
-    },
-    {
-      key: "professional",
-      title: "Professional Qualifications",
-      customIcon: {
-        src: "/assets/certificate.svg",
-        alt: "certificateicon",
-        className: "w-5 h-5 object-contain hover:brightness-125 transition-all"
-      },
-      component: <ProfessionalQualifications />,
     },
     {
       key: "work",

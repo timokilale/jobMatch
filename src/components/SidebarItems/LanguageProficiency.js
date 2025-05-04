@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import LanguageProficiencyLogic from '../../hooks/Language';
 
 const LanguageProficiency = () => {
   const languages = [
@@ -8,19 +9,43 @@ const LanguageProficiency = () => {
     "Vietnamese", "Thai", "Hebrew", "Malay", "Swahili"
   ];
 
+  const {
+    currentLanguage,
+    setCurrentLanguage,
+    proficiencies,
+    handleProficiencyChange,
+    handleSave : hookHandleSave,
+    savedLanguages
+  } = LanguageProficiencyLogic();
+
+  const [showForm, setShowForm] = useState(savedLanguages.length === 0);
+  
+  const handleSave = (e) => {
+    e.preventDefault();
+    const success = hookHandleSave(e);
+    if (success) {
+      setShowForm(false);
+    }
+  };
 
   return (
     <div className="p-6">
       <div className=" p-6 shadow-sm">
         <h1 className="text-2xl font-bold text-green-800 mb-6">Language Proficiency</h1>
 
-        {/* Form Grid */}
-        <form className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        {showForm ? (
+        <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           
           {/* Language Dropdown */}
           <div className="flex flex-col">
             <label className="text-green-800 font-semibold mb-2">Language</label>
-            <select className="p-2 border border-green-300 rounded-md focus:outline-none focus:border-green-500">
+            <select 
+              className="p-2 border border-green-300 rounded-md focus:outline-none focus:border-green-500"
+              value={currentLanguage}
+              onChange={(e) => setCurrentLanguage(e.target.value)}
+              required
+              >
+              <option value="">Select Language</option>
               {languages.map((lang) => (
                 <option key={lang} value={lang}>{lang}</option>
               ))}
@@ -29,13 +54,20 @@ const LanguageProficiency = () => {
 
           {/* Speak, Read, Write Sections */}
           <div className="flex flex-col space-y-4">
-            {['Speak', 'Read', 'Write'].map((skill) => (
-              <div key={skill}>
-                <h3 className="font-semibold text-green-800 mb-2">Speak</h3>
+            {['Speak', 'Read', 'Write'].map((lang) => (
+              <div key={lang}>
+                <h3 className="font-semibold text-green-800 mb-2">{lang}</h3>
                 <div className="flex space-x-6">
                 {['Very Good', 'Good', 'Fair'].map((level) => (
-                  <label key={`${skill}-${level}`} className="flex items-center space-x-1">
-                    <input type="radio" name={skill.toLowerCase()} className="h-4 w-4" />
+                  <label key={`${lang}-${level}`} className="flex items-center space-x-1">
+                    <input 
+                      type="radio"
+                      name={lang.toLowerCase()}
+                      value={level}
+                      checked={proficiencies[lang.toLowerCase()] === level}
+                      onChange={() => handleProficiencyChange(lang.toLowerCase(), level)}
+                      required
+                      className="h-4 w-4" />
                     <span>{level}</span>
                   </label>
                 ))}
@@ -43,17 +75,50 @@ const LanguageProficiency = () => {
             </div>
             ))}
           </div>
-        </form>
 
-        {/* Save Button */}
-        <div className="mt-6">
-          <button 
-            type="submit" 
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md transition-colors"
-          >
-            Save
-          </button>
-        </div>
+          <div className="md:col-span-2">
+            <button
+              type="submit"
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md transition-colors"
+            >
+              Add Language
+            </button>
+          </div>
+        </form>
+      ) : (
+        <>
+        {savedLanguages.length > 0 && (
+          <div className="mt-4">
+            <table className="w-full border-collapse border border-green-200">
+              <thead>
+                <tr className="bg-green-100">
+                  <th className="p-2 border border-green-200">Language</th>
+                  <th className="p-2 border border-green-200">Speak</th>
+                  <th className="p-2 border border-green-200">Read</th>
+                  <th className="p-2 border border-green-200">Write</th>
+                </tr>
+              </thead>
+              <tbody>
+              {savedLanguages.map((lang, index) => (
+                  <tr key={index} className="even:bg-green-50">
+                    <td className="p-2 border border-green-200">{lang.language}</td>
+                    <td className="p-2 border border-green-200">{lang.speak}</td>
+                    <td className="p-2 border border-green-200">{lang.read}</td>
+                    <td className="p-2 border border-green-200">{lang.write}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+         <button
+           onClick={() => setShowForm(true)}
+           className="fixed bottom-8 right-8 w-14 h-14 bg-green-600 text-white rounded-full hover:bg-green-700 transition shadow-lg flex items-center justify-center text-2xl"
+         >
+           <i className="fas fa-plus"></i>
+         </button>
+         </>
+      )}
       </div>
     </div>
   );
