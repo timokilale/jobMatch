@@ -36,7 +36,7 @@ const LoginPage = () => {
       <div className="w-4/5 md:flex rounded-lg shadow-2xl bg-green-700 h-[auto] max-h-[600px] overflow-hidden">
         <div className="flex-1 bg-white p-8 flex flex-col justify-between rounded-l-lg overflow-auto">
           <div className="flex flex-col gap-5 items-start overflow-auto">
-            <img src="assets/logo.png" alt="Logo" className="w-36 h-36" />
+            <img src="assets/logo.png" alt="Logo" className="w-25 h-10" />
             <p className="text-2xl font-bold text-green-700">
               Welcome back! <br />
               <span className="text-sm font-light text-gray-600">Please enter your details</span>

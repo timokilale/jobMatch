@@ -1,31 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 
 const EmployerDashboard = () => {
-  // Sample data
-  const stats = [
-    { title: 'Active Jobs', value: '12', color: 'bg-green-100 text-green-800' },
-    { title: 'New Applications', value: '24', color: 'bg-green-100 text-green-800' },
-    { title: 'Interviewing', value: '8', color: 'bg-green-100 text-green-800' },
-    { title: 'Hired This Month', value: '5', color: 'bg-green-100 text-green-800' }
-  ];
+    // Sample data
+    const stats = [
+      { title: 'Active Jobs', value: '12', color: 'bg-green-300 border border-green-400 text-green-800' },
+      { title: 'New Applications', value: '24', color: 'bg-green-200  border border-green-300 text-green-800' },
+      { title: 'Interviewing', value: '8', color: 'bg-green-100  border border-green-300 text-green-800' },
+      { title: 'Hired This Month', value: '5', color: 'bg-green-50  border border-green-300 text-green-800' }
+   ];
 
-  const recentApplications = [
-    { name: 'John Doe', position: 'Senior Developer', status: 'Interview', date: '2024-03-15' },
-    { name: 'Jane Smith', position: 'UX Designer', status: 'New', date: '2024-03-14' },
-    { name: 'Mike Johnson', position: 'Project Manager', status: 'Offer Sent', date: '2024-03-13' }
-  ];
+   const recentApplications = [
+     { name: 'John Doe', position: 'Senior Developer', status: 'Interview', date: '2024-03-15' },
+     { name: 'Jane Smith', position: 'UX Designer', status: 'New', date: '2024-03-14' },
+     { name: 'Mike Johnson', position: 'Project Manager', status: 'Offer Sent', date: '2024-03-13' }
+   ];
 
-  const jobPostings = [
-    { title: 'Senior React Developer', applicants: 15, status: 'Active' },
-    { title: 'UX Designer', applicants: 8, status: 'Active' },
-    { title: 'DevOps Engineer', applicants: 3, status: 'Draft' }
-  ];
+   const [jobPostings, setJobPostings] = useState([
+     { title: 'Senior React Developer', applicants: 15, status: 'Active' },
+     { title: 'UX Designer', applicants: 8, status: 'Active' },
+     { title: 'DevOps Engineer', applicants: 3, status: 'Draft' }
+   ]);
+
+   const [showJobModal, setShowJobModal] = useState(false);
+   const [newJob, setNewJob] = useState({
+      title: '',
+      description: '',
+      status: 'Draft'
+  });
+
+  const handleNewJob = (e) => {
+    e.preventDefault();
+    setJobPostings([...jobPostings, {
+      title: newJob.title,
+      applicants: 0,
+      status: newJob.status
+    }]);
+    setShowJobModal(false);
+    setNewJob({ title: '', description: '', status: 'Draft' });
+  };
+
+  const [user] = useState({
+    name: 'Acme Corp',
+    email: 'hr@acmecorp.com',
+    avatar: null
+  });
 
   return (
     <div className="min-h-screen bg-green-50">
       {/* Dashboard Header */}
-      <header className="bg-white shadow-sm">
+      
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="w-48">
             <img src="/assets/logo.png" alt="Logo" className="w-full h-auto" />
@@ -35,36 +59,72 @@ const EmployerDashboard = () => {
               <span className="sr-only">Notifications</span>
               <i className="fas fa-bell text-xl text-green-700"></i>
             </button>
-            <div className="flex items-center">
-              <i className="fas fa-user-circle text-4xl text-green-700"></i>
-              <span className="ml-2fas fa-Briefcase text-green-700">Acme Corp</span>
-            </div>
+    
           </div>
         </div>
-      </header>
+
 
       <div className="max-w-7xl mx-auto px-4 py-6 flex gap-6">
         {/* Sidebar Navigation */}
-        <nav className="w-64 space-y-1">
+        <nav className="w-64 bg-white-100 text-green-800 p-5 flex flex-col justify-between shadow-xl">
+          <div className="mt-4 flex flex-col items-center">
+            <div className="relative group">
+              <label htmlFor="avatar-upload" className="cursor-pointer relative">
+                {user.avatar ? (
+                  <img 
+                    src={user.avatar} 
+                    alt="Profile" 
+                    className="h-24 w-24 rounded-full object-cover border-4 border-green-700 hover:border-green-700 transition-all duration-300" />
+                ) : (
+                  <div className="h-24 w-24 rounded-full border-4 border-green-700 bg-gray-100 hover:border-green-900 transition-all duration-300 flex items-center justify-center">
+                    <i className="fas fa-briefcase text-4xl text-green-700"></i>
+                  </div>
+                )}
+                <div className="absolute -bottom-1 -right-1 bg-green-700 rounded-full border-2 border-white hover:bg-green-900 transition-colors z-10 w-8 h-8 flex items-center justify-center">
+                  <i className="fas fa-camera text-white text-sm"></i> 
+                </div>
+              </label>
+              <input 
+                type="file" 
+                id="avatar-upload" 
+                className="hidden" 
+                accept="image/*"
+                onChange={(e)=>{}} 
+              />
+            </div>
+
+            <div className="mt-4 text-center">
+              <h3 className="text-lg font-bold">{user.name}</h3>
+              <p className="text-sm text-green-700">{user.email}</p>
+            </div>
+          </div>
+
+          <hr className=" border-t border-green-700" />
+
+
           <button className="w-full flex items-center space-x-3 px-4 py-2 bg-green-100 text-green-800 rounded-lg">
-            <i className="fas fa-Briefcase text-green-700"></i>
+            <i className="fas fa-briefcase text-green-700"></i>
             <span>Dashboard</span>
           </button>
           <button className="w-full flex items-center space-x-3 px-4 py-2 text-green-600 hover:bg-green-100 rounded-lg">
-          <i className="fas fa-Briefcase text-green-700"></i>
+            <i className="fas fa-users text-green-700"></i>
             <span>Candidates</span>
           </button>
           <button className="w-full flex items-center space-x-3 px-4 py-2 text-green-600 hover:bg-green-100 rounded-lg">
-          <i className="fas fa-Briefcase text-green-700"></i>
+            <i className="fas fa-chart-bar text-green-700"></i>
             <span>Analytics</span>
           </button>
           <button className="w-full flex items-center space-x-3 px-4 py-2 text-green-600 hover:bg-green-100 rounded-lg">
-          <i className="fas fa-Briefcase text-green-700"></i>
+            <i className="fas fa-envelope text-green-700"></i>
             <span>Messages</span>
           </button>
           <button className="w-full flex items-center space-x-3 px-4 py-2 text-green-600 hover:bg-green-100 rounded-lg">
-          <i className="fas fa-settings text-green-700"></i>
+            <i className="fas fa-cog text-green-700"></i>
             <span>Settings</span>
+          </button>
+          <button className="w-full flex items-center space-x-3 px-4 py-2 text-green-600 hover:bg-green-100 rounded-lg">
+            <i className="fas fa-sign-out-alt text-green-700"></i>
+            <span>Logout</span>
           </button>
         </nav>
 
@@ -114,7 +174,9 @@ const EmployerDashboard = () => {
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">Job Postings</h2>
-              <button className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+              <button 
+                onClick={() => setShowJobModal(true)}
+                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
                 + New Job
               </button>
             </div>
@@ -136,7 +198,7 @@ const EmployerDashboard = () => {
                     <button className="text-gray-400 hover:text-gray-600">
                       Edit
                     </button>
-                    <button className="text-gray-400 hover:text-red-600">
+                    <button className="text-red-400 hover:text-red-600">
                       Delete
                     </button>
                   </div>
@@ -147,13 +209,74 @@ const EmployerDashboard = () => {
         </main>
       </div>
 
-      {/* New Job Modal (Hidden by default) */}
-      <div className="fixed inset-0 bg-black bg-opacity-50 hidden">
-        <div className="bg-white p-6 rounded-lg max-w-2xl mx-auto mt-20">
-          <h3 className="text-xl font-bold mb-4">Create New Job Posting</h3>
-          {/* Add form fields here */}
+      {showJobModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg max-w-2xl mx-auto mt-20">
+            <div className="flex justify-between items-center mb-4">
+             <h3 className="text-xl text-green-800 font-bold mb-4 ">Create New Job Posting</h3>
+               <button 
+                 onClick={() => setShowJobModal(false)}
+                 className="text-gray-500 hover:text-gray-700"
+               >
+                 <i className="fas fa-times"></i>
+               </button>
+            </div>
+
+            <form onSubmit={handleNewJob}>
+            <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Job Title</label>
+                  <input
+                    type="text"
+                    required
+                    className="mt-1 block w-full rounded-md border border-gray-300 p-2"
+                    value={newJob.title}
+                    onChange={(e) => setNewJob({...newJob, title: e.target.value})}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Description</label>
+                  <textarea
+                    className="mt-1 block w-full rounded-md border border-gray-300 p-2"
+                    rows="4"
+                    value={newJob.description}
+                    onChange={(e) => setNewJob({...newJob, description: e.target.value})}
+                  ></textarea>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Status</label>
+                  <select
+                    className="mt-1 block w-full rounded-md border border-gray-300 p-2"
+                    value={newJob.status}
+                    onChange={(e) => setNewJob({...newJob, status: e.target.value})}
+                  >
+                    <option value="Draft">Draft</option>
+                    <option value="Active">Active</option>
+                  </select>
+                </div>
+
+                <div className="flex justify-end space-x-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowJobModal(false)}
+                    className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  >
+                    Create Job
+                  </button>
+                </div>
+              </div>
+            </form>
         </div>
       </div>
+      )}
     </div>
   );
 };
