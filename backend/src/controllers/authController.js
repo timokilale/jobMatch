@@ -1,0 +1,63 @@
+const prisma = require('../prisma');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const registerApplicant = async (req, res) => {
+  try {
+    const { email, password, fullName, nida } = req.body;
+    
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Create user and applicant
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        role: 'APPLICANT',
+        applicant: {
+          create: {
+            fullName,
+            nida
+          }
+        }
+      },
+      include: { applicant: true }
+    });
+
+    // Generate JWT
+    const token = jwt.sign(
+      { userId: user.id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.status(201).json({ token });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    const user = await prisma.user.findUnique({ where: { email } });
+    
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign(
+      { userId: user.id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.json({ token, role: user.role });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { registerApplicant, login };

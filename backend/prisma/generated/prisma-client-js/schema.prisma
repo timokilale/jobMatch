@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  APPLICANT
+  EMPLOYER
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  applicant Applicant?
+  employer  Employer?
+}
+
+model Applicant {
+  id        Int      @id @default(autoincrement())
+  fullName  String
+  nida      String   @unique
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  applications   Application[]
+  qualifications AcademicQualification[]
+  experiences    WorkExperience[]
+  languages      LanguageProficiency[]
+  skills         ComputerSkill[]
+}
+
+model Employer {
+  id          Int      @id @default(autoincrement())
+  companyName String
+  address     String
+  userId      Int      @unique
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+
+  jobs Job[]
+}
+
+model Job {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  location    String?
+  status      String   @default("DRAFT")
+  employerId  Int
+  employer    Employer @relation(fields: [employerId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  applications Application[]
+}
+
+model Application {
+  id          Int       @id @default(autoincrement())
+  status      String    @default("APPLIED")
+  jobId       Int
+  job         Job       @relation(fields: [jobId], references: [id])
+  applicantId Int
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+  createdAt   DateTime  @default(now())
+}
+
+model AcademicQualification {
+  id           Int       @id @default(autoincrement())
+  institution  String
+  degree       String
+  fieldOfStudy String?
+  startDate    DateTime
+  endDate      DateTime?
+  applicantId  Int
+  applicant    Applicant @relation(fields: [applicantId], references: [id])
+}
+
+model WorkExperience {
+  id          Int       @id @default(autoincrement())
+  company     String
+  position    String
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+  applicantId Int
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+}
+
+model LanguageProficiency {
+  id          Int       @id @default(autoincrement())
+  language    String
+  proficiency String
+  applicantId Int
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+}
+
+model ComputerSkill {
+  id          Int       @id @default(autoincrement())
+  skill       String
+  proficiency String
+  applicantId Int
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+}
