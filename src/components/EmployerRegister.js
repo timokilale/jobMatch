@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Register from '../hooks/EmployerRegister';
+import useEmployerRegister from '../hooks/EmployerRegister';
 
 const RegisterPage = () => {
   const {
@@ -8,7 +8,7 @@ const RegisterPage = () => {
     address, setAddress,
     password, setPassword,
     handleRegister
-  } = Register();
+  } = useEmployerRegister();
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 pt-20">

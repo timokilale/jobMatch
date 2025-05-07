@@ -39,6 +39,7 @@ const RegisterPage = () => {
               <span className="text-sm font-light text-gray-600">Register below</span>
             </p>
             <form onSubmit={handleRegister} className="w-full">
+               
               <input
                 type="text"
                 placeholder="Fullname"

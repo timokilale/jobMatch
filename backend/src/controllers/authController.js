@@ -34,6 +34,54 @@ const registerApplicant = async (req, res) => {
 
     res.status(201).json({ token });
   } catch (error) {
+    console.error('Registration error:', error);
+    if (error.code === 'P2002') {
+      return res.status(400).json({ 
+        error: `${error.meta.target.join(', ')} already exists` 
+      });
+    }
+    res.status(400).json({ 
+      error: error.message || 'Registration failed' });
+  }
+};
+
+const registerEmployer = async (req, res) => {
+  try {
+    const { email, password, companyName, address } = req.body;
+    
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        role: 'EMPLOYER',
+        employer: {
+          create: {
+            companyName,
+            address
+          }
+        }
+      },
+      include: { employer: true }
+    });
+
+    const token = jwt.sign(
+      { userId: user.id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.status(201).json({ token });
+  } catch (error) {
+    console.error('Employer registration error:', error);
+    
+    if (error.code === 'P2002') {
+      return res.status(400).json({
+        error: `${error.meta.target.join(', ')} already exists`
+      });
+    }
+
     res.status(400).json({ error: error.message });
   }
 };
@@ -60,4 +108,4 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { registerApplicant, login };
+module.exports = { registerApplicant, registerEmployer, login };

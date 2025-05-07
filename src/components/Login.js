@@ -1,9 +1,9 @@
 
 import { Link } from 'react-router-dom';
-import Login from '../hooks/Login';
+import useLogin from '../hooks/Login';
 
 const LoginPage = () => {
-    const { email, setEmail, password, setPassword, handleLogin, loading } = Login();
+  const { email, setEmail, password, setPassword, handleLogin, loading, error } = useLogin();
  
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 pt-16 overflow-hidden">

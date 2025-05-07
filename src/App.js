@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {  Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Login from './components/Login';
@@ -11,7 +12,6 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function App() {
   return (
-    <Router>
       <Routes>
         <Route 
           path="/" 
@@ -24,10 +24,13 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/employer_register" element={<EmployerRegister />} />
-        <Route path="/applicant_dashboard" element={<ApplicantDashboard />} />
-        <Route path="/employer_dashboard" element={<EmployerDashboard />} />
+        <Route element={<ProtectedRoute allowedRoles={['APPLICANT']} />}>
+          <Route path="/applicant_dashboard" element={<ApplicantDashboard />} />
+        </Route>
+        <Route element={<ProtectedRoute allowedRoles={['EMPLOYER']} />}>
+          <Route path="/employer_dashboard" element={<EmployerDashboard />} />
+        </Route>
       </Routes>
-    </Router>
   );
 }
 

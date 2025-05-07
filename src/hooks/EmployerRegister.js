@@ -1,48 +1,44 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { registerEmployer } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 
-const EmployerRegister = () => {
-  const [companyName, setCompanyName] = useState('');
-  const [email, setEmail] = useState('');
-  const [address, setAddress] = useState('');
-  const [password, setPassword] = useState('');
+const useEmployerRegister = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    companyName: '',
+    email: '',
+    address: '',
+    password: '',
+  });
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await fetch('http://localhost:5000/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
+      const result = await dispatch(registerEmployer({
+        email: formData.email,
+        password: formData.password,
+        companyName: formData.companyName,
+        address: formData.address
+      }));
 
-      const data = await response.json();
-
-      if (data.success) {
-        alert('Registration successful! Please login.');
+      if (result.payload?.token) {
         navigate('/login');
-      } else {
-        alert('Registration failed: ' + data.message);
       }
     } catch (err) {
-      console.error('Registration error:', err);
-      alert('Something went wrong. Please try again later.');
+      console.error('Registration failed:', err);
     }
   };
 
   return {
-    companyName,
-    setCompanyName,
-    email,
-    setEmail,
-    address,
-    setAddress,
-    password,
-    setPassword,
+    ...formData,
+    setCompanyName: (value) => setFormData({ ...formData, companyName: value }),
+    setEmail: (value) => setFormData({ ...formData, email: value }),
+    setAddress: (value) => setFormData({ ...formData, address: value }),
+    setPassword: (value) => setFormData({ ...formData, password: value }),
     handleRegister,
   };
 };
 
-export default EmployerRegister;
+export default useEmployerRegister;

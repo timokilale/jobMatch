@@ -1,50 +1,48 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerApplicant } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 
-const Register = () => {
-  const [fullname, setFullname] = useState('');
-  const [nida, setNida] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const useRegister = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loading, error } = useSelector((state) => state.auth);
 
-  const handleRegister =  (e) => {
+  const [formData, setFormData] = useState({
+    fullname: '',
+    nida: '',
+    email: '',
+    password: '',
+  });
+  
+  const handleRegister = async (e) => {
     e.preventDefault();
-    alert('Registration successful! Please login.');
-    navigate('/login');
+    try {
+      const result = await dispatch(registerApplicant({
+        email: formData.email,
+        password: formData.password,
+        fullName: formData.fullname,
+        nida: formData.nida
+      }));
 
-  //   try {
-  //     const response = await fetch('http://localhost:5000/register', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ email, password })
-  //     });
-
-  //     const data = await response.json();
-
-  //     if (data.success) {
-  //       alert('Registration successful! Please login.');
-  //       navigate('/login');
-  //     } else {
-  //       alert('Registration failed: ' + data.message);
-  //     }
-  //   } catch (err) {
-  //     console.error('Registration error:', err);
-  //     alert('Something went wrong. Please try again later.');
-  //   }
-};
+      if (result.payload?.token) {
+        navigate('/login')
+      }
+    } catch (err) {
+      console.error('Registration failed:', err);
+    }
+  };
 
   return {
-    fullname,
-    setFullname,
-    nida,
-    setNida,
-    email,
-    setEmail,
-    password,
-    setPassword,
+    ...formData,
+    setFullname: (value) => setFormData({ ...formData, fullname: value }),
+    setNida: (value) => setFormData({ ...formData, nida: value }),
+    setEmail: (value) => setFormData({ ...formData, email: value }),
+    setPassword: (value) => setFormData({ ...formData, password: value }),
     handleRegister,
+    loading,
+    error,
   };
 };
 
-export default Register;
+export default useRegister;
