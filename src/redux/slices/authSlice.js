@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import api from '../../api/api';
 
 
 export const registerApplicant = createAsyncThunk(
     'auth/registerApplicant',
     async (formData, { rejectWithValue }) => {
       try {
-        const res = await axios.post('http://localhost:5000/api/auth/applicant/register', formData);
+        const res = await api.post('/auth/register/applicant', formData);
         return res.data;
       } catch (err) {
         return rejectWithValue(err.response.data);
@@ -19,7 +19,7 @@ export const registerEmployer = createAsyncThunk(
     'auth/registerEmployer',
     async (formData, { rejectWithValue }) => {
       try {
-        const res = await axios.post('http://localhost:5000/api/auth/employer/register', formData);
+        const res = await api.post('/auth/register/employer', formData);
         return res.data;
       } catch (err) {
         return rejectWithValue(err.response.data);
@@ -32,7 +32,7 @@ export const loginUser = createAsyncThunk(
     'auth/loginUser',
     async (credentials, { rejectWithValue }) => {
       try {
-        const res = await axios.post('http://localhost:5000/api/auth/login', credentials);
+        const res = await api.post('/auth/login', credentials);
         return res.data;
       } catch (err) {
         return rejectWithValue(err.response.data);
@@ -94,6 +94,7 @@ const authSlice = createSlice({
             state.user = {
               role: action.payload.role,
               name: action.payload.name,
+              companyName: action.payload.companyName,
               email: action.payload.email,
             }
           })

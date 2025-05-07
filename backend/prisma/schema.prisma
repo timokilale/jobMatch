@@ -76,15 +76,19 @@ model Application {
 }
 
 model AcademicQualification {
-  id           Int      @id @default(autoincrement())
-  institution  String
-  degree       String
-  fieldOfStudy String?
-  startDate    DateTime
-  endDate      DateTime?
-  applicantId  Int
-  applicant    Applicant @relation(fields: [applicantId], references: [id])
+  id             Int      @id @default(autoincrement())
+  level          String   // already stores 'Bachelor', 'Master', etc.
+  country        String
+  institution    String
+  fieldOfStudy   String
+  startDate      DateTime
+  endDate        DateTime?
+  certificateUrl String?
+  applicantId    Int
+  applicant      Applicant @relation(fields: [applicantId], references: [id])
+  // degree field removed
 }
+
 
 model WorkExperience {
   id          Int      @id @default(autoincrement())

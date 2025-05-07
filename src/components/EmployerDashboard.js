@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 
 const EmployerDashboard = () => {
@@ -42,11 +43,19 @@ const EmployerDashboard = () => {
     setNewJob({ title: '', description: '', status: 'Draft' });
   };
 
-  const [user] = useState({
-    name: 'Acme Corp',
-    email: 'hr@acmecorp.com',
-    avatar: null
-  });
+  const { user } = useSelector((state) => state.auth);
+  const [avatar, setAvatar] = useState(null);
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-green-50">
@@ -70,8 +79,9 @@ const EmployerDashboard = () => {
         <nav className="w-64 bg-white-100 text-green-800 p-5 flex flex-col justify-between shadow-xl">
           <div className="flex flex-col items-center">
             <div className="relative group">
+
               <label htmlFor="avatar-upload" className="cursor-pointer relative">
-                {user.avatar ? (
+                {avatar ? (
                   <img 
                     src={user.avatar} 
                     alt="Profile" 
@@ -90,13 +100,13 @@ const EmployerDashboard = () => {
                 id="avatar-upload" 
                 className="hidden" 
                 accept="image/*"
-                onChange={(e)=>{}} 
+                onChange={handleAvatarChange} 
               />
             </div>
 
             <div className="mt-2 text-center">
-              <h3 className="text-md font-bold">{user.name}</h3>
-              <p className="text-xs text-green-700">{user.email}</p>
+              <h3 className="text-md font-bold">{user?.companyName}</h3>
+              <p className="text-xs text-green-700">{user?.email}</p>
             </div>
             <hr className="border-t border-green-700 w-full my-4" />
 

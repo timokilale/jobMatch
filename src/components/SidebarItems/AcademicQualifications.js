@@ -58,7 +58,6 @@ const AcademicQualifications = () => {
               value={formData.country}
               onChange={handleChange}
               className="w-full p-2 border border-green-300 rounded-md  focus:border-green-500 focus:outline-none"
-              defaultValue="Tanzania, United Republic of"
               required
             />    
           </div>
@@ -129,12 +128,15 @@ const AcademicQualifications = () => {
               className="absolute opacity-0 w-full h-full cursor-pointer"
               id="certificate-upload"
               accept=".pdf,.doc,.docx"
+              onChange={handleChange}
+              name="certificate"
             />
             <div className="flex items-center gap-2 p-2 border border-green-300 rounded-md">
               <span className="px-4 py-2  bg-green-100 text-green-800 rounded-md">
                 Choose File
               </span>
-              <span className="text-gray-500">No file chosen</span>
+              <span className="text-gray-500">
+                {formData.certificate?.name || " No file chosen"}</span>
             </div>
           </div>
         </div>
@@ -177,7 +179,10 @@ const AcademicQualifications = () => {
                     <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.country}</td>
                     <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.institution}</td>
                     <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.program}</td>
-                    <td className="p-3 text-sm text-green-800 border border-green-200 whitespace-nowrap">{qualification.time}</td>
+                    <td className="p-3 text-sm text-green-800 border border-green-200 whitespace-nowrap">
+                      {new Date(qualification.startDate).toLocaleDateString()} - 
+                      {qualification.endDate ? new Date(qualification.endDate).toDateString() : 'Present'}
+                    </td>
                   </tr>
                 ))}
               </tbody>

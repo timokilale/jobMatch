@@ -6821,31 +6821,37 @@ export namespace Prisma {
 
   export type AcademicQualificationMinAggregateOutputType = {
     id: number | null
+    level: string | null
+    country: string | null
     institution: string | null
-    degree: string | null
     fieldOfStudy: string | null
     startDate: Date | null
     endDate: Date | null
+    certificateUrl: string | null
     applicantId: number | null
   }
 
   export type AcademicQualificationMaxAggregateOutputType = {
     id: number | null
+    level: string | null
+    country: string | null
     institution: string | null
-    degree: string | null
     fieldOfStudy: string | null
     startDate: Date | null
     endDate: Date | null
+    certificateUrl: string | null
     applicantId: number | null
   }
 
   export type AcademicQualificationCountAggregateOutputType = {
     id: number
+    level: number
+    country: number
     institution: number
-    degree: number
     fieldOfStudy: number
     startDate: number
     endDate: number
+    certificateUrl: number
     applicantId: number
     _all: number
   }
@@ -6863,31 +6869,37 @@ export namespace Prisma {
 
   export type AcademicQualificationMinAggregateInputType = {
     id?: true
+    level?: true
+    country?: true
     institution?: true
-    degree?: true
     fieldOfStudy?: true
     startDate?: true
     endDate?: true
+    certificateUrl?: true
     applicantId?: true
   }
 
   export type AcademicQualificationMaxAggregateInputType = {
     id?: true
+    level?: true
+    country?: true
     institution?: true
-    degree?: true
     fieldOfStudy?: true
     startDate?: true
     endDate?: true
+    certificateUrl?: true
     applicantId?: true
   }
 
   export type AcademicQualificationCountAggregateInputType = {
     id?: true
+    level?: true
+    country?: true
     institution?: true
-    degree?: true
     fieldOfStudy?: true
     startDate?: true
     endDate?: true
+    certificateUrl?: true
     applicantId?: true
     _all?: true
   }
@@ -6980,11 +6992,13 @@ export namespace Prisma {
 
   export type AcademicQualificationGroupByOutputType = {
     id: number
+    level: string
+    country: string
     institution: string
-    degree: string
-    fieldOfStudy: string | null
+    fieldOfStudy: string
     startDate: Date
     endDate: Date | null
+    certificateUrl: string | null
     applicantId: number
     _count: AcademicQualificationCountAggregateOutputType | null
     _avg: AcademicQualificationAvgAggregateOutputType | null
@@ -7009,11 +7023,13 @@ export namespace Prisma {
 
   export type AcademicQualificationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    level?: boolean
+    country?: boolean
     institution?: boolean
-    degree?: boolean
     fieldOfStudy?: boolean
     startDate?: boolean
     endDate?: boolean
+    certificateUrl?: boolean
     applicantId?: boolean
     applicant?: boolean | ApplicantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["academicQualification"]>
@@ -7022,15 +7038,17 @@ export namespace Prisma {
 
   export type AcademicQualificationSelectScalar = {
     id?: boolean
+    level?: boolean
+    country?: boolean
     institution?: boolean
-    degree?: boolean
     fieldOfStudy?: boolean
     startDate?: boolean
     endDate?: boolean
+    certificateUrl?: boolean
     applicantId?: boolean
   }
 
-  export type AcademicQualificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "institution" | "degree" | "fieldOfStudy" | "startDate" | "endDate" | "applicantId", ExtArgs["result"]["academicQualification"]>
+  export type AcademicQualificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "level" | "country" | "institution" | "fieldOfStudy" | "startDate" | "endDate" | "certificateUrl" | "applicantId", ExtArgs["result"]["academicQualification"]>
   export type AcademicQualificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     applicant?: boolean | ApplicantDefaultArgs<ExtArgs>
   }
@@ -7042,11 +7060,13 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
+      level: string
+      country: string
       institution: string
-      degree: string
-      fieldOfStudy: string | null
+      fieldOfStudy: string
       startDate: Date
       endDate: Date | null
+      certificateUrl: string | null
       applicantId: number
     }, ExtArgs["result"]["academicQualification"]>
     composites: {}
@@ -7419,11 +7439,13 @@ export namespace Prisma {
    */
   interface AcademicQualificationFieldRefs {
     readonly id: FieldRef<"AcademicQualification", 'Int'>
+    readonly level: FieldRef<"AcademicQualification", 'String'>
+    readonly country: FieldRef<"AcademicQualification", 'String'>
     readonly institution: FieldRef<"AcademicQualification", 'String'>
-    readonly degree: FieldRef<"AcademicQualification", 'String'>
     readonly fieldOfStudy: FieldRef<"AcademicQualification", 'String'>
     readonly startDate: FieldRef<"AcademicQualification", 'DateTime'>
     readonly endDate: FieldRef<"AcademicQualification", 'DateTime'>
+    readonly certificateUrl: FieldRef<"AcademicQualification", 'String'>
     readonly applicantId: FieldRef<"AcademicQualification", 'Int'>
   }
     
@@ -10762,11 +10784,13 @@ export namespace Prisma {
 
   export const AcademicQualificationScalarFieldEnum: {
     id: 'id',
+    level: 'level',
+    country: 'country',
     institution: 'institution',
-    degree: 'degree',
     fieldOfStudy: 'fieldOfStudy',
     startDate: 'startDate',
     endDate: 'endDate',
+    certificateUrl: 'certificateUrl',
     applicantId: 'applicantId'
   };
 
@@ -10864,9 +10888,11 @@ export namespace Prisma {
 
 
   export const AcademicQualificationOrderByRelevanceFieldEnum: {
+    level: 'level',
+    country: 'country',
     institution: 'institution',
-    degree: 'degree',
-    fieldOfStudy: 'fieldOfStudy'
+    fieldOfStudy: 'fieldOfStudy',
+    certificateUrl: 'certificateUrl'
   };
 
   export type AcademicQualificationOrderByRelevanceFieldEnum = (typeof AcademicQualificationOrderByRelevanceFieldEnum)[keyof typeof AcademicQualificationOrderByRelevanceFieldEnum]
@@ -11282,22 +11308,26 @@ export namespace Prisma {
     OR?: AcademicQualificationWhereInput[]
     NOT?: AcademicQualificationWhereInput | AcademicQualificationWhereInput[]
     id?: IntFilter<"AcademicQualification"> | number
+    level?: StringFilter<"AcademicQualification"> | string
+    country?: StringFilter<"AcademicQualification"> | string
     institution?: StringFilter<"AcademicQualification"> | string
-    degree?: StringFilter<"AcademicQualification"> | string
-    fieldOfStudy?: StringNullableFilter<"AcademicQualification"> | string | null
+    fieldOfStudy?: StringFilter<"AcademicQualification"> | string
     startDate?: DateTimeFilter<"AcademicQualification"> | Date | string
     endDate?: DateTimeNullableFilter<"AcademicQualification"> | Date | string | null
+    certificateUrl?: StringNullableFilter<"AcademicQualification"> | string | null
     applicantId?: IntFilter<"AcademicQualification"> | number
     applicant?: XOR<ApplicantScalarRelationFilter, ApplicantWhereInput>
   }
 
   export type AcademicQualificationOrderByWithRelationInput = {
     id?: SortOrder
+    level?: SortOrder
+    country?: SortOrder
     institution?: SortOrder
-    degree?: SortOrder
-    fieldOfStudy?: SortOrderInput | SortOrder
+    fieldOfStudy?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrderInput | SortOrder
+    certificateUrl?: SortOrderInput | SortOrder
     applicantId?: SortOrder
     applicant?: ApplicantOrderByWithRelationInput
     _relevance?: AcademicQualificationOrderByRelevanceInput
@@ -11308,22 +11338,26 @@ export namespace Prisma {
     AND?: AcademicQualificationWhereInput | AcademicQualificationWhereInput[]
     OR?: AcademicQualificationWhereInput[]
     NOT?: AcademicQualificationWhereInput | AcademicQualificationWhereInput[]
+    level?: StringFilter<"AcademicQualification"> | string
+    country?: StringFilter<"AcademicQualification"> | string
     institution?: StringFilter<"AcademicQualification"> | string
-    degree?: StringFilter<"AcademicQualification"> | string
-    fieldOfStudy?: StringNullableFilter<"AcademicQualification"> | string | null
+    fieldOfStudy?: StringFilter<"AcademicQualification"> | string
     startDate?: DateTimeFilter<"AcademicQualification"> | Date | string
     endDate?: DateTimeNullableFilter<"AcademicQualification"> | Date | string | null
+    certificateUrl?: StringNullableFilter<"AcademicQualification"> | string | null
     applicantId?: IntFilter<"AcademicQualification"> | number
     applicant?: XOR<ApplicantScalarRelationFilter, ApplicantWhereInput>
   }, "id">
 
   export type AcademicQualificationOrderByWithAggregationInput = {
     id?: SortOrder
+    level?: SortOrder
+    country?: SortOrder
     institution?: SortOrder
-    degree?: SortOrder
-    fieldOfStudy?: SortOrderInput | SortOrder
+    fieldOfStudy?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrderInput | SortOrder
+    certificateUrl?: SortOrderInput | SortOrder
     applicantId?: SortOrder
     _count?: AcademicQualificationCountOrderByAggregateInput
     _avg?: AcademicQualificationAvgOrderByAggregateInput
@@ -11337,11 +11371,13 @@ export namespace Prisma {
     OR?: AcademicQualificationScalarWhereWithAggregatesInput[]
     NOT?: AcademicQualificationScalarWhereWithAggregatesInput | AcademicQualificationScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"AcademicQualification"> | number
+    level?: StringWithAggregatesFilter<"AcademicQualification"> | string
+    country?: StringWithAggregatesFilter<"AcademicQualification"> | string
     institution?: StringWithAggregatesFilter<"AcademicQualification"> | string
-    degree?: StringWithAggregatesFilter<"AcademicQualification"> | string
-    fieldOfStudy?: StringNullableWithAggregatesFilter<"AcademicQualification"> | string | null
+    fieldOfStudy?: StringWithAggregatesFilter<"AcademicQualification"> | string
     startDate?: DateTimeWithAggregatesFilter<"AcademicQualification"> | Date | string
     endDate?: DateTimeNullableWithAggregatesFilter<"AcademicQualification"> | Date | string | null
+    certificateUrl?: StringNullableWithAggregatesFilter<"AcademicQualification"> | string | null
     applicantId?: IntWithAggregatesFilter<"AcademicQualification"> | number
   }
 
@@ -11844,68 +11880,82 @@ export namespace Prisma {
   }
 
   export type AcademicQualificationCreateInput = {
+    level: string
+    country: string
     institution: string
-    degree: string
-    fieldOfStudy?: string | null
+    fieldOfStudy: string
     startDate: Date | string
     endDate?: Date | string | null
+    certificateUrl?: string | null
     applicant: ApplicantCreateNestedOneWithoutQualificationsInput
   }
 
   export type AcademicQualificationUncheckedCreateInput = {
     id?: number
+    level: string
+    country: string
     institution: string
-    degree: string
-    fieldOfStudy?: string | null
+    fieldOfStudy: string
     startDate: Date | string
     endDate?: Date | string | null
+    certificateUrl?: string | null
     applicantId: number
   }
 
   export type AcademicQualificationUpdateInput = {
+    level?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     institution?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
-    fieldOfStudy?: NullableStringFieldUpdateOperationsInput | string | null
+    fieldOfStudy?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    certificateUrl?: NullableStringFieldUpdateOperationsInput | string | null
     applicant?: ApplicantUpdateOneRequiredWithoutQualificationsNestedInput
   }
 
   export type AcademicQualificationUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
+    level?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     institution?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
-    fieldOfStudy?: NullableStringFieldUpdateOperationsInput | string | null
+    fieldOfStudy?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    certificateUrl?: NullableStringFieldUpdateOperationsInput | string | null
     applicantId?: IntFieldUpdateOperationsInput | number
   }
 
   export type AcademicQualificationCreateManyInput = {
     id?: number
+    level: string
+    country: string
     institution: string
-    degree: string
-    fieldOfStudy?: string | null
+    fieldOfStudy: string
     startDate: Date | string
     endDate?: Date | string | null
+    certificateUrl?: string | null
     applicantId: number
   }
 
   export type AcademicQualificationUpdateManyMutationInput = {
+    level?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     institution?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
-    fieldOfStudy?: NullableStringFieldUpdateOperationsInput | string | null
+    fieldOfStudy?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    certificateUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AcademicQualificationUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
+    level?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     institution?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
-    fieldOfStudy?: NullableStringFieldUpdateOperationsInput | string | null
+    fieldOfStudy?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    certificateUrl?: NullableStringFieldUpdateOperationsInput | string | null
     applicantId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -12526,11 +12576,13 @@ export namespace Prisma {
 
   export type AcademicQualificationCountOrderByAggregateInput = {
     id?: SortOrder
+    level?: SortOrder
+    country?: SortOrder
     institution?: SortOrder
-    degree?: SortOrder
     fieldOfStudy?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
+    certificateUrl?: SortOrder
     applicantId?: SortOrder
   }
 
@@ -12541,21 +12593,25 @@ export namespace Prisma {
 
   export type AcademicQualificationMaxOrderByAggregateInput = {
     id?: SortOrder
+    level?: SortOrder
+    country?: SortOrder
     institution?: SortOrder
-    degree?: SortOrder
     fieldOfStudy?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
+    certificateUrl?: SortOrder
     applicantId?: SortOrder
   }
 
   export type AcademicQualificationMinOrderByAggregateInput = {
     id?: SortOrder
+    level?: SortOrder
+    country?: SortOrder
     institution?: SortOrder
-    degree?: SortOrder
     fieldOfStudy?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
+    certificateUrl?: SortOrder
     applicantId?: SortOrder
   }
 
@@ -13548,20 +13604,24 @@ export namespace Prisma {
   }
 
   export type AcademicQualificationCreateWithoutApplicantInput = {
+    level: string
+    country: string
     institution: string
-    degree: string
-    fieldOfStudy?: string | null
+    fieldOfStudy: string
     startDate: Date | string
     endDate?: Date | string | null
+    certificateUrl?: string | null
   }
 
   export type AcademicQualificationUncheckedCreateWithoutApplicantInput = {
     id?: number
+    level: string
+    country: string
     institution: string
-    degree: string
-    fieldOfStudy?: string | null
+    fieldOfStudy: string
     startDate: Date | string
     endDate?: Date | string | null
+    certificateUrl?: string | null
   }
 
   export type AcademicQualificationCreateOrConnectWithoutApplicantInput = {
@@ -13721,11 +13781,13 @@ export namespace Prisma {
     OR?: AcademicQualificationScalarWhereInput[]
     NOT?: AcademicQualificationScalarWhereInput | AcademicQualificationScalarWhereInput[]
     id?: IntFilter<"AcademicQualification"> | number
+    level?: StringFilter<"AcademicQualification"> | string
+    country?: StringFilter<"AcademicQualification"> | string
     institution?: StringFilter<"AcademicQualification"> | string
-    degree?: StringFilter<"AcademicQualification"> | string
-    fieldOfStudy?: StringNullableFilter<"AcademicQualification"> | string | null
+    fieldOfStudy?: StringFilter<"AcademicQualification"> | string
     startDate?: DateTimeFilter<"AcademicQualification"> | Date | string
     endDate?: DateTimeNullableFilter<"AcademicQualification"> | Date | string | null
+    certificateUrl?: StringNullableFilter<"AcademicQualification"> | string | null
     applicantId?: IntFilter<"AcademicQualification"> | number
   }
 
@@ -14387,11 +14449,13 @@ export namespace Prisma {
 
   export type AcademicQualificationCreateManyApplicantInput = {
     id?: number
+    level: string
+    country: string
     institution: string
-    degree: string
-    fieldOfStudy?: string | null
+    fieldOfStudy: string
     startDate: Date | string
     endDate?: Date | string | null
+    certificateUrl?: string | null
   }
 
   export type WorkExperienceCreateManyApplicantInput = {
@@ -14436,29 +14500,35 @@ export namespace Prisma {
   }
 
   export type AcademicQualificationUpdateWithoutApplicantInput = {
+    level?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     institution?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
-    fieldOfStudy?: NullableStringFieldUpdateOperationsInput | string | null
+    fieldOfStudy?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    certificateUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AcademicQualificationUncheckedUpdateWithoutApplicantInput = {
     id?: IntFieldUpdateOperationsInput | number
+    level?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     institution?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
-    fieldOfStudy?: NullableStringFieldUpdateOperationsInput | string | null
+    fieldOfStudy?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    certificateUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AcademicQualificationUncheckedUpdateManyWithoutApplicantInput = {
     id?: IntFieldUpdateOperationsInput | number
+    level?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
     institution?: StringFieldUpdateOperationsInput | string
-    degree?: StringFieldUpdateOperationsInput | string
-    fieldOfStudy?: NullableStringFieldUpdateOperationsInput | string | null
+    fieldOfStudy?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    certificateUrl?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type WorkExperienceUpdateWithoutApplicantInput = {

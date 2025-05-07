@@ -1,49 +1,63 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addQualification, fetchQualifications } from '../redux/slices/qualificationSlice';
+
 
 const AcademicQualificationsLogic = () => {
-    const [qualifications, setQualifications] = useState([]);
+    const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.auth);
+    const applicantId = user?.applicant?.id;
+    
+    const qualifications = useSelector((state) => state.qualifications.list);
+    
+   
     const [formData, setFormData] = useState({
         educationLevel: '',
-        country: 'Tanzania, United Republic of',
+        country: '',
         institution: '',
         program: '',
         startDate: '',
         endDate: '',
+        certificate: null,
     });
 
+    useEffect(() => {
+        if (applicantId) {
+            dispatch(fetchQualifications(applicantId));
+        }
+    }, [dispatch, applicantId]);
+
     const handleChange = (e) => {
+        const value = e.target.type === 'file'
+            ? e.target.files[0]
+            : e.target.value;
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [e.target.name]: value
         });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
-        const startYear = new Date(formData.startDate).getFullYear();
-        const endYear = new Date(formData.endDate).getFullYear();
-        const timePeriod = `${startYear} - ${endYear}`;
 
-        const newQualification = {
-            educationLevel: formData.educationLevel,
-            country: formData.country,
-            institution: formData.institution,
-            program: formData.program,
-            time: timePeriod
-        };
+        if (!applicantId) {
+            return alert("Loggin first");
+        }
 
-        setQualifications([...qualifications, newQualification]);
-
+        dispatch(addQualification({
+          ...formData,
+          applicantId
+        }));
         setFormData({
             educationLevel: '',
-            country: 'Tanzania, United Republic of',
+            country: '',
             institution: '',
             program: '',
             startDate: '',
-            endDate: ''
+            endDate: '',
         });
-    }
+    };
+        
     return {
         formData,
         handleChange,

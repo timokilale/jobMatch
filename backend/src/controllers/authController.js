@@ -90,7 +90,13 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ 
+      where: { email },
+      include: { 
+        applicant: true, 
+        employer: true 
+      } 
+    });
     
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -102,7 +108,13 @@ const login = async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    res.json({ token, role: user.role });
+    res.json({ 
+      token, 
+      role: user.role,
+      email: user.email,
+      name: user.applicant?.fullName,
+      companyName: user.employer?.companyName
+     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

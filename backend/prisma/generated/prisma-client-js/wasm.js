@@ -166,11 +166,13 @@ exports.Prisma.ApplicationScalarFieldEnum = {
 
 exports.Prisma.AcademicQualificationScalarFieldEnum = {
   id: 'id',
+  level: 'level',
+  country: 'country',
   institution: 'institution',
-  degree: 'degree',
   fieldOfStudy: 'fieldOfStudy',
   startDate: 'startDate',
   endDate: 'endDate',
+  certificateUrl: 'certificateUrl',
   applicantId: 'applicantId'
 };
 
@@ -235,9 +237,11 @@ exports.Prisma.ApplicationOrderByRelevanceFieldEnum = {
 };
 
 exports.Prisma.AcademicQualificationOrderByRelevanceFieldEnum = {
+  level: 'level',
+  country: 'country',
   institution: 'institution',
-  degree: 'degree',
-  fieldOfStudy: 'fieldOfStudy'
+  fieldOfStudy: 'fieldOfStudy',
+  certificateUrl: 'certificateUrl'
 };
 
 exports.Prisma.WorkExperienceOrderByRelevanceFieldEnum = {

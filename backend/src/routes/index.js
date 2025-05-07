@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
 const { registerApplicant, registerEmployer, login } = require('../controllers/authController');
 const { createJob, getJobs } = require('../controllers/jobController');
+const auth = require('../middleware/auth');
 
 // Auth Routes
 router.post('/auth/register/applicant', registerApplicant);

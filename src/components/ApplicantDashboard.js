@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import AcademicQualifications from "./SidebarItems/AcademicQualifications"
 import WorkExperience from "./SidebarItems/WorkExperience";
@@ -12,11 +13,8 @@ const ApplicantDashboard = () => {
   const [loadingText, setLoadingText] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(null);
-  const [user, setUser] = useState({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    avatar: null
-  });
+  const{ user } = useSelector((state) => state.auth);
+  const [avatar, setAvatar] = useState(null);
 
   const sections = [
     {
@@ -141,7 +139,7 @@ const ApplicantDashboard = () => {
                 if (file) {
                   const reader = new FileReader();
                   reader.onload = (event) => {
-                    setUser(prev => ({ ...prev, avatar: event.target.result }));
+                    setAvatar(prev => ({ ...prev, avatar: event.target.result }));
                   };
                   reader.readAsDataURL(file);
                 }
