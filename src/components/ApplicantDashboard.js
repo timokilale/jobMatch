@@ -14,7 +14,7 @@ const ApplicantDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(null);
   const{ user } = useSelector((state) => state.auth);
-  const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState(user?.avatar || null);
 
   const sections = [
     {
@@ -113,9 +113,9 @@ const ApplicantDashboard = () => {
         <div className="mt-12 ml-4 flex flex-col items-center">
           <div className="relative group">
             <label htmlFor="avatar-upload" className="cursor-pointer relative">
-              {user.avatar ? (
+              {user?.avatar ? (
                 <img
-                  src={user.avatar}
+                  src={user?.avatar}
                   alt="Profile"
                   className="h-24 w-24 rounded-full object-cover border-4 border-green-700 hover:border-green-700 transition-all duration-300"
               />
@@ -148,8 +148,8 @@ const ApplicantDashboard = () => {
           </div>
           
           <div className="mt-4 text-center">
-            <h3 className="text-lg font-bold">{user.name}</h3>
-            <p className="text-sm text-green-700">{user.email}</p>
+            <h3 className="text-lg font-bold">{user?.fullName || 'Loading...'}</h3>
+            <p className="text-sm text-green-700">{user?.email || 'Loading...'}</p>
           </div>
         </div>
 

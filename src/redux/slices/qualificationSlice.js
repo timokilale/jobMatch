@@ -5,8 +5,20 @@ export const fetchQualifications = createAsyncThunk(
     'qualifications/fetch',
     async (applicantId, thunkAPI) => {
       try {
-        const res = await api.get(`/qualifications/${applicantId}`); // Auth headers handled in `api.js`
-        return res.data;
+        const res = await api.get(`/qualifications/${applicantId}`);
+        
+        const mapped = res.data.map((item) => ({
+          id: item.id,
+          educationLevel: item.level,
+          country: item.country,
+          institution: item.institution,
+          program: item.fieldOfStudy,
+          startDate: item.startDate,
+          endDate: item.endDate,
+          certificateUrl: item.certificateUrl
+        }));
+      
+        return mapped;
       } catch (err) {
         return thunkAPI.rejectWithValue(err.response?.data || err.message);
       }

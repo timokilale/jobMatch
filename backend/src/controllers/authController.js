@@ -1,6 +1,7 @@
 const prisma = require('../prisma');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { Role } = require('../../prisma/generated/prisma-client-js');
 
 const registerApplicant = async (req, res) => {
   try {
@@ -32,7 +33,14 @@ const registerApplicant = async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    res.status(201).json({ token });
+    res.status(201).json({ 
+      token,
+      role: 'APPLICANT',
+      user: {
+        ...user.applicant,
+        email: user.email
+      }
+     });
   } catch (error) {
     console.error('Registration error:', error);
     if (error.code === 'P2002') {
@@ -72,7 +80,14 @@ const registerEmployer = async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    res.status(201).json({ token });
+    res.status(201).json({ 
+      token,
+      role: 'EMPLOYER',
+      user: {
+        ...user.employer ,
+        email: user.email
+      }
+    });
   } catch (error) {
     console.error('Employer registration error:', error);
     
@@ -108,13 +123,25 @@ const login = async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    res.json({ 
-      token, 
+    const responsePayload = {
+      token,
       role: user.role,
-      email: user.email,
-      name: user.applicant?.fullName,
-      companyName: user.employer?.companyName
-     });
+      user: null,
+    };
+
+    if (user.role === 'APPLICANT') {
+      responsePayload.user = {
+        ...user.applicant,
+        email: user.email
+        };
+    } else if (user.role === 'EMPLOYER') {
+      responsePayload.user = {
+        ...user.employer,
+        email: user.email
+        };
+    }
+
+    res.json(responsePayload);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

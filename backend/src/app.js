@@ -21,7 +21,6 @@ app.use(cors({
 app.use(express.json());
 
 
-  
 
 // Routes
 app.use('/api', routes);
@@ -41,3 +40,4 @@ app.listen(PORT, () => {
     .then(() => console.log('Connected to database'))
     .catch(err => console.error('Database connection error:', err));
 });
+

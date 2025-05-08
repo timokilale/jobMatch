@@ -55,7 +55,9 @@ const AcademicQualificationsLogic = () => {
             program: '',
             startDate: '',
             endDate: '',
+            certificate: null,
         });
+        console.log("User from Redux:", user);
     };
         
     return {
@@ -63,6 +65,7 @@ const AcademicQualificationsLogic = () => {
         handleChange,
         handleSubmit,
         qualifications,
+        
     }
 }
 export default AcademicQualificationsLogic;
