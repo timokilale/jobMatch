@@ -4,11 +4,12 @@ const router = express.Router();
 const upload = require('../middleware/uploadMiddleware');
 const { 
   createAcademicQualification,
-  getAcademicQualifications
+  getAcademicQualifications,
+  validateQualification,
 } = require('../controllers/qualifications');
 
 
-router.post('/',  upload.single('certificate'), createAcademicQualification);
+router.post('/',  upload.single('certificate'), validateQualification, createAcademicQualification);
 router.get('/:applicantId', getAcademicQualifications);
 
 module.exports = router;
