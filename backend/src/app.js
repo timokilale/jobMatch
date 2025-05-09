@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const prisma = require('./prisma');
 const routes = require('./routes');
+const cookieParser = require('cookie-parser');
 const qualificationRouter = require('./routes/qualifications');
 
 const app = express();
@@ -17,7 +18,7 @@ app.use(cors({
   preflightContinue: false,
   optionsSuccessStatus: 204, 
 }));
-
+app.use(cookieParser());
 app.use(express.json());
 
 

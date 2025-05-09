@@ -1,16 +1,14 @@
 const prisma = require('../prisma');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { Role } = require('../../prisma/generated/prisma-client-js');
+
 
 const registerApplicant = async (req, res) => {
   try {
     const { email, password, fullName, nida } = req.body;
     
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
     
-    // Create user and applicant
     const user = await prisma.user.create({
       data: {
         email,
@@ -33,8 +31,14 @@ const registerApplicant = async (req, res) => {
       { expiresIn: '1h' }
     );
 
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', 
+      sameSite: 'Lax',
+      maxAge: 3600000 
+    });
+
     res.status(201).json({ 
-      token,
       role: 'APPLICANT',
       user: {
         ...user.applicant,
@@ -80,8 +84,14 @@ const registerEmployer = async (req, res) => {
       { expiresIn: '1h' }
     );
 
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', 
+      sameSite: 'Lax',
+      maxAge: 3600000 
+    });
+
     res.status(201).json({ 
-      token,
       role: 'EMPLOYER',
       user: {
         ...user.employer ,
@@ -123,23 +133,20 @@ const login = async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    const responsePayload = {
-      token,
-      role: user.role,
-      user: null,
-    };
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', 
+      sameSite: 'Lax',
+      maxAge: 3600000 
+    });
 
-    if (user.role === 'APPLICANT') {
-      responsePayload.user = {
-        ...user.applicant,
-        email: user.email
-        };
-    } else if (user.role === 'EMPLOYER') {
-      responsePayload.user = {
-        ...user.employer,
-        email: user.email
-        };
-    }
+    const responsePayload = {
+      role: user.role,
+      user: {
+        email: user.email,
+        ...(user.role === 'APPLICANT' ? user.applicant : user.employer),
+      },
+    };
 
     res.json(responsePayload);
   } catch (error) {
