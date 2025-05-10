@@ -27,7 +27,7 @@ const LoginPage = () => {
 
       {loading ? (
           <div className="flex flex-col items-center justify-center w-full h-full space-y-6">
-           <div className="w-20 h-20 border-8 border-green-300 border-t-green-700 rounded-full animate-spin"></div>
+           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-700"></div>
            <p className="text-green-700 text-xl font-semibold">Logging in...</p>
            </div>
       ) : (
