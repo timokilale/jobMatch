@@ -6,7 +6,7 @@ import { addQualification, fetchQualifications } from '../redux/slices/qualifica
 const AcademicQualificationsLogic = () => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
-    const applicantId = user?.applicant?.id;
+    const applicantId = user?.id;
     
     const qualifications = useSelector((state) => state.qualifications.list);
     
