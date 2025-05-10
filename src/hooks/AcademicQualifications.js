@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addQualification, fetchQualifications } from '../redux/slices/qualificationSlice';
+import { addQualification, fetchQualifications, updateQualification, deleteQualification } from '../redux/slices/qualificationSlice';
 
 
-const AcademicQualificationsLogic = () => {
+const AcademicQualificationsLogic = (setShowForm) => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
     const applicantId = user?.id;
-    
     const qualifications = useSelector((state) => state.qualifications.list);
-    
-   
+    const [editingId, setEditingId] = useState(null);
+
     const [formData, setFormData] = useState({
         educationLevel: '',
         country: '',
@@ -39,15 +38,23 @@ const AcademicQualificationsLogic = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const data = { ...formData, applicantId };
+
+        if (editingId) {
+            dispatch(updateQualification({ id: editingId, data })).then(() => {
+              setEditingId(null);
+              setShowForm(false);
+            });
+        } else {
+          dispatch(addQualification(data)).then(() => {
+            setShowForm(false);
+          });
+        }
 
         if (!applicantId) {
             return alert("Loggin first");
         }
-
-        dispatch(addQualification({
-          ...formData,
-          applicantId
-        }));
+        
         setFormData({
             educationLevel: '',
             country: '',
@@ -59,12 +66,36 @@ const AcademicQualificationsLogic = () => {
         });
         console.log("User from Redux:", user);
     };
+
+    const handleEdit = (qualification) => {
+        setFormData({
+          educationLevel: qualification.level,
+          country: qualification.country,
+          institution: qualification.institution,
+          program: qualification.fieldOfStudy,
+          startDate: qualification.startDate,
+          endDate: qualification.endDate,
+          certificate: null,
+          applicantId,
+        });
+        setEditingId(qualification.id);
+        setShowForm(true);
+      };
+      
+      const handleDelete = (id) => {
+        if (window.confirm('Are you sure you want to delete this?')) {
+          dispatch(deleteQualification(id));
+        }
+      };
+      
         
     return {
         formData,
         handleChange,
         handleSubmit,
         qualifications,
+        handleDelete,
+        handleEdit
         
     }
 }

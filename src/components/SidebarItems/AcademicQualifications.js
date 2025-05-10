@@ -1,16 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AcademicQualificationsLogic from '../../hooks/AcademicQualifications';
 
 
 const AcademicQualifications = () => {
-  const { formData, handleChange, handleSubmit, qualifications } = AcademicQualificationsLogic();
-  const [showForm, setShowForm] = useState(qualifications.length === 0);
+  const [showForm, setShowForm] = useState(false);
+  const {
+    formData,
+    handleChange,
+    handleSubmit,
+    qualifications,
+    handleEdit,
+    handleDelete,
+  } = AcademicQualificationsLogic(setShowForm)
+
 
   const handleSave = (e) => {
     e.preventDefault();
     handleSubmit(e);
     setShowForm(false);
   };
+
+  useEffect(() => {
+    if (qualifications.length === 0) {
+      setShowForm(true);
+    }
+  }, [qualifications]);
 
   return (
     <div className="p-8 min-h-screen flex flex-col">
@@ -120,7 +134,7 @@ const AcademicQualifications = () => {
         {/* File Upload */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-green-800">
-            Attach your certificate (max size 2MB) *
+            Attach your certificate (optional, max size 2MB) *
           </label>
           <div className="relative">
             <input 
@@ -145,9 +159,16 @@ const AcademicQualifications = () => {
         <div className="mt-8">
           <button
             type="submit"
-            className="px-6 py-2 bg-green-700 text-white rounded-md hover:bg-green-800 transition-colors"
+            className="px-6 py-2 bg-green-700 mr-6 text-white rounded-md hover:bg-green-800 transition-colors"
           >
             Save
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowForm(false)}
+            className="px-6 py-2 border border-green-700 ml-4 text-green-700 rounded-md hover:bg-green-50 transition-colors mr-4"
+          >
+            Cancel
           </button>
         </div>
         </div>
@@ -170,6 +191,8 @@ const AcademicQualifications = () => {
                   <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Institution</th>
                   <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Program</th>
                   <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Time Period</th>
+                  <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Certificate</th>
+                  <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -192,6 +215,20 @@ const AcademicQualifications = () => {
                       >
                         View Certificate
                       </a>
+                    </td>
+                    <td className="p-3 text-sm text-green-800 border border-green-200">
+                      <button 
+                        onClick={() => handleEdit(qualification)}
+                        className="text-gray-600 mr-4"
+                      >
+                          <i className="fas fa-pen"></i>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(qualification.id)}
+                        className="text-green-600 "
+                      >
+                        <i className="fas fa-trash"></i>
+                      </button>               
                     </td>
                   </tr>
                 ))}

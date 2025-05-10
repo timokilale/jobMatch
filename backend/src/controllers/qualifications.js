@@ -72,8 +72,68 @@ const validateQualification = (req, res, next) => {
   next();
 };
 
+const updateAcademicQualification = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const applicantId = parseInt(req.body.applicantId);
+    if (isNaN(id) || isNaN(applicantId)) {
+      return res.status(400).json({ error: 'Invalid ID(s)' });
+    }
+
+    const {
+      educationLevel,
+      country,
+      institution,
+      program,
+      startDate,
+      endDate
+    } = req.body;
+
+    const updatedQualification = await prisma.academicQualification.update({
+      where: { id },
+      data: {
+        level: educationLevel,
+        country,
+        institution,
+        fieldOfStudy: program,
+        startDate: new Date(startDate),
+        endDate: endDate ? new Date(endDate) : null,
+        applicantId,
+        ...(req.file && { certificateUrl: `uploads/${req.file.filename}` }),
+      },
+    });
+
+    res.json(updatedQualification);
+  } catch (error) {
+    console.error('Update error:', error);
+    res.status(500).json({ error: 'Failed to update qualification' });
+  }
+};
+
+
+const deleteAcademicQualification = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid qualification ID' });
+    }
+
+    await prisma.academicQualification.delete({
+      where: { id },
+    });
+
+    res.sendStatus(204); // No Content
+  } catch (error) {
+    console.error('Delete error:', error);
+    res.status(500).json({ error: 'Failed to delete qualification' });
+  }
+};
+
+
 module.exports = { 
   createAcademicQualification, 
   getAcademicQualifications,
-  validateQualification
+  validateQualification,
+  updateAcademicQualification,
+  deleteAcademicQualification
 };

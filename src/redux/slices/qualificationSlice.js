@@ -6,20 +6,7 @@ export const fetchQualifications = createAsyncThunk(
     async (applicantId, thunkAPI) => {
       try {
         const res = await api.get(`/qualifications/${applicantId}`);
-        
-        const mapped = res.data.map((item) => ({
-          id: item.id,
-          level: item.level,
-          country: item.country,
-          institution: item.institution,
-          fieldOfStudy: item.fieldOfStudy,
-          startDate: item.startDate,
-          endDate: item.endDate,
-          certificate: item.certificateUrl
-        }));
-        
-      
-        return mapped;
+        return res.data;
       } catch (err) {
         return thunkAPI.rejectWithValue(err.response?.data || err.message);
       }
@@ -37,8 +24,10 @@ export const addQualification = createAsyncThunk(
         payload.append('fieldOfStudy', formData.program);
         payload.append('startDate', formData.startDate);
         payload.append('endDate', formData.endDate);
-        payload.append('certificate', formData.certificate);
         payload.append('applicantId', formData.applicantId);
+        if (formData.certificate) {  
+          payload.append('certificate', formData.certificate);
+        }
 
         const res = await api.post('/qualifications', payload, {
           headers: {
@@ -52,6 +41,47 @@ export const addQualification = createAsyncThunk(
     }
   );
 
+  export const updateQualification = createAsyncThunk(
+    'qualifications/update',
+    async ({ id, data }, thunkAPI) => {
+      try {
+        const payload = new FormData();
+        payload.append('level', data.educationLevel);
+        payload.append('country', data.country);
+        payload.append('institution', data.institution);
+        payload.append('fieldOfStudy', data.program);
+        payload.append('startDate', data.startDate);
+        payload.append('endDate', data.endDate);
+        payload.append('applicantId', data.applicantId);
+        if (data.certificate) {
+          payload.append('certificate', data.certificate);
+        }
+  
+        const res = await api.put(`/qualifications/${id}`, payload, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+  
+        return res.data;
+      } catch (err) {
+        return thunkAPI.rejectWithValue(err.response?.data || err.message);
+      }
+    }
+  );
+  
+  export const deleteQualification = createAsyncThunk(
+    'qualifications/delete',
+    async (id, thunkAPI) => {
+      try {
+        await api.delete(`/qualifications/${id}`);
+        return id;
+      } catch (err) {
+        return thunkAPI.rejectWithValue(err.response?.data || err.message);
+      }
+    }
+  );
+  
   
 const qualificationSlice = createSlice({
     name: 'qualifications',
@@ -82,22 +112,21 @@ const qualificationSlice = createSlice({
         })
         .addCase(addQualification.fulfilled, (state, action) => {
           state.loading = false;
-          const newItem = {
-            id: action.payload.id,
-            level: action.payload.level,
-            country: action.payload.country,
-            institution: action.payload.institution,
-            fieldOfStudy: action.payload.fieldOfStudy,
-            startDate: action.payload.startDate,
-            endDate: action.payload.endDate,
-            certificate: action.payload.certificateUrl
-          }
-          state.list.push(newItem);
+          state.list.push(action.payload);
         })
         .addCase(addQualification.rejected, (state, action) => {
           state.loading = false;
           state.error = action.payload;
-        });
+        })
+        .addCase(updateQualification.fulfilled, (state, action) => {
+          const index = state.list.findIndex(q => q.id === action.payload.id);
+          if (index !== -1) {
+            state.list[index] = action.payload;
+          }
+        })
+        .addCase(deleteQualification.fulfilled, (state, action) => {
+          state.list = state.list.filter(q => q.id !== action.payload);
+        });        
     },
   });
   
