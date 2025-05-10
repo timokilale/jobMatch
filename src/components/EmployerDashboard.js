@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
 
 const EmployerDashboard = () => {
    const [recentApplications, setRecentApplications] = useState([]);
    const [jobPostings, setJobPostings] = useState([]);
+   const [showJobModal, setShowJobModal] = useState(false);
+   const [newJob, setNewJob] = useState({
+      title: '',
+      description: '',
+      status: 'Draft'
+   });
+   const [avatar, setAvatar] = useState(null);
+   const { role, user } = useSelector((state) => state.auth);
    const activeJobs = jobPostings.filter(job => job.status === 'Active').length;
    const interviewing = recentApplications.filter(app => app.status === 'interview').length;
    const newApplications = recentApplications.length;
@@ -25,13 +34,11 @@ const EmployerDashboard = () => {
       color: 'bg-green-100  border border-green-300 text-green-800' 
     },
  ];
-   const [showJobModal, setShowJobModal] = useState(false);
-   const [newJob, setNewJob] = useState({
-      title: '',
-      description: '',
-      status: 'Draft'
-  });
 
+ if (role !== 'EMPLOYER') {
+  return <Navigate to="/login" />;
+}
+   
   const handleNewJob = (e) => {
     e.preventDefault();
     setJobPostings([...jobPostings, {
@@ -43,8 +50,7 @@ const EmployerDashboard = () => {
     setNewJob({ title: '', description: '', status: 'Draft' });
   };
 
-  const { user } = useSelector((state) => state.auth);
-  const [avatar, setAvatar] = useState(null);
+  
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];

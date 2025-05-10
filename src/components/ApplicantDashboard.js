@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import AcademicQualifications from "./SidebarItems/AcademicQualifications"
 import WorkExperience from "./SidebarItems/WorkExperience";
 import LanguageProficiency from "./SidebarItems/LanguageProficiency";
@@ -8,13 +8,17 @@ import ComputerSkills from "./SidebarItems/ComputerSkills";
 
 
 const ApplicantDashboard = () => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(null);
-  const{ user } = useSelector((state) => state.auth);
+  const{ role, user } = useSelector((state) => state.auth);
   const [avatar, setAvatar] = useState(user?.avatar || null);
+  const navigate = useNavigate();
+  
+  if (role !== 'APPLICANT') {
+    return <Navigate to="/login" />;
+  }
 
   const sections = [
     {

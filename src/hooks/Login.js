@@ -7,10 +7,8 @@ import { useNavigate } from 'react-router-dom';
 const useLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, role, token } = useSelector((state) => state.auth);
+  const { user, role } = useSelector((state) => state.auth);
   const { loading, error } = useSelector((state) => state.auth);
-  const applicantId = role === 'APPLICANT' ? user?.id : null;
-  const employerId = role === 'EMPLOYER' ? user?.id : null;
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
@@ -22,15 +20,12 @@ const useLogin = () => {
       const result = await dispatch(loginUser(credentials));
 
       if (loginUser.fulfilled.match(result)) {
-        const role = result.payload.role?.toUpperCase();
-          
-        setTimeout(() => {
-          const redirectPath = role === 'APPLICANT' 
-            ? '/applicant_dashboard' 
-            : '/employer_dashboard'
- 
-          navigate(redirectPath);  
-        }, 50);
+        const role = result.payload.role;
+        
+        navigate(role === 'APPLICANT' 
+          ? '/applicant_dashboard' 
+          : '/employer_dashboard'
+        );  
       }
     } catch (err) {
       console.error('Login failed:', err);

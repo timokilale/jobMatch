@@ -8,28 +8,30 @@ import EmployerRegister from './components/EmployerRegister';
 import ApplicantDashboard from './components/ApplicantDashboard';
 import EmployerDashboard from './components/EmployerDashboard';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 
 function App() {
   return (
       <Routes>
-        <Route 
-          path="/" 
-          element={
-            <div className="bg-gray-50 min-h-screen">
-              <Header />
-              <Hero />
-            </div>
-        } />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/employer_register" element={<EmployerRegister />} />
+        
+      
         <Route element={<ProtectedRoute allowedRoles={['APPLICANT']} />}>
           <Route path="/applicant_dashboard" element={<ApplicantDashboard />} />
         </Route>
         <Route element={<ProtectedRoute allowedRoles={['EMPLOYER']} />}>
           <Route path="/employer_dashboard" element={<EmployerDashboard />} />
         </Route>
+        <Route path="/" element={
+          <div className="bg-gray-50 min-h-screen">
+            <Header />
+            <Hero />
+          </div>
+          }/>
       </Routes>
   );
 }
