@@ -8,8 +8,7 @@ import EmployerRegister from './components/EmployerRegister';
 import ApplicantDashboard from './components/ApplicantDashboard';
 import EmployerDashboard from './components/EmployerDashboard';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+
 
 
 function App() {

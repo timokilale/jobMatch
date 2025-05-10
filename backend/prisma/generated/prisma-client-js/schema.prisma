@@ -90,14 +90,18 @@ model AcademicQualification {
 }
 
 model WorkExperience {
-  id          Int       @id @default(autoincrement())
-  company     String
-  position    String
-  startDate   DateTime
-  endDate     DateTime?
-  description String?
-  applicantId Int
-  applicant   Applicant @relation(fields: [applicantId], references: [id])
+  id                 Int       @id @default(autoincrement())
+  institution        String
+  institutionAddress String?
+  jobTitle           String
+  startDate          DateTime
+  endDate            DateTime?
+  duties             String?
+  supervisorName     String?
+  supervisorTel      String?
+  supervisorAddress  String?
+  applicantId        Int
+  applicant          Applicant @relation(fields: [applicantId], references: [id])
 }
 
 model LanguageProficiency {

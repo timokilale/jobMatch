@@ -5,7 +5,6 @@ const prisma = require('./prisma');
 const routes = require('./routes');
 const cookieParser = require('cookie-parser');
 const qualificationRouter = require('./routes/qualifications');
-
 const app = express();
 
 
@@ -27,7 +26,7 @@ app.use(express.json());
 app.use('/api', routes);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/qualifications', qualificationRouter);
-app.use('/api/experience', require('./routes/workExperience'));
+app.use('/api/experiences', require('./routes/workExperience'));
 app.use('/api/languages', require('./routes/languageProficiency'));
 app.use('/api/skills', require('./routes/computerSkill'));
 app.use('/api/jobs', require('./routes/jobs'));

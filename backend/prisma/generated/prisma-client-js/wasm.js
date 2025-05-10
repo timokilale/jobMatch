@@ -178,11 +178,15 @@ exports.Prisma.AcademicQualificationScalarFieldEnum = {
 
 exports.Prisma.WorkExperienceScalarFieldEnum = {
   id: 'id',
-  company: 'company',
-  position: 'position',
+  institution: 'institution',
+  institutionAddress: 'institutionAddress',
+  jobTitle: 'jobTitle',
   startDate: 'startDate',
   endDate: 'endDate',
-  description: 'description',
+  duties: 'duties',
+  supervisorName: 'supervisorName',
+  supervisorTel: 'supervisorTel',
+  supervisorAddress: 'supervisorAddress',
   applicantId: 'applicantId'
 };
 
@@ -245,9 +249,13 @@ exports.Prisma.AcademicQualificationOrderByRelevanceFieldEnum = {
 };
 
 exports.Prisma.WorkExperienceOrderByRelevanceFieldEnum = {
-  company: 'company',
-  position: 'position',
-  description: 'description'
+  institution: 'institution',
+  institutionAddress: 'institutionAddress',
+  jobTitle: 'jobTitle',
+  duties: 'duties',
+  supervisorName: 'supervisorName',
+  supervisorTel: 'supervisorTel',
+  supervisorAddress: 'supervisorAddress'
 };
 
 exports.Prisma.LanguageProficiencyOrderByRelevanceFieldEnum = {

@@ -6,10 +6,23 @@ const {
         showForm,
         setShowForm,
         formData,
+        setFormData,
         handleChange,
         handleSave,
+        handleEdit,
+        handleDelete,
         savedWorkExperience
 } = Work();
+
+const formatDate = (isoDate) => {
+  if (!isoDate) return '';
+  return new Date(isoDate).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
 
   return (
     <div className="p-8 min-h-screen flex flex-col">
@@ -135,6 +148,26 @@ const {
           >
             Save
           </button>
+          <button
+            type="button"
+            onClick={() => {
+            setShowForm(false);
+            setFormData({
+              institution: '',
+              jobTitle: '',
+              supervisorName: '',
+              supervisorTel: '',
+              supervisorAddress: '',
+              institutionAddress: '',
+              duties: '',
+              startDate: '',
+              endDate: '',
+            });
+          }}
+           className="ml-4 bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors"
+          >
+           Cancel
+         </button>
         </div>
       </form>
       ) : (
@@ -150,9 +183,12 @@ const {
                       <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Institution</th>
                       <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Address</th>
                       <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Job Title</th>
+                      <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Duties</th>
                       <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Duration</th>
                       <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Supervisor</th>
                       <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Supervisor Contact</th>
+                      <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Supervisor Adress</th>
+                      <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -161,9 +197,27 @@ const {
                         <td className="p-3 text-sm text-green-800 border border-green-200">{exp.institution}</td>
                         <td className="p-3 text-sm text-green-800 border border-green-200">{exp.institutionAddress}</td>
                         <td className="p-3 text-sm text-green-800 border border-green-200">{exp.jobTitle}</td>
-                        <td className="p-3 text-sm text-green-800 border border-green-200">{`${exp.startDate} - ${exp.endDate}`}</td>
+                        <td className="p-3 text-sm text-green-800 border border-green-200">{exp.duties}</td>
+                        <td className="p-3 text-sm text-green-800 border border-green-200">
+                            {`${formatDate(exp.startDate)} - ${formatDate(exp.endDate)}`}
+                        </td>
                         <td className="p-3 text-sm text-green-800 border border-green-200">{exp.supervisorName}</td>
                         <td className="p-3 text-sm text-green-800 border border-green-200">{exp.supervisorTel}</td>
+                        <td className="p-3 text-sm text-green-800 border border-green-200">{exp.supervisorAddress}</td>
+                        <td className="p-3 text-sm text-green-800 border border-green-200 text-center">
+                          <button
+                            onClick={() => handleEdit(exp)}
+                            className="text-gray-600 mr-4"
+                          >
+                            <i className="fas fa-pen"></i>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(exp.id)}
+                            className="text-green-600 "
+                          >
+                            <i className="fas fa-trash"></i>
+                          </button>
+                         </td>
                       </tr>
                     ))}
                   </tbody>
