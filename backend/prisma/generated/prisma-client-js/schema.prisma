@@ -107,7 +107,9 @@ model WorkExperience {
 model LanguageProficiency {
   id          Int       @id @default(autoincrement())
   language    String
-  proficiency String
+  speak       String
+  read        String
+  write       String
   applicantId Int
   applicant   Applicant @relation(fields: [applicantId], references: [id])
 }

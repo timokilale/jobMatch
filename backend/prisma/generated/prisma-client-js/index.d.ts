@@ -8866,21 +8866,27 @@ export namespace Prisma {
   export type LanguageProficiencyMinAggregateOutputType = {
     id: number | null
     language: string | null
-    proficiency: string | null
+    speak: string | null
+    read: string | null
+    write: string | null
     applicantId: number | null
   }
 
   export type LanguageProficiencyMaxAggregateOutputType = {
     id: number | null
     language: string | null
-    proficiency: string | null
+    speak: string | null
+    read: string | null
+    write: string | null
     applicantId: number | null
   }
 
   export type LanguageProficiencyCountAggregateOutputType = {
     id: number
     language: number
-    proficiency: number
+    speak: number
+    read: number
+    write: number
     applicantId: number
     _all: number
   }
@@ -8899,21 +8905,27 @@ export namespace Prisma {
   export type LanguageProficiencyMinAggregateInputType = {
     id?: true
     language?: true
-    proficiency?: true
+    speak?: true
+    read?: true
+    write?: true
     applicantId?: true
   }
 
   export type LanguageProficiencyMaxAggregateInputType = {
     id?: true
     language?: true
-    proficiency?: true
+    speak?: true
+    read?: true
+    write?: true
     applicantId?: true
   }
 
   export type LanguageProficiencyCountAggregateInputType = {
     id?: true
     language?: true
-    proficiency?: true
+    speak?: true
+    read?: true
+    write?: true
     applicantId?: true
     _all?: true
   }
@@ -9007,7 +9019,9 @@ export namespace Prisma {
   export type LanguageProficiencyGroupByOutputType = {
     id: number
     language: string
-    proficiency: string
+    speak: string
+    read: string
+    write: string
     applicantId: number
     _count: LanguageProficiencyCountAggregateOutputType | null
     _avg: LanguageProficiencyAvgAggregateOutputType | null
@@ -9033,7 +9047,9 @@ export namespace Prisma {
   export type LanguageProficiencySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     language?: boolean
-    proficiency?: boolean
+    speak?: boolean
+    read?: boolean
+    write?: boolean
     applicantId?: boolean
     applicant?: boolean | ApplicantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["languageProficiency"]>
@@ -9043,11 +9059,13 @@ export namespace Prisma {
   export type LanguageProficiencySelectScalar = {
     id?: boolean
     language?: boolean
-    proficiency?: boolean
+    speak?: boolean
+    read?: boolean
+    write?: boolean
     applicantId?: boolean
   }
 
-  export type LanguageProficiencyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "language" | "proficiency" | "applicantId", ExtArgs["result"]["languageProficiency"]>
+  export type LanguageProficiencyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "language" | "speak" | "read" | "write" | "applicantId", ExtArgs["result"]["languageProficiency"]>
   export type LanguageProficiencyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     applicant?: boolean | ApplicantDefaultArgs<ExtArgs>
   }
@@ -9060,7 +9078,9 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       language: string
-      proficiency: string
+      speak: string
+      read: string
+      write: string
       applicantId: number
     }, ExtArgs["result"]["languageProficiency"]>
     composites: {}
@@ -9434,7 +9454,9 @@ export namespace Prisma {
   interface LanguageProficiencyFieldRefs {
     readonly id: FieldRef<"LanguageProficiency", 'Int'>
     readonly language: FieldRef<"LanguageProficiency", 'String'>
-    readonly proficiency: FieldRef<"LanguageProficiency", 'String'>
+    readonly speak: FieldRef<"LanguageProficiency", 'String'>
+    readonly read: FieldRef<"LanguageProficiency", 'String'>
+    readonly write: FieldRef<"LanguageProficiency", 'String'>
     readonly applicantId: FieldRef<"LanguageProficiency", 'Int'>
   }
     
@@ -10861,7 +10883,9 @@ export namespace Prisma {
   export const LanguageProficiencyScalarFieldEnum: {
     id: 'id',
     language: 'language',
-    proficiency: 'proficiency',
+    speak: 'speak',
+    read: 'read',
+    write: 'write',
     applicantId: 'applicantId'
   };
 
@@ -10961,7 +10985,9 @@ export namespace Prisma {
 
   export const LanguageProficiencyOrderByRelevanceFieldEnum: {
     language: 'language',
-    proficiency: 'proficiency'
+    speak: 'speak',
+    read: 'read',
+    write: 'write'
   };
 
   export type LanguageProficiencyOrderByRelevanceFieldEnum = (typeof LanguageProficiencyOrderByRelevanceFieldEnum)[keyof typeof LanguageProficiencyOrderByRelevanceFieldEnum]
@@ -11527,7 +11553,9 @@ export namespace Prisma {
     NOT?: LanguageProficiencyWhereInput | LanguageProficiencyWhereInput[]
     id?: IntFilter<"LanguageProficiency"> | number
     language?: StringFilter<"LanguageProficiency"> | string
-    proficiency?: StringFilter<"LanguageProficiency"> | string
+    speak?: StringFilter<"LanguageProficiency"> | string
+    read?: StringFilter<"LanguageProficiency"> | string
+    write?: StringFilter<"LanguageProficiency"> | string
     applicantId?: IntFilter<"LanguageProficiency"> | number
     applicant?: XOR<ApplicantScalarRelationFilter, ApplicantWhereInput>
   }
@@ -11535,7 +11563,9 @@ export namespace Prisma {
   export type LanguageProficiencyOrderByWithRelationInput = {
     id?: SortOrder
     language?: SortOrder
-    proficiency?: SortOrder
+    speak?: SortOrder
+    read?: SortOrder
+    write?: SortOrder
     applicantId?: SortOrder
     applicant?: ApplicantOrderByWithRelationInput
     _relevance?: LanguageProficiencyOrderByRelevanceInput
@@ -11547,7 +11577,9 @@ export namespace Prisma {
     OR?: LanguageProficiencyWhereInput[]
     NOT?: LanguageProficiencyWhereInput | LanguageProficiencyWhereInput[]
     language?: StringFilter<"LanguageProficiency"> | string
-    proficiency?: StringFilter<"LanguageProficiency"> | string
+    speak?: StringFilter<"LanguageProficiency"> | string
+    read?: StringFilter<"LanguageProficiency"> | string
+    write?: StringFilter<"LanguageProficiency"> | string
     applicantId?: IntFilter<"LanguageProficiency"> | number
     applicant?: XOR<ApplicantScalarRelationFilter, ApplicantWhereInput>
   }, "id">
@@ -11555,7 +11587,9 @@ export namespace Prisma {
   export type LanguageProficiencyOrderByWithAggregationInput = {
     id?: SortOrder
     language?: SortOrder
-    proficiency?: SortOrder
+    speak?: SortOrder
+    read?: SortOrder
+    write?: SortOrder
     applicantId?: SortOrder
     _count?: LanguageProficiencyCountOrderByAggregateInput
     _avg?: LanguageProficiencyAvgOrderByAggregateInput
@@ -11570,7 +11604,9 @@ export namespace Prisma {
     NOT?: LanguageProficiencyScalarWhereWithAggregatesInput | LanguageProficiencyScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"LanguageProficiency"> | number
     language?: StringWithAggregatesFilter<"LanguageProficiency"> | string
-    proficiency?: StringWithAggregatesFilter<"LanguageProficiency"> | string
+    speak?: StringWithAggregatesFilter<"LanguageProficiency"> | string
+    read?: StringWithAggregatesFilter<"LanguageProficiency"> | string
+    write?: StringWithAggregatesFilter<"LanguageProficiency"> | string
     applicantId?: IntWithAggregatesFilter<"LanguageProficiency"> | number
   }
 
@@ -12127,46 +12163,60 @@ export namespace Prisma {
 
   export type LanguageProficiencyCreateInput = {
     language: string
-    proficiency: string
+    speak: string
+    read: string
+    write: string
     applicant: ApplicantCreateNestedOneWithoutLanguagesInput
   }
 
   export type LanguageProficiencyUncheckedCreateInput = {
     id?: number
     language: string
-    proficiency: string
+    speak: string
+    read: string
+    write: string
     applicantId: number
   }
 
   export type LanguageProficiencyUpdateInput = {
     language?: StringFieldUpdateOperationsInput | string
-    proficiency?: StringFieldUpdateOperationsInput | string
+    speak?: StringFieldUpdateOperationsInput | string
+    read?: StringFieldUpdateOperationsInput | string
+    write?: StringFieldUpdateOperationsInput | string
     applicant?: ApplicantUpdateOneRequiredWithoutLanguagesNestedInput
   }
 
   export type LanguageProficiencyUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     language?: StringFieldUpdateOperationsInput | string
-    proficiency?: StringFieldUpdateOperationsInput | string
+    speak?: StringFieldUpdateOperationsInput | string
+    read?: StringFieldUpdateOperationsInput | string
+    write?: StringFieldUpdateOperationsInput | string
     applicantId?: IntFieldUpdateOperationsInput | number
   }
 
   export type LanguageProficiencyCreateManyInput = {
     id?: number
     language: string
-    proficiency: string
+    speak: string
+    read: string
+    write: string
     applicantId: number
   }
 
   export type LanguageProficiencyUpdateManyMutationInput = {
     language?: StringFieldUpdateOperationsInput | string
-    proficiency?: StringFieldUpdateOperationsInput | string
+    speak?: StringFieldUpdateOperationsInput | string
+    read?: StringFieldUpdateOperationsInput | string
+    write?: StringFieldUpdateOperationsInput | string
   }
 
   export type LanguageProficiencyUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     language?: StringFieldUpdateOperationsInput | string
-    proficiency?: StringFieldUpdateOperationsInput | string
+    speak?: StringFieldUpdateOperationsInput | string
+    read?: StringFieldUpdateOperationsInput | string
+    write?: StringFieldUpdateOperationsInput | string
     applicantId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -12801,7 +12851,9 @@ export namespace Prisma {
   export type LanguageProficiencyCountOrderByAggregateInput = {
     id?: SortOrder
     language?: SortOrder
-    proficiency?: SortOrder
+    speak?: SortOrder
+    read?: SortOrder
+    write?: SortOrder
     applicantId?: SortOrder
   }
 
@@ -12813,14 +12865,18 @@ export namespace Prisma {
   export type LanguageProficiencyMaxOrderByAggregateInput = {
     id?: SortOrder
     language?: SortOrder
-    proficiency?: SortOrder
+    speak?: SortOrder
+    read?: SortOrder
+    write?: SortOrder
     applicantId?: SortOrder
   }
 
   export type LanguageProficiencyMinOrderByAggregateInput = {
     id?: SortOrder
     language?: SortOrder
-    proficiency?: SortOrder
+    speak?: SortOrder
+    read?: SortOrder
+    write?: SortOrder
     applicantId?: SortOrder
   }
 
@@ -13783,13 +13839,17 @@ export namespace Prisma {
 
   export type LanguageProficiencyCreateWithoutApplicantInput = {
     language: string
-    proficiency: string
+    speak: string
+    read: string
+    write: string
   }
 
   export type LanguageProficiencyUncheckedCreateWithoutApplicantInput = {
     id?: number
     language: string
-    proficiency: string
+    speak: string
+    read: string
+    write: string
   }
 
   export type LanguageProficiencyCreateOrConnectWithoutApplicantInput = {
@@ -13966,7 +14026,9 @@ export namespace Prisma {
     NOT?: LanguageProficiencyScalarWhereInput | LanguageProficiencyScalarWhereInput[]
     id?: IntFilter<"LanguageProficiency"> | number
     language?: StringFilter<"LanguageProficiency"> | string
-    proficiency?: StringFilter<"LanguageProficiency"> | string
+    speak?: StringFilter<"LanguageProficiency"> | string
+    read?: StringFilter<"LanguageProficiency"> | string
+    write?: StringFilter<"LanguageProficiency"> | string
     applicantId?: IntFilter<"LanguageProficiency"> | number
   }
 
@@ -14598,7 +14660,9 @@ export namespace Prisma {
   export type LanguageProficiencyCreateManyApplicantInput = {
     id?: number
     language: string
-    proficiency: string
+    speak: string
+    read: string
+    write: string
   }
 
   export type ComputerSkillCreateManyApplicantInput = {
@@ -14699,19 +14763,25 @@ export namespace Prisma {
 
   export type LanguageProficiencyUpdateWithoutApplicantInput = {
     language?: StringFieldUpdateOperationsInput | string
-    proficiency?: StringFieldUpdateOperationsInput | string
+    speak?: StringFieldUpdateOperationsInput | string
+    read?: StringFieldUpdateOperationsInput | string
+    write?: StringFieldUpdateOperationsInput | string
   }
 
   export type LanguageProficiencyUncheckedUpdateWithoutApplicantInput = {
     id?: IntFieldUpdateOperationsInput | number
     language?: StringFieldUpdateOperationsInput | string
-    proficiency?: StringFieldUpdateOperationsInput | string
+    speak?: StringFieldUpdateOperationsInput | string
+    read?: StringFieldUpdateOperationsInput | string
+    write?: StringFieldUpdateOperationsInput | string
   }
 
   export type LanguageProficiencyUncheckedUpdateManyWithoutApplicantInput = {
     id?: IntFieldUpdateOperationsInput | number
     language?: StringFieldUpdateOperationsInput | string
-    proficiency?: StringFieldUpdateOperationsInput | string
+    speak?: StringFieldUpdateOperationsInput | string
+    read?: StringFieldUpdateOperationsInput | string
+    write?: StringFieldUpdateOperationsInput | string
   }
 
   export type ComputerSkillUpdateWithoutApplicantInput = {

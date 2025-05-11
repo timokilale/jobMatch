@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import LanguageProficiencyLogic from '../../hooks/Language';
 
-const LanguageProficiency = () => {
+const LanguageProficiency = ({ applicantId }) => {
   const languages = [
     "English", "Spanish", "French", "German", "Chinese", "Japanese",
     "Korean", "Arabic", "Portuguese", "Russian", "Hindi", "Bengali",
@@ -14,19 +14,16 @@ const LanguageProficiency = () => {
     setCurrentLanguage,
     proficiencies,
     handleProficiencyChange,
-    handleSave : hookHandleSave,
-    savedLanguages
-  } = LanguageProficiencyLogic();
+    handleSave,
+    savedLanguages,
+    handleEdit,
+    handleDelete,
+    showForm,
+    setShowForm,
+    clearForm,
+    editId,
+  } = LanguageProficiencyLogic(applicantId);
 
-  const [showForm, setShowForm] = useState(savedLanguages.length === 0);
-  
-  const handleSave = (e) => {
-    e.preventDefault();
-    const success = hookHandleSave(e);
-    if (success) {
-      setShowForm(false);
-    }
-  };
 
   return (
     <div className="p-6">
@@ -96,6 +93,7 @@ const LanguageProficiency = () => {
                   <th className="p-2 border border-green-200">Speak</th>
                   <th className="p-2 border border-green-200">Read</th>
                   <th className="p-2 border border-green-200">Write</th>
+                  <th className="p-2 border border-green-200">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -105,6 +103,9 @@ const LanguageProficiency = () => {
                     <td className="p-2 border border-green-200">{lang.speak}</td>
                     <td className="p-2 border border-green-200">{lang.read}</td>
                     <td className="p-2 border border-green-200">{lang.write}</td>
+                    <td className="p-2 border space-x-2">
+                      <button onClick={() => handleEdit(lang)} className="text-blue-600">Edit</button>
+                      <button onClick={() => handleDelete(lang.id)} className="text-red-600">Delete</button></td>
                   </tr>
                 ))}
               </tbody>

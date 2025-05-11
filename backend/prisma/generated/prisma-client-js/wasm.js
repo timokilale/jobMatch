@@ -193,7 +193,9 @@ exports.Prisma.WorkExperienceScalarFieldEnum = {
 exports.Prisma.LanguageProficiencyScalarFieldEnum = {
   id: 'id',
   language: 'language',
-  proficiency: 'proficiency',
+  speak: 'speak',
+  read: 'read',
+  write: 'write',
   applicantId: 'applicantId'
 };
 
@@ -260,7 +262,9 @@ exports.Prisma.WorkExperienceOrderByRelevanceFieldEnum = {
 
 exports.Prisma.LanguageProficiencyOrderByRelevanceFieldEnum = {
   language: 'language',
-  proficiency: 'proficiency'
+  speak: 'speak',
+  read: 'read',
+  write: 'write'
 };
 
 exports.Prisma.ComputerSkillOrderByRelevanceFieldEnum = {
