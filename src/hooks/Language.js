@@ -7,9 +7,10 @@ import {
   deleteLanguage
 } from '../redux/slices/languageSlice';
 
-const LanguageProficiencyLogic = (applicantId) => {
+const LanguageProficiencyLogic = () => {
   const dispatch = useDispatch();
-  const { items: savedLanguages } = useSelector((state) => state.language);
+  const savedLanguages = useSelector((state) => state.language?.items || []);
+  const applicantId = useSelector((state) => state.auth?.user?.id);
 
   const [currentLanguage, setCurrentLanguage] = useState('');
   const [proficiencies, setProficiencies] = useState({ speak: '', read: '', write: '' });
@@ -17,7 +18,9 @@ const LanguageProficiencyLogic = (applicantId) => {
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchLanguages(applicantId));
+    if (applicantId) {
+      dispatch(fetchLanguages(applicantId));
+    }
   }, [dispatch, applicantId]);
 
   const handleProficiencyChange = (skill, value) => {
@@ -26,6 +29,11 @@ const LanguageProficiencyLogic = (applicantId) => {
 
   const handleSave = (e) => {
     e.preventDefault();
+
+    if (!applicantId) {
+      alert ('Applicant ID missing');
+      return;
+    }
     if (!currentLanguage || !proficiencies.speak || !proficiencies.read || !proficiencies.write) {
       alert('All fields are required');
       return;
@@ -41,6 +49,7 @@ const LanguageProficiencyLogic = (applicantId) => {
         clearForm();
       });
     } else {
+      console.log('Submitting with applicantId:', applicantId);
       dispatch(addLanguage({ applicantId, ...data })).then(() => {
         clearForm();
       });

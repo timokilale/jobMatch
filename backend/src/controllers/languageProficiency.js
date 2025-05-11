@@ -2,23 +2,42 @@ const prisma = require('../prisma');
 
 exports.createLanguage = async (req, res) => {
   const { applicantId, language, speak, read, write } = req.body;
+  
+  if (!applicantId || isNaN(parseInt(applicantId))) {
+    return res.status(400).json({ error: 'Invalid applicant ID' });
+  }
 
   try {
     const lang = await prisma.languageProficiency.create({
-      data: { applicantId: parseInt(applicantId), language, speak, read, write }
+      data: { 
+        applicantId: parseInt(applicantId), 
+        language, 
+        speak, 
+        read, 
+        write
+      }
     });
     res.status(201).json(lang);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to add language proficiency' });
+    console.error('Error creating language:', err);
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
 exports.getLanguages = async (req, res) => {
+  const applicantId = parseInt(req.params.applicantId);
+
+  if (!applicantId || isNaN(applicantId)) {
+    return res.status(400).json({ error: 'Invalid applicantId'});
+  }
+
   try {
-    const applicantId = parseInt(req.params.applicantId);
-    const langs = await prisma.languageProficiency.findMany({ where: { applicantId } });
+    const langs = await prisma.languageProficiency.findMany({ 
+      where: { applicantId } 
+    });
     res.json(langs);
   } catch (error) {
+    console.error('Get languages error:', error);
     res.status(500).json({ error: 'Failed to fetch language proficiencies' });
   }
 };

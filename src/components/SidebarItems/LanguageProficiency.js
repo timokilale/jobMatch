@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import LanguageProficiencyLogic from '../../hooks/Language';
 
-const LanguageProficiency = ({ applicantId }) => {
+const LanguageProficiency = () => {
   const languages = [
     "English", "Spanish", "French", "German", "Chinese", "Japanese",
     "Korean", "Arabic", "Portuguese", "Russian", "Hindi", "Bengali",
@@ -22,7 +22,7 @@ const LanguageProficiency = ({ applicantId }) => {
     setShowForm,
     clearForm,
     editId,
-  } = LanguageProficiencyLogic(applicantId);
+  } = LanguageProficiencyLogic();
 
 
   return (
@@ -73,12 +73,19 @@ const LanguageProficiency = ({ applicantId }) => {
             ))}
           </div>
 
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 flex space-x-4">
             <button
               type="submit"
               className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md transition-colors"
             >
-              Add Language
+              {editId ? 'Update' : 'Add Language'}
+            </button>
+            <button
+              type="button"
+              onClick={clearForm}
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-md transition-colors"
+            >
+              cancel
             </button>
           </div>
         </form>
@@ -88,7 +95,7 @@ const LanguageProficiency = ({ applicantId }) => {
           <div className="mt-4">
             <table className="w-full border-collapse border border-green-200">
               <thead>
-                <tr className="bg-green-100">
+                <tr className="bg-green-100 text-green-800">
                   <th className="p-2 border border-green-200">Language</th>
                   <th className="p-2 border border-green-200">Speak</th>
                   <th className="p-2 border border-green-200">Read</th>
@@ -103,9 +110,20 @@ const LanguageProficiency = ({ applicantId }) => {
                     <td className="p-2 border border-green-200">{lang.speak}</td>
                     <td className="p-2 border border-green-200">{lang.read}</td>
                     <td className="p-2 border border-green-200">{lang.write}</td>
-                    <td className="p-2 border space-x-2">
-                      <button onClick={() => handleEdit(lang)} className="text-blue-600">Edit</button>
-                      <button onClick={() => handleDelete(lang.id)} className="text-red-600">Delete</button></td>
+                    <td className="p-2 border border-green-200 min-w-[120px] space-x-2">
+                      <button 
+                        onClick={() => handleEdit(lang)} 
+                        className="text-gray-600 mr-4"
+                      >
+                        <i className="fas fa-pen"></i>
+                      </button>
+                      <button 
+                        onClick={() => handleDelete(lang.id)} 
+                        className="text-green-600 "
+                      >
+                        <i className="fas fa-trash"></i>
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
