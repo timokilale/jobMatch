@@ -7,13 +7,14 @@ import authReducer from './slices/authSlice'; // relative to store.js
 import qualificationReducer from './slices/qualificationSlice'; 
 import workExperienceReducer from './slices/workSlice';
 import languageReducer from './slices/languageSlice';
-
+import computerSkillReducer from './slices/computerSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
   qualifications: qualificationReducer,
   experience: workExperienceReducer,
   language: languageReducer,
+  computerSkill: computerSkillReducer,
 });
 
 const persistConfig = {

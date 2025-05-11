@@ -1,26 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
+import Computer from '../../hooks/Computer';
 
 const ComputerSkills = () => {
+  const {
+    showForm,
+    setShowForm,
+    currentSkill,
+    setCurrentSkill,
+    skillLevel,
+    setSkillLevel,
+    handleSave,
+    skills,
+    handleDelete,
+    setEditingId
+  } = Computer();
+
   const computerSkills = [
     "Excel", "PowerPoint", "Word", "Access", "OneNote", "Publisher", "Other"
   ];
 
-  const [showForm, setShowForm] = useState(true);
-  const [currentSkill, setCurrentSkill] = useState('');
-  const [skillLevel, setSkillLevel] = useState('');
-  const [savedSkills, setSavedSkills] = useState([]);
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    if (currentSkill && skillLevel) {
-      setSavedSkills(prev => [...prev, { skill: currentSkill, level: skillLevel }]);
-      setCurrentSkill('');
-      setSkillLevel('');
-      setShowForm(false);
-    } else {
-      alert('Please select both a skill and rating');
-    }
-  };
 
   return (
     <div className="p-6">
@@ -71,26 +69,46 @@ const ComputerSkills = () => {
                 type="submit" 
                 className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md transition-colors"
               >
-                Save Skill
+                Save
               </button>
             </div>
           </form>
         ) : (
           <>
-            {savedSkills.length > 0 && (
+            {skills.length > 0 && (
               <div className="mt-6">
                 <table className="w-full border-collapse border border-green-200">
                   <thead>
                     <tr className="bg-green-100">
                       <th className="p-2 border border-green-200">Skill</th>
                       <th className="p-2 border border-green-200">Level</th>
+                      <th className="p-2 border border-green-200">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {savedSkills.map((skill, index) => (
-                      <tr key={index} className="hover:bg-green-50">
+                    {skills.map((skill) => (
+                      <tr key={skill.id} className="hover:bg-green-50">
                         <td className="p-2 border border-green-200">{skill.skill}</td>
-                        <td className="p-2 border border-green-200">{skill.level}</td>
+                        <td className="p-2 border border-green-200">{skill.proficiency}</td>
+                        <td className="p-2 border border-green-200 space-x-2">
+                          <button
+                            onClick={() => {
+                              setCurrentSkill(skill.skill);
+                              setSkillLevel(skill.proficiency);
+                              setEditingId(skill.id); 
+                              setShowForm(true);
+                            }}
+                             className="text-gray-600 mr-4"
+                          >
+                            <i className="fas fa-pen"></i>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(skill.id)}
+                            className="text-green-600 "
+                          >
+                           <i className="fas fa-trash"></i>
+                          </button>
+                       </td>
                       </tr>
                     ))}
                   </tbody>

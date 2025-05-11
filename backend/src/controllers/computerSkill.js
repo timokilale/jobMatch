@@ -22,3 +22,29 @@ exports.getSkills = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch computer skills' });
   }
 };
+
+exports.updateSkill = async (req, res) => {
+  const { id } = req.params;
+  const { skill, proficiency } = req.body;
+
+  try {
+    const updatedSkill = await prisma.computerSkill.update({
+      where: { id: parseInt(id) },
+      data: { skill, proficiency }
+    });
+    res.json(updatedSkill);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update skill' });
+  }
+};
+
+exports.deleteSkill = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await prisma.computerSkill.delete({ where: { id: parseInt(id) } });
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete skill' });
+  }
+};
