@@ -79,7 +79,7 @@ const ComputerSkills = () => {
               <div className="mt-6">
                 <table className="w-full border-collapse border border-green-200">
                   <thead>
-                    <tr className="bg-green-100">
+                    <tr className="bg-green-100 text-green-700">
                       <th className="p-2 border border-green-200">Skill</th>
                       <th className="p-2 border border-green-200">Level</th>
                       <th className="p-2 border border-green-200">Actions</th>
