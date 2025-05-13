@@ -14,11 +14,15 @@ PORT=5000
 
 ## Database set up and migrations
 ## 1. Create database called job_match
-## 2. Initialize prisma in backend and run migrations
+## 2. Install prisma CLI and client
+  run : i. npm install prisma --save-dev
+        ii. npm install @prisma/client
+
+## 3. Initialize prisma in backend and run migrations
      in your backend terminal run to initialize prisma
-        i. npx prisma init
-        ii. npx peisma generate
-        iii. npx prisma migrate dev
+    run : i. npx prisma init
+          ii. npx peisma generate
+          iii. npx prisma migrate dev
 following above will migate all database tables from prisma schema to database created automatically
 
 ## Start up your project
