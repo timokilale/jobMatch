@@ -129,6 +129,12 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.JobCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description'
+};
+
 exports.Prisma.ApplicantScalarFieldEnum = {
   id: 'id',
   fullName: 'fullName',
@@ -217,6 +223,16 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   password: 'password'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
+exports.Prisma.JobCategoryOrderByRelevanceFieldEnum = {
+  name: 'name',
+  description: 'description'
+};
+
 exports.Prisma.ApplicantOrderByRelevanceFieldEnum = {
   fullName: 'fullName',
   nida: 'nida'
@@ -225,11 +241,6 @@ exports.Prisma.ApplicantOrderByRelevanceFieldEnum = {
 exports.Prisma.EmployerOrderByRelevanceFieldEnum = {
   companyName: 'companyName',
   address: 'address'
-};
-
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
 };
 
 exports.Prisma.JobOrderByRelevanceFieldEnum = {
@@ -279,6 +290,7 @@ exports.Role = exports.$Enums.Role = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  JobCategory: 'JobCategory',
   Applicant: 'Applicant',
   Employer: 'Employer',
   Job: 'Job',

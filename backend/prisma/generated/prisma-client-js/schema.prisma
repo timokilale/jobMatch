@@ -25,6 +25,14 @@ model User {
   employer  Employer?
 }
 
+model JobCategory {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  description String?
+  applicants  Applicant[] @relation("ApplicantCategories")
+  jobs        Job[]       @relation("JobCategories")
+}
+
 model Applicant {
   id        Int      @id @default(autoincrement())
   fullName  String
@@ -38,6 +46,8 @@ model Applicant {
   experiences    WorkExperience[]
   languages      LanguageProficiency[]
   skills         ComputerSkill[]
+
+  categories JobCategory[] @relation("ApplicantCategories")
 }
 
 model Employer {
@@ -64,6 +74,8 @@ model Job {
   updatedAt   DateTime @updatedAt
 
   applications Application[]
+
+  categories JobCategory[] @relation("JobCategories")
 }
 
 model Application {

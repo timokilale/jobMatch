@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const registerApplicant = async (req, res) => {
   try {
-    const { email, password, fullName, nida } = req.body;
+    const { email, password, fullName, nida, categoryIds } = req.body;
     
     const hashedPassword = await bcrypt.hash(password, 10);
     
@@ -17,7 +17,10 @@ const registerApplicant = async (req, res) => {
         applicant: {
           create: {
             fullName,
-            nida
+            nida,
+            categories: {
+              connect: categoryIds.map(id => ({ id }))
+            }
           }
         }
       },

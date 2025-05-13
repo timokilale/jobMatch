@@ -2,7 +2,7 @@
 const prisma = require('../prisma');
 
 exports.createJob = async (req, res) => {
-  const { title, description, location, employerId, status= 'Draft'} = req.body;
+  const {  title, description, location, employerId, status = 'Draft', categoryIds = []} = req.body;
   try {
     const job = await prisma.job.create({
       data: {
@@ -10,7 +10,10 @@ exports.createJob = async (req, res) => {
         description,
         location,
         status,
-        employerId: parseInt(employerId)
+        employerId: parseInt(employerId),
+        categories: {
+          connect: categoryIds.map(id => ({ id }))
+        }
       }
     });
     res.status(201).json(job);
@@ -28,6 +31,37 @@ exports.getEmployerJobs = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch jobs' });
   }
 };
+
+exports.getApplicantJobs = async (req, res) => {
+  const applicantId = parseInt(req.params.id);
+  try {
+    const applicant = await prisma.applicant.findUnique({
+      where: { id: applicantId},
+      include: { categories: true}
+    });
+
+    if (!applicant) {
+      return res.status(404).json({ error: 'Applicant not found'});
+    }
+
+    const jobs = await prisma.job.findMany({
+      where: {
+        categories: {
+          some: {
+            id: {
+              in: applicant.categories.map(cat => cat.id)
+            }
+          }
+        }
+      }
+    });
+    res.json(jobs);
+  } catch (error) {
+    console.error('Error feching jobs for applicant:', error);
+    res.status(500).json({ error: 'Internal server error'});
+  }
+};
+
 
 exports.updateJob = async (req, res) => {
   const jobId = parseInt(req.params.id);

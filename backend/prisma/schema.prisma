@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "./generated/prisma-client-js"
 }
 
 datasource db {
@@ -25,6 +24,14 @@ model User {
   employer  Employer?
 }
 
+model JobCategory {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  description String?
+  applicants  Applicant[]  @relation("ApplicantCategories")
+  jobs        Job[]        @relation("JobCategories")
+}
+
 model Applicant {
   id          Int      @id @default(autoincrement())
   fullName    String
@@ -32,13 +39,16 @@ model Applicant {
   userId      Int      @unique
   user        User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
-  
+
   applications Application[]
   qualifications AcademicQualification[]
   experiences    WorkExperience[]
   languages      LanguageProficiency[]
   skills         ComputerSkill[]
+
+  categories     JobCategory[] @relation("ApplicantCategories")
 }
+
 
 model Employer {
   id         Int      @id @default(autoincrement())
@@ -62,9 +72,12 @@ model Job {
   employer    Employer @relation(fields: [employerId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
+
   applications Application[]
+
+  categories   JobCategory[] @relation("JobCategories")
 }
+
 
 model Application {
   id          Int      @id @default(autoincrement())
