@@ -3,22 +3,27 @@ import api from '../../api/api';
 
 
 
-export const fetchSkills = createAsyncThunk('computerSkill/fetchSkills', async (applicantId) => {
+export const fetchSkills = createAsyncThunk(
+  'computerSkill/fetchSkills', 
+  async (applicantId) => {
   const res = await api.get(`/skills/${applicantId}`);
   return res.data;
 });
 
-export const createSkill = createAsyncThunk('computerSkill/createSkill', async (data) => {
+export const createSkill = createAsyncThunk('computerSkill/createSkill', 
+  async (data) => {
   const res = await api.post('/skills', data);
   return res.data;
 });
 
-export const updateSkill = createAsyncThunk('computerSkill/updateSkill', async ({ id, ...rest }) => {
+export const updateSkill = createAsyncThunk('computerSkill/updateSkill', 
+  async ({ id, ...rest }) => {
   const res = await api.put(`/skills/${id}`, rest);
   return res.data;
 });
 
-export const deleteSkill = createAsyncThunk('computerSkill/deleteSkill', async (id) => {
+export const deleteSkill = createAsyncThunk('computerSkill/deleteSkill', 
+  async (id) => {
   await api.delete(`/skills/${id}`);
   return id;
 });

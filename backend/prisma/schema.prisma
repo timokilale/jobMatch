@@ -57,6 +57,7 @@ model Job {
   description String
   location    String?
   status      String   @default("DRAFT")
+  applicants  Int      @default(0)
   employerId  Int
   employer    Employer @relation(fields: [employerId], references: [id])
   createdAt   DateTime @default(now())

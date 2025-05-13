@@ -4806,11 +4806,13 @@ export namespace Prisma {
 
   export type JobAvgAggregateOutputType = {
     id: number | null
+    applicants: number | null
     employerId: number | null
   }
 
   export type JobSumAggregateOutputType = {
     id: number | null
+    applicants: number | null
     employerId: number | null
   }
 
@@ -4820,6 +4822,7 @@ export namespace Prisma {
     description: string | null
     location: string | null
     status: string | null
+    applicants: number | null
     employerId: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4831,6 +4834,7 @@ export namespace Prisma {
     description: string | null
     location: string | null
     status: string | null
+    applicants: number | null
     employerId: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4842,6 +4846,7 @@ export namespace Prisma {
     description: number
     location: number
     status: number
+    applicants: number
     employerId: number
     createdAt: number
     updatedAt: number
@@ -4851,11 +4856,13 @@ export namespace Prisma {
 
   export type JobAvgAggregateInputType = {
     id?: true
+    applicants?: true
     employerId?: true
   }
 
   export type JobSumAggregateInputType = {
     id?: true
+    applicants?: true
     employerId?: true
   }
 
@@ -4865,6 +4872,7 @@ export namespace Prisma {
     description?: true
     location?: true
     status?: true
+    applicants?: true
     employerId?: true
     createdAt?: true
     updatedAt?: true
@@ -4876,6 +4884,7 @@ export namespace Prisma {
     description?: true
     location?: true
     status?: true
+    applicants?: true
     employerId?: true
     createdAt?: true
     updatedAt?: true
@@ -4887,6 +4896,7 @@ export namespace Prisma {
     description?: true
     location?: true
     status?: true
+    applicants?: true
     employerId?: true
     createdAt?: true
     updatedAt?: true
@@ -4985,6 +4995,7 @@ export namespace Prisma {
     description: string
     location: string | null
     status: string
+    applicants: number
     employerId: number
     createdAt: Date
     updatedAt: Date
@@ -5015,6 +5026,7 @@ export namespace Prisma {
     description?: boolean
     location?: boolean
     status?: boolean
+    applicants?: boolean
     employerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5031,12 +5043,13 @@ export namespace Prisma {
     description?: boolean
     location?: boolean
     status?: boolean
+    applicants?: boolean
     employerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "location" | "status" | "employerId" | "createdAt" | "updatedAt", ExtArgs["result"]["job"]>
+  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "location" | "status" | "applicants" | "employerId" | "createdAt" | "updatedAt", ExtArgs["result"]["job"]>
   export type JobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     employer?: boolean | EmployerDefaultArgs<ExtArgs>
     applications?: boolean | Job$applicationsArgs<ExtArgs>
@@ -5055,6 +5068,7 @@ export namespace Prisma {
       description: string
       location: string | null
       status: string
+      applicants: number
       employerId: number
       createdAt: Date
       updatedAt: Date
@@ -5434,6 +5448,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Job", 'String'>
     readonly location: FieldRef<"Job", 'String'>
     readonly status: FieldRef<"Job", 'String'>
+    readonly applicants: FieldRef<"Job", 'Int'>
     readonly employerId: FieldRef<"Job", 'Int'>
     readonly createdAt: FieldRef<"Job", 'DateTime'>
     readonly updatedAt: FieldRef<"Job", 'DateTime'>
@@ -10829,6 +10844,7 @@ export namespace Prisma {
     description: 'description',
     location: 'location',
     status: 'status',
+    applicants: 'applicants',
     employerId: 'employerId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -11253,6 +11269,7 @@ export namespace Prisma {
     description?: StringFilter<"Job"> | string
     location?: StringNullableFilter<"Job"> | string | null
     status?: StringFilter<"Job"> | string
+    applicants?: IntFilter<"Job"> | number
     employerId?: IntFilter<"Job"> | number
     createdAt?: DateTimeFilter<"Job"> | Date | string
     updatedAt?: DateTimeFilter<"Job"> | Date | string
@@ -11266,6 +11283,7 @@ export namespace Prisma {
     description?: SortOrder
     location?: SortOrderInput | SortOrder
     status?: SortOrder
+    applicants?: SortOrder
     employerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11283,6 +11301,7 @@ export namespace Prisma {
     description?: StringFilter<"Job"> | string
     location?: StringNullableFilter<"Job"> | string | null
     status?: StringFilter<"Job"> | string
+    applicants?: IntFilter<"Job"> | number
     employerId?: IntFilter<"Job"> | number
     createdAt?: DateTimeFilter<"Job"> | Date | string
     updatedAt?: DateTimeFilter<"Job"> | Date | string
@@ -11296,6 +11315,7 @@ export namespace Prisma {
     description?: SortOrder
     location?: SortOrderInput | SortOrder
     status?: SortOrder
+    applicants?: SortOrder
     employerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11315,6 +11335,7 @@ export namespace Prisma {
     description?: StringWithAggregatesFilter<"Job"> | string
     location?: StringNullableWithAggregatesFilter<"Job"> | string | null
     status?: StringWithAggregatesFilter<"Job"> | string
+    applicants?: IntWithAggregatesFilter<"Job"> | number
     employerId?: IntWithAggregatesFilter<"Job"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
@@ -11864,6 +11885,7 @@ export namespace Prisma {
     description: string
     location?: string | null
     status?: string
+    applicants?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     employer: EmployerCreateNestedOneWithoutJobsInput
@@ -11876,6 +11898,7 @@ export namespace Prisma {
     description: string
     location?: string | null
     status?: string
+    applicants?: number
     employerId: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11887,6 +11910,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    applicants?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employer?: EmployerUpdateOneRequiredWithoutJobsNestedInput
@@ -11899,6 +11923,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    applicants?: IntFieldUpdateOperationsInput | number
     employerId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11911,6 +11936,7 @@ export namespace Prisma {
     description: string
     location?: string | null
     status?: string
+    applicants?: number
     employerId: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11921,6 +11947,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    applicants?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11931,6 +11958,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    applicants?: IntFieldUpdateOperationsInput | number
     employerId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12600,6 +12628,7 @@ export namespace Prisma {
     description?: SortOrder
     location?: SortOrder
     status?: SortOrder
+    applicants?: SortOrder
     employerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -12607,6 +12636,7 @@ export namespace Prisma {
 
   export type JobAvgOrderByAggregateInput = {
     id?: SortOrder
+    applicants?: SortOrder
     employerId?: SortOrder
   }
 
@@ -12616,6 +12646,7 @@ export namespace Prisma {
     description?: SortOrder
     location?: SortOrder
     status?: SortOrder
+    applicants?: SortOrder
     employerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -12627,6 +12658,7 @@ export namespace Prisma {
     description?: SortOrder
     location?: SortOrder
     status?: SortOrder
+    applicants?: SortOrder
     employerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -12634,6 +12666,7 @@ export namespace Prisma {
 
   export type JobSumOrderByAggregateInput = {
     id?: SortOrder
+    applicants?: SortOrder
     employerId?: SortOrder
   }
 
@@ -14087,6 +14120,7 @@ export namespace Prisma {
     description: string
     location?: string | null
     status?: string
+    applicants?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     applications?: ApplicationCreateNestedManyWithoutJobInput
@@ -14098,6 +14132,7 @@ export namespace Prisma {
     description: string
     location?: string | null
     status?: string
+    applicants?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     applications?: ApplicationUncheckedCreateNestedManyWithoutJobInput
@@ -14168,6 +14203,7 @@ export namespace Prisma {
     description?: StringFilter<"Job"> | string
     location?: StringNullableFilter<"Job"> | string | null
     status?: StringFilter<"Job"> | string
+    applicants?: IntFilter<"Job"> | number
     employerId?: IntFilter<"Job"> | number
     createdAt?: DateTimeFilter<"Job"> | Date | string
     updatedAt?: DateTimeFilter<"Job"> | Date | string
@@ -14263,6 +14299,7 @@ export namespace Prisma {
     description: string
     location?: string | null
     status?: string
+    applicants?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     employer: EmployerCreateNestedOneWithoutJobsInput
@@ -14274,6 +14311,7 @@ export namespace Prisma {
     description: string
     location?: string | null
     status?: string
+    applicants?: number
     employerId: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14328,6 +14366,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    applicants?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employer?: EmployerUpdateOneRequiredWithoutJobsNestedInput
@@ -14339,6 +14378,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    applicants?: IntFieldUpdateOperationsInput | number
     employerId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14807,6 +14847,7 @@ export namespace Prisma {
     description: string
     location?: string | null
     status?: string
+    applicants?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14816,6 +14857,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    applicants?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     applications?: ApplicationUpdateManyWithoutJobNestedInput
@@ -14827,6 +14869,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    applicants?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     applications?: ApplicationUncheckedUpdateManyWithoutJobNestedInput
@@ -14838,6 +14881,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    applicants?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

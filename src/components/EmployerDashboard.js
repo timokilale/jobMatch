@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
+import JobPostingsSection from './JobPostings';
+import { useJobs } from '../hooks/useJobs';
 
 
 const EmployerDashboard = () => {
-   const [recentApplications, setRecentApplications] = useState([]);
-   const [jobPostings, setJobPostings] = useState([]);
-   const [showJobModal, setShowJobModal] = useState(false);
-   const [newJob, setNewJob] = useState({
-      title: '',
-      description: '',
-      status: 'Draft'
-   });
-   const [avatar, setAvatar] = useState(null);
-   const { role, user } = useSelector((state) => state.auth);
-   const activeJobs = jobPostings.filter(job => job.status === 'Active').length;
-   const interviewing = recentApplications.filter(app => app.status === 'interview').length;
-   const newApplications = recentApplications.length;
+  const [recentApplications, setRecentApplications] = useState([]);
+  const [avatar, setAvatar] = useState(null);
+  const { role, user } = useSelector((state) => state.auth);
+  
+  const { jobPostings, loading: jobsLoading } = useJobs(user?.id);
+  
+  const activeJobs = jobPostings.filter(job => job.status === 'Active').length;
+  const interviewing = recentApplications.filter(app => app.status === 'interview').length;
+  const newApplications = recentApplications.length;
    const stats = [
     { 
       title: 'Active Jobs', 
@@ -39,18 +37,6 @@ const EmployerDashboard = () => {
   return <Navigate to="/login" />;
 }
    
-  const handleNewJob = (e) => {
-    e.preventDefault();
-    setJobPostings([...jobPostings, {
-      title: newJob.title,
-      applicants: 0,
-      status: newJob.status
-    }]);
-    setShowJobModal(false);
-    setNewJob({ title: '', description: '', status: 'Draft' });
-  };
-
-  
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -117,33 +103,15 @@ const EmployerDashboard = () => {
             <hr className="border-t border-green-700 w-full my-4" />
 
             <div className="w-full space-y-2 mt-2">
-          <button className="w-full flex items-center space-x-2 px-2 py-1.5 bg-green-100 text-green-800 rounded-lg">
-            <i className="fas fa-briefcase text-green-700"></i>
-            <span>Dashboard</span>
-          </button>
-          <button className="w-full flex items-center space-x-2 px-2 py-1.5 text-green-600 hover:bg-green-100 rounded-lg">
-            <i className="fas fa-users text-green-700"></i>
-            <span>Candidates</span>
-          </button>
-          <button className="w-full flex items-center space-x-2 px-2 py-1.5 text-green-600 hover:bg-green-100 rounded-lg">
-            <i className="fas fa-chart-bar text-green-700"></i>
-            <span>Analytics</span>
-          </button>
-          <button className="w-full flex items-center space-x-2 px-2 py-1.5 text-green-600 hover:bg-green-100 rounded-lg">
-            <i className="fas fa-envelope text-green-700"></i>
-            <span>Messages</span>
-          </button>
-          <button className="w-full flex items-center space-x-2 px-2 py-1.5 text-green-600 hover:bg-green-100 rounded-lg">
-            <i className="fas fa-cog text-green-700"></i>
-            <span>Settings</span>
-          </button>
-          <button className="w-full flex items-center space-x-2 px-2 py-2 text-green-600 hover:bg-green-100 rounded-lg">
-            <i className="fas fa-sign-out-alt text-green-700"></i>
-            <span>Logout</span>
-          </button>
-        </div>
-      </div>
-    </nav>
+              {['Dashboard', 'Candidates', 'Analytics', 'Messages', 'Settings', 'Logout'].map((label, i) => (
+                 <button key={i} className="w-full flex items-center space-x-2 px-2 py-1.5 text-green-600 hover:bg-green-100 rounded-lg">
+                   <i className={`fas fa-${label.toLowerCase()} text-green-700`}></i>
+                   <span>{label}</span>
+                 </button>
+              ))}
+            </div>
+          </div>
+        </nav>
 
         {/* Main Content */}
         <main className="flex-1">
@@ -161,18 +129,18 @@ const EmployerDashboard = () => {
           {/* Recent Applications */}
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
              {recentApplications.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                    <i className="fas fa-file-alt text-6xl text-green-600"></i> 
-                    <p className=" text-gray-500 font-medium">No applications yet</p>
+                 <div className="flex flex-col items-center py-12 space-y-4">
+                    <i className="fas fa-file-alt text-6xl text-green-600"></i>
+                    <p className="text-gray-500 font-medium">No applications yet</p>
                   </div>
-              ): (
+              ) : (
                  <>
                   <div className="flex justify-between items-center mb-4">
-                      <h2 className="text-lg font-semibold">Recent Applications</h2>
+                    <h2 className="text-lg font-semibold">Recent Applications</h2>
                       {recentApplications.length > 3 && (
-                          <button className="text-green-600 hover:text-green-800">
-                            View All →
-                          </button>
+                        <button className="text-green-600 hover:text-green-800">
+                          View All →
+                        </button>
                       )}
                   </div>
                   <div className="space-y-4">
@@ -202,127 +170,9 @@ const EmployerDashboard = () => {
               )}    
           </div>
 
-          {/* Job Postings */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Posted Jobs</h2>
-              <button 
-                onClick={() => setShowJobModal(true)}
-                className="bg-green-600 hover:bg-green-700 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-200">
-                 <i className="fas fa-plus text-xl"></i>
-              </button>
-            </div>
-            {jobPostings.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                  <i className="fas fa-file-alt text-6xl text-green-600"></i>
-                  <p className=" text-gray-600 font-medium">No jobs posted yet</p>
-
-                  <button 
-                    onClick={() => setShowJobModal(true)}
-                    className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700">
-                    Add Your First Job
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                {jobPostings.map((job, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded">
-                    <div>
-                      <h4 className="font-medium">{job.title}</h4>
-                      <p className="text-sm text-green-600">
-                        {job.applicants} applicants
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                      <span className={`px-2 py-1 text-sm rounded-full ${
-                        job.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-green-800'
-                      }`}>
-                        {job.status}
-                      </span>
-                      <button className="text-gray-400 hover:text-gray-600">
-                        Edit
-                      </button>
-                      <button className="text-red-400 hover:text-red-600">
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              )}
-         
-          </div>
+          <JobPostingsSection employerId={user?.id} />
         </main>
       </div>
-
-      {showJobModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg max-w-2xl mx-auto mt-20">
-            <div className="flex justify-between items-center mb-4">
-             <h3 className="text-xl text-green-800 font-bold mb-4 ">Create New Job Posting</h3>
-               <button 
-                 onClick={() => setShowJobModal(false)}
-                 className="text-gray-500 hover:text-gray-700"
-               >
-                 <i className="fas fa-times"></i>
-               </button>
-            </div>
-
-            <form onSubmit={handleNewJob}>
-            <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Job Title</label>
-                  <input
-                    type="text"
-                    required
-                    className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-                    value={newJob.title}
-                    onChange={(e) => setNewJob({...newJob, title: e.target.value})}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Description</label>
-                  <textarea
-                    className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-                    rows="4"
-                    value={newJob.description}
-                    onChange={(e) => setNewJob({...newJob, description: e.target.value})}
-                  ></textarea>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Status</label>
-                  <select
-                    className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-                    value={newJob.status}
-                    onChange={(e) => setNewJob({...newJob, status: e.target.value})}
-                  >
-                    <option value="Draft">Draft</option>
-                    <option value="Active">Active</option>
-                  </select>
-                </div>
-
-                <div className="flex justify-end space-x-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowJobModal(false)}
-                    className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-                  >
-                    Create Job
-                  </button>
-                </div>
-              </div>
-            </form>
-        </div>
-      </div>
-      )}
     </div>
   );
 };

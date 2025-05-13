@@ -43,6 +43,7 @@ CREATE TABLE `Job` (
     `description` VARCHAR(191) NOT NULL,
     `location` VARCHAR(191) NULL,
     `status` VARCHAR(191) NOT NULL DEFAULT 'DRAFT',
+    `applicants` INTEGER NOT NULL DEFAULT 0,
     `employerId` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -64,11 +65,13 @@ CREATE TABLE `Application` (
 -- CreateTable
 CREATE TABLE `AcademicQualification` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `level` VARCHAR(191) NOT NULL,
+    `country` VARCHAR(191) NOT NULL,
     `institution` VARCHAR(191) NOT NULL,
-    `degree` VARCHAR(191) NOT NULL,
-    `fieldOfStudy` VARCHAR(191) NULL,
+    `fieldOfStudy` VARCHAR(191) NOT NULL,
     `startDate` DATETIME(3) NOT NULL,
     `endDate` DATETIME(3) NULL,
+    `certificateUrl` VARCHAR(191) NULL,
     `applicantId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -77,11 +80,15 @@ CREATE TABLE `AcademicQualification` (
 -- CreateTable
 CREATE TABLE `WorkExperience` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `company` VARCHAR(191) NOT NULL,
-    `position` VARCHAR(191) NOT NULL,
+    `institution` VARCHAR(191) NOT NULL,
+    `institutionAddress` VARCHAR(191) NULL,
+    `jobTitle` VARCHAR(191) NOT NULL,
     `startDate` DATETIME(3) NOT NULL,
     `endDate` DATETIME(3) NULL,
-    `description` VARCHAR(191) NULL,
+    `duties` VARCHAR(191) NULL,
+    `supervisorName` VARCHAR(191) NULL,
+    `supervisorTel` VARCHAR(191) NULL,
+    `supervisorAddress` VARCHAR(191) NULL,
     `applicantId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -91,7 +98,9 @@ CREATE TABLE `WorkExperience` (
 CREATE TABLE `LanguageProficiency` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `language` VARCHAR(191) NOT NULL,
-    `proficiency` VARCHAR(191) NOT NULL,
+    `speak` VARCHAR(191) NOT NULL,
+    `read` VARCHAR(191) NOT NULL,
+    `write` VARCHAR(191) NOT NULL,
     `applicantId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)

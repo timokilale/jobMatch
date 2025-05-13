@@ -8,6 +8,8 @@ import qualificationReducer from './slices/qualificationSlice';
 import workExperienceReducer from './slices/workSlice';
 import languageReducer from './slices/languageSlice';
 import computerSkillReducer from './slices/computerSlice';
+import jobsReducer from './slices/jobsSlice';
+
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -15,6 +17,7 @@ const rootReducer = combineReducers({
   experience: workExperienceReducer,
   language: languageReducer,
   computerSkill: computerSkillReducer,
+  jobs: jobsReducer
 });
 
 const persistConfig = {

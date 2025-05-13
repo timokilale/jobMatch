@@ -151,6 +151,7 @@ exports.Prisma.JobScalarFieldEnum = {
   description: 'description',
   location: 'location',
   status: 'status',
+  applicants: 'applicants',
   employerId: 'employerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
