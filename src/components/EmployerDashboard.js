@@ -1,21 +1,31 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import JobPostingsSection from './JobPostings';
 import { useJobs } from '../hooks/useJobs';
+import Candidates from './EmployerSidebar/Candidates';
+import Analytics from './EmployerSidebar/Analytics';
+import Settings from './EmployerSidebar/Settings';
+
+
+import { logout } from '../redux/slices/authSlice';
 
 
 const EmployerDashboard = () => {
+  const dispatch = useDispatch();
   const [recentApplications, setRecentApplications] = useState([]);
   const [avatar, setAvatar] = useState(null);
   const { role, user } = useSelector((state) => state.auth);
-  
+  const [activeView, setActiveView] = useState('dashboard');
+  // Get jobs data using the same hook used by JobPostingsSection
   const { jobPostings, loading: jobsLoading } = useJobs(user?.id);
   
+  // Calculate active jobs count
   const activeJobs = jobPostings.filter(job => job.status === 'Active').length;
   const interviewing = recentApplications.filter(app => app.status === 'interview').length;
   const newApplications = recentApplications.length;
-   const stats = [
+  
+  const stats = [
     { 
       title: 'Active Jobs', 
       value: activeJobs, 
@@ -31,12 +41,11 @@ const EmployerDashboard = () => {
       value: interviewing, 
       color: 'bg-green-100  border border-green-300 text-green-800' 
     },
- ];
+  ];
 
- if (role !== 'EMPLOYER') {
-  return <Navigate to="/login" />;
-}
-   
+  if (role !== 'EMPLOYER') {
+    return <Navigate to="/login" />;
+  }
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -103,10 +112,30 @@ const EmployerDashboard = () => {
             <hr className="border-t border-green-700 w-full my-4" />
 
             <div className="w-full space-y-2 mt-2">
-              {['Dashboard', 'Candidates', 'Analytics', 'Messages', 'Settings', 'Logout'].map((label, i) => (
-                 <button key={i} className="w-full flex items-center space-x-2 px-2 py-1.5 text-green-600 hover:bg-green-100 rounded-lg">
-                   <i className={`fas fa-${label.toLowerCase()} text-green-700`}></i>
-                   <span>{label}</span>
+              {[
+                { label: 'Dashboard', icon: 'tachometer-alt', view: 'dashboard' },
+                { label: 'Candidates', icon: 'users', view: 'candidates' },
+                { label: 'Analytics', icon: 'chart-bar', view: 'analytics' },
+                { label: 'Settings', icon: 'cog', view: 'settings' },
+                { label: 'Logout', icon: 'sign-out-alt', action: 'logout' }
+              ].map((item, i) => (
+                 <button 
+                   key={i} 
+                   className={`w-full flex items-center space-x-2 px-2 py-1.5 rounded-lg transition-colors ${
+                    activeView === item.view 
+                      ? 'bg-green-100  text-green-800'
+                      : 'text-green-600 hover:bg-green-50'
+                  }`}
+                   onClick={() => {
+                    if (item.action === 'logout') {
+                      dispatch(logout());
+                    } else if (item.view) {
+                      setActiveView(item.view);
+                    }
+                   }}
+                  >
+                   <i className={`fas fa-${item.icon} text-green-700`}></i>
+                   <span>{item.label}</span>
                  </button>
               ))}
             </div>
@@ -115,15 +144,28 @@ const EmployerDashboard = () => {
 
         {/* Main Content */}
         <main className="flex-1">
+          {activeView === 'dashboard' ? (
+            <>
           <div className="flex justify-center">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 w-full max-w-3xl">
-               {stats.map((stat, index) => (
-                 <div key={index} className={`p-4 rounded-lg ${stat.color}`}>
-                   <h3 className="text-sm font-medium">{stat.title}</h3>
-                   <p className="text-2xl font-bold mt-1">{stat.value}</p>
-                 </div>
-              ))}
-             </div>
+              {jobsLoading ? (
+                // Show loading state for stats when jobs are loading
+                stats.map((stat, index) => (
+                  <div key={index} className={`p-4 rounded-lg ${stat.color}`}>
+                    <h3 className="text-sm font-medium">{stat.title}</h3>
+                    <p className="text-2xl font-bold mt-1">...</p>
+                  </div>
+                ))
+              ) : (
+                // Show actual stats when data is loaded
+                stats.map((stat, index) => (
+                  <div key={index} className={`p-4 rounded-lg ${stat.color}`}>
+                    <h3 className="text-sm font-medium">{stat.title}</h3>
+                    <p className="text-2xl font-bold mt-1">{stat.value}</p>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
 
           {/* Recent Applications */}
@@ -171,6 +213,14 @@ const EmployerDashboard = () => {
           </div>
 
           <JobPostingsSection employerId={user?.id} />
+        </>
+      ) : activeView === 'candidates' ? (
+        <Candidates />
+      ) : activeView === 'analytics' ? (
+        <Analytics />
+      ) : activeView === 'settings' ? (
+        <Settings />
+      ) : null}
         </main>
       </div>
     </div>
