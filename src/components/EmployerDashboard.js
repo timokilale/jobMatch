@@ -6,25 +6,36 @@ import { useJobs } from '../hooks/useJobs';
 import Candidates from './EmployerSidebar/Candidates';
 import Analytics from './EmployerSidebar/Analytics';
 import Settings from './EmployerSidebar/Settings';
-
+import { fetchEmployerApplications } from '../redux/slices/applications';
 
 import { logout } from '../redux/slices/authSlice';
 
 
 const EmployerDashboard = () => {
   const dispatch = useDispatch();
-  const [recentApplications, setRecentApplications] = useState([]);
+  const { 
+    applications = [], 
+    loading = false,
+    error = null 
+  } = useSelector((state) => state.applications) || {};
   const [avatar, setAvatar] = useState(null);
+  
   const { role, user } = useSelector((state) => state.auth);
   const [activeView, setActiveView] = useState('dashboard');
-  // Get jobs data using the same hook used by JobPostingsSection
   const { jobPostings, loading: jobsLoading } = useJobs(user?.id);
-  
-  // Calculate active jobs count
+
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(fetchEmployerApplications(user.id));
+    }
+  }, [dispatch, user]);
+
+
   const activeJobs = jobPostings.filter(job => job.status === 'Active').length;
-  const interviewing = recentApplications.filter(app => app.status === 'interview').length;
-  const newApplications = recentApplications.length;
-  
+  const interviewing = applications.filter(app => app.status === 'INTERVIEW').length;
+  const newApplications = applications.filter(app => app.status === 'APPLIED').length;
+
+ 
   const stats = [
     { 
       title: 'Active Jobs', 
@@ -56,6 +67,11 @@ const EmployerDashboard = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   return (
@@ -170,7 +186,17 @@ const EmployerDashboard = () => {
 
           {/* Recent Applications */}
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-             {recentApplications.length === 0 ? (
+             {loading ? (
+               <div className="flex flex-col items-center py-12 space-y-4">
+                 <i className="fas fa-spinner fa-spin text-3xl text-green-600"></i>
+                 <p className="text-gray-500 font-medium">Loading applications...</p>
+                </div>
+             ) : error ? (
+               <div className="flex flex-col items-center py-12 space-y-4">
+                  <i className="fas fa-exclamation-triangle text-3xl text-red-600"></i>
+                  <p className="text-red-500 font-medium">{error}</p>
+               </div>
+             ) : applications.length === 0 ? (
                  <div className="flex flex-col items-center py-12 space-y-4">
                     <i className="fas fa-file-alt text-6xl text-green-600"></i>
                     <p className="text-gray-500 font-medium">No applications yet</p>
@@ -179,31 +205,35 @@ const EmployerDashboard = () => {
                  <>
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-semibold">Recent Applications</h2>
-                      {recentApplications.length > 3 && (
+                      {applications.length > 3 && (
                         <button className="text-green-600 hover:text-green-800">
                           View All →
                         </button>
                       )}
                   </div>
                   <div className="space-y-4">
-                      {[...recentApplications]
-                          .sort((a, b) => new Date(b.date) - new Date(a.date))
-                          .slice(0, 3)
-                          .map((application, index) => (
-                              <div key={index} className="flex items-center justify-between p-3 hover:bg-green-50 rounded">
-                                  <div>
-                                      <h4 className="font-medium">{application.name}</h4>
-                                      <p className="text-sm text-green-600">{application.position}</p>
-                                  </div>
-                                  <div className="text-right">
-                                      <span className={`px-2 py-1 text-sm rounded-full ${
-                                          application.status === 'New' ? 'bg-green-100 text-green-800' :
-                                          application.status === 'Interview' ? 'bg-blue-100 text-green-800' :
-                                          'bg-green-100 text-green-800'
-                                      }`}>
-                                          {application.status}
-                                      </span>
-                                      <p className="text-sm text-green-600 mt-1">{application.date}</p>
+                      {applications
+                         .slice(0,3)
+                         .sort((a, b) => new Date(b.date) - new Date(a.date))
+                         .map((application) => (
+                           <div 
+                             key={application.id} 
+                             className="flex items-center justify-between p-3 hover:bg-green-50 rounded">
+                            <div>
+                              <h4 className="font-medium">{application.applicant.fullName}</h4>
+                              <p className="text-sm text-green-600">{application.job.title}</p>
+                              <p className="text-xs text-gray-500 mt-1">Applied: {formatDate(application.createdAt)}</p>
+                            </div>
+                            <div className="text-right">
+                              <span className={`px-2 py-1 text-sm rounded-full ${
+                                application.status === 'APPLIED' ? 'bg-green-100 text-green-800' :
+                                application.status === 'INTERVIEW' ? 'bg-blue-100 text-blue-800' :
+                                application.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
+                                'bg-gray-100 text-gray-800'
+                                }`}>
+                                  {application.status.toLowerCase().replace('_', ' ')}
+                              </span>
+                              <p className="text-sm text-green-600 mt-1">{application.applicant.user.email}</p>
                                </div>
                            </div>
                        ))}
