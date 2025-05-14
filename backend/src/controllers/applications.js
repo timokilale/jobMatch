@@ -85,3 +85,43 @@ exports.getApplicantApplications = async (req, res) => {
      });
   }
 };
+
+// applications.js (backend)
+exports.getEmployerApplications = async (req, res) => {
+  try {
+    const employerId = parseInt(req.params.employerId);
+    
+    const applications = await prisma.application.findMany({
+      where: {
+        job: {
+          employerId: employerId
+        }
+      },
+      include: {
+        job: {
+          select: {
+            title: true
+          }
+        },
+        applicant: {
+          select: {
+            fullName: true,
+            user: {
+              select: {
+                email: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    res.json(applications);
+  } catch (error) {
+    console.error('Error fetching employer applications:', error);
+    res.status(500).json({ error: 'Failed to fetch applications' });
+  }
+};

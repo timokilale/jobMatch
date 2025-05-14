@@ -29,6 +29,18 @@ export const getApplicantApplications = createAsyncThunk(
   }
 );
 
+export const fetchEmployerApplications = createAsyncThunk(
+  'applications/fetchEmployerApplications',
+  async (employerId, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/applications/employer/${employerId}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 const applicationsSlice = createSlice({
   name: 'applications',
   initialState: {
@@ -36,7 +48,8 @@ const applicationsSlice = createSlice({
     applicationStatus: {},
     loadingApplications: false,
     applyingToJob: false,
-    error: null
+    error: null,
+    loading: false
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -72,7 +85,21 @@ const applicationsSlice = createSlice({
       .addCase(getApplicantApplications.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.error || 'Failed to fetch applications';
+      })
+
+      .addCase(fetchEmployerApplications.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchEmployerApplications.fulfilled, (state, action) => {
+        state.loading = false;
+        state.applications = action.payload;
+      })
+      .addCase(fetchEmployerApplications.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.error || 'Failed to fetch applications';
       });
+
   }
 });
 
