@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useJobs } from '../hooks/useJobs';
 
 const JobPostingsSection = ({ employerId }) => {
@@ -15,6 +16,8 @@ const JobPostingsSection = ({ employerId }) => {
     handleJobChange,
     handleDeleteJob
   } = useJobs(employerId);
+  
+  const { applications } = useSelector((state) => state.applications);
 
  if (loading && jobPostings.length === 0) {
   return (
@@ -65,7 +68,8 @@ const JobPostingsSection = ({ employerId }) => {
             <div key={job.id} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded">
               <div>
                 <h4 className="font-medium">{job.title}</h4>
-                <p className="text-sm text-green-600">{job.applicants} applicants</p>
+                <p className="text-sm text-green-600">
+                  {applications.filter(app => app.jobId === job.id).length} applicants</p>
               </div>
               <div className="flex items-center space-x-4">
                 <span className={`px-2 py-1 text-sm rounded-full ${job.status === 'Active' ? 'bg-green-200 text-green-800 border border-green-300' : 'bg-gray-200 border border-gray-400 text-gray-800'}`}>
