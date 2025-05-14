@@ -50,8 +50,21 @@ export const deleteJob = createAsyncThunk(
   }
 );
 
+export const fetchCategories = createAsyncThunk(
+  'jobs/fetchCategories',
+  async (_, { rejectWithValue }) => {
+  try {
+    const response = await api.get('/categories');
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || 'Failed to fetch categories');
+  }
+},
+);
+
 const initialState = {
   jobPostings: [],
+  categories: [],
   loading: false,
   error: null,
   showJobModal: false,
@@ -59,7 +72,8 @@ const initialState = {
     title: '',
     description: '',
     location: '',
-    status: 'Draft'
+    status: 'Draft',
+    categoryId: null,
   }
 };
 
@@ -79,6 +93,18 @@ const jobsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+       .addCase(fetchCategories.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCategories.fulfilled, (state, action) => {
+        state.loading = false;
+        state.categories = action.payload;
+      })
+      .addCase(fetchCategories.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // Fetch Jobs
       .addCase(fetchEmployerJobs.pending, (state) => {
         state.loading = true;

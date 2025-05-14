@@ -7,7 +7,8 @@ import {
   deleteJob, 
   setShowJobModal, 
   setNewJob, 
-  resetNewJob
+  resetNewJob,
+  fetchCategories,
 } from '../redux/slices/jobsSlice';
 
 export const useJobs = (employerId) => {
@@ -17,7 +18,8 @@ export const useJobs = (employerId) => {
     loading,
     error,
     showJobModal,
-    newJob
+    newJob,
+    categories,
   } = useSelector(state => state.jobs);
   const [selectedJob, setSelectedJob] = useState(null);
   
@@ -25,6 +27,7 @@ export const useJobs = (employerId) => {
     if (employerId) {
       dispatch(fetchEmployerJobs(employerId));
     }
+    dispatch(fetchCategories());
   }, [dispatch, employerId]);
 
   const toggleJobModal = (show = true, job = null) => {
@@ -34,7 +37,8 @@ export const useJobs = (employerId) => {
         title: job.title,
         description: job.description || '',
         location: job.location || '',
-        status: job.status || 'Draft'
+        status: job.status || 'Draft',
+        categoryId: job.categoryId || null,
       }));
     } else {
       setSelectedJob(null);
@@ -51,7 +55,8 @@ export const useJobs = (employerId) => {
       description: newJob.description,
       location: newJob.location,
       status: newJob.status,
-      employerId: parseInt(employerId)
+      employerId: parseInt(employerId),
+      categoryId: newJob.categoryId,
     };
     
     if (selectedJob) {
@@ -82,6 +87,7 @@ export const useJobs = (employerId) => {
     showJobModal,
     newJob,
     selectedJob,
+    categories,
     
     // Actions
     toggleJobModal,

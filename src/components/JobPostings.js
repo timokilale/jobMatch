@@ -3,6 +3,7 @@ import { useJobs } from '../hooks/useJobs';
 
 const JobPostingsSection = ({ employerId }) => {
   const {
+    categories,
     jobPostings,
     loading,
     error,
@@ -108,6 +109,22 @@ const JobPostingsSection = ({ employerId }) => {
                     value={newJob.title}
                     onChange={(e) => handleJobChange('title', e.target.value)}
                   />
+                </div>
+                <div>
+                <label className="block text-sm font-medium text-gray-700">Category</label>
+                <select
+                  id="category"
+                  className="mt-1 block w-full border border-gray-300 p-2 rounded-md"
+                  value={newJob.categoryId}
+                  onChange={(e) => handleJobChange('categoryId', e.target.value)}
+                >
+                  <option value=""> Select Category</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Description</label>

@@ -31,7 +31,7 @@ app.use('/api/languages', require('./routes/languageProficiency'));
 app.use('/api/skills', require('./routes/computerSkill'));
 app.use('/api/jobs', require('./routes/jobs'));
 app.use('/api/applications', require('./routes/applications'));
-
+app.use('/api/categories', require('./routes/categories'));
 
 // Error Handling
 app.use((err, req, res, next) => {
