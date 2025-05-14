@@ -1,38 +1,93 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchApplicantJobs } from "../redux/slices/jobsSlice";
+import { applyToJob, getApplicantApplications } from "../redux/slices/applications";
+
 
 const JobListings = ({ category }) => {
   const dispatch = useDispatch();
   const { applicantJobs = [], loading } = useSelector((state) => state.jobs);
   const { user } = useSelector((state) => state.auth);
+  const {
+    applicationStatus = {},
+    applyingToJob,
+    error: applicationError
+  } = useSelector((state) => state.applications);
 
   const [expandedJobId, setExpandedJobId] = useState(null);
+  const [localApplicationStatus, setLocalApplicationStatus] = useState({});
+
 
   useEffect(() => {
     if (user?.id) {
       dispatch(fetchApplicantJobs(user.id));
+      dispatch(getApplicantApplications(user.id));
     }
   }, [dispatch, user]);
+
+  useEffect(() => {
+    setLocalApplicationStatus(applicationStatus);
+  }, [applicationStatus]);
+
+  useEffect(() => {
+    if (applicationError) {
+      alert(`Application error: ${applicationError}`);
+    }
+  }, [applicationError]);
 
   const toggleJobExpansion = (jobId) => {
     setExpandedJobId((prevId) => (prevId === jobId ? null : jobId));
   };
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    if (!dateString) return "Date not available";
+
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return "Invalid date";
+
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch (error) {
+      console.error ("error formatting date:", error);
+      return "Date error";
+    }
   };
 
   const calculateDaysAgo = (dateString) => {
-    const postedDate = new Date(dateString);
-    const currentDate = new Date();
-    const diffTime = Math.abs(currentDate - postedDate);
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (!dateString) return "?";
+
+    try {
+      const postedDate = new Date(dateString);
+      if (isNaN(postedDate.getTime())) return "?";
+
+      const currentDate = new Date();
+      const diffTime = Math.abs(currentDate - postedDate);
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    } catch (error) {
+      console.error("Error calculating days:", error);
+      return "?";
+    }
+  };
+
+  const handleApplyNow = async (jobId) => {
+    if (!user?.id) {
+      alert("please login to apply");
+      return;
+    }
+
+    setLocalApplicationStatus(prev => ({
+      ...prev,
+      [jobId]: 'pending'
+    }));
+
+    dispatch(applyToJob({
+      applicantId: user.id,
+      jobId
+    }));
   };
 
   const filteredJobs = category && category !== "home"
@@ -48,8 +103,7 @@ const JobListings = ({ category }) => {
     return <p className="text-center text-gray-600">Loading jobs...</p>;
   }
   
-
-  if (!filteredJobs.length) {
+  if (!filteredJobs.length || filteredJobs.length === 0) {
     return (
       <div className="text-center space-y-4">
         <img src="assets/empty folder.svg" alt="No Jobs" className="w-24 h-auto mx-auto mb-4" />
@@ -99,25 +153,44 @@ const JobListings = ({ category }) => {
                   <i className={`fas fa-chevron-${expandedJobId === job.id ? 'up' : 'down'} ml-1`}></i>
                 </button>
                 
-                <button className="bg-green-700 hover:bg-green-800 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center">
+                {localApplicationStatus[job.id] === 'pending' || (applyingToJob && applicationStatus[job.id] === 'pending') ? (
+                  <button className="bg-gray-200 text-green-700 font-medium py-2 px-4 rounded-lg transition-colors flex items-center" disabled>
+                    <i className="fas fa-spinner fa-spin mr-2"></i>
+                    Applying...
+                  </button>
+                ) : localApplicationStatus[job.id] === 'applied' || applicationStatus[job.id] === 'applied' ? (
+                  <button className="bg-green-500 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center" disabled>
+                    <i className="fas fa-check mr-2"></i>
+                    Applied
+                  </button>
+                ) : (
+                <button 
+                  onClick={() => handleApplyNow(job.id)}
+                  className="bg-green-700 hover:bg-green-800 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center"
+                >
                   <i className="fas fa-paper-plane mr-2"></i>
                   Apply Now
                 </button>
+                )}
               </div>
               
               {expandedJobId === job.id && (
                 <div className="mt-6 border-t border-gray-200 pt-4">
                   <h4 className="font-semibold text-gray-800 mb-2">Requirements:</h4>
                   <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                    {job.requirements.map((req, index) => (
+                    {job.requirements && Array.isArray(job.requirements) && job.requirements.length > 0 ? (
+                      job.requirements.map((req, index) => (
                       <li key={index}>{req}</li>
-                    ))}
+                    ))
+                  ) : (
+                    <li>Requirements not specified</li>
+                  )}
                   </ul>
                   
                   <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
                     <div className="flex items-center text-gray-600">
                       <i className="far fa-calendar-alt mr-2"></i>
-                      <span>Posted on {formatDate(job.postedDate)}</span>
+                      <span>Posted on {formatDate(job.createdAt)}</span>
                     </div>
                     
                     <div className="flex space-x-2">
