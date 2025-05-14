@@ -155,6 +155,7 @@ const jobsSlice = createSlice({
             applicants: state.jobPostings[index].applicants // Preserve applicant count
           };
         }
+        state.showJobModal = false;
       })
       .addCase(updateJob.rejected, (state, action) => {
         state.loading = false;

@@ -68,7 +68,7 @@ const JobPostingsSection = ({ employerId }) => {
                 <p className="text-sm text-green-600">{job.applicants} applicants</p>
               </div>
               <div className="flex items-center space-x-4">
-                <span className={`px-2 py-1 text-sm rounded-full ${job.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-green-800'}`}>
+                <span className={`px-2 py-1 text-sm rounded-full ${job.status === 'Active' ? 'bg-green-200 text-green-800 border border-green-300' : 'bg-gray-200 border border-gray-400 text-gray-800'}`}>
                   {job.status}
                 </span>
                 <button 
@@ -88,7 +88,7 @@ const JobPostingsSection = ({ employerId }) => {
       )}
 
       {showJobModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-start pt-20">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg w-full max-w-2xl mx-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-green-800">
