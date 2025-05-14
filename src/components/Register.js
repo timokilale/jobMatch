@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import Register from '../hooks/Register';
+import useRegister from '../hooks/Register';
+import MultiSelectDropdown from './MultiSelectDropdown';
 
 const RegisterPage = () => {
   const {
@@ -7,8 +8,12 @@ const RegisterPage = () => {
     nida, setNida,
     email, setEmail,
     password, setPassword,
-    handleRegister
-  } = Register();
+    selectedCategories, setSelectedCategories,
+    categoryOptions,
+    handleRegister,
+    loading,
+    error
+  } = useRegister();
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 pt-20">
@@ -38,8 +43,7 @@ const RegisterPage = () => {
               New Here! <br />
               <span className="text-sm font-light text-gray-600">Register below</span>
             </p>
-            <form onSubmit={handleRegister} className="w-full">
-               
+            <form onSubmit={handleRegister}  className="space-y-4 max-w-md mx-auto">
               <input
                 type="text"
                 placeholder="Fullname"
@@ -64,6 +68,11 @@ const RegisterPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
+              <MultiSelectDropdown
+                options={categoryOptions}
+                selected={selectedCategories}
+                setSelected={setSelectedCategories}
+              />
               <input
                 type="password"
                 placeholder="Password"
@@ -76,9 +85,12 @@ const RegisterPage = () => {
                 <button
                   type="submit"
                   className="w-1/3 bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
+                  disabled={loading}
                 >
-                  Register
+                 {loading ? 'Registering...' : 'Register'}
                 </button>
+
+                {error && <p className="text-red-500">{error}</p>}
               </div>
             </form>
           </div>

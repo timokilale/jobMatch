@@ -3,12 +3,11 @@ import { loginUser } from '../redux/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-
 const useLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, role } = useSelector((state) => state.auth);
   const { loading, error } = useSelector((state) => state.auth);
+  
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
@@ -17,20 +16,32 @@ const useLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      console.log("Attempting login with:", credentials);
       const result = await dispatch(loginUser(credentials));
-
-      if (loginUser.fulfilled.match(result)) {
-        const role = result.payload.role;
+      
+      console.log("Login result:", result);
+      
+      // Using the correct way to check for fulfilled action
+      if (result.meta.requestStatus === 'fulfilled') {
+        const { role } = result.payload;
+        console.log("Login successful, role:", role);
         
-        navigate(role === 'APPLICANT' 
-          ? '/applicant_dashboard' 
-          : '/employer_dashboard'
-        );  
+        // Navigate based on role
+        if (role === 'APPLICANT') {
+          navigate('/applicant_dashboard');
+        } else if (role === 'EMPLOYER') {
+          navigate('/employer_dashboard');
+        } else {
+          console.error('Unknown role:', role);
+        }
+      } else {
+        console.error('Login failed:', result.error);
       }
     } catch (err) {
-      console.error('Login failed:', err);
+      console.error('Login error:', err);
     }
   };
+
   return {
     email: credentials.email,
     setEmail: (value) => setCredentials({ ...credentials, email: value }),
@@ -43,5 +54,3 @@ const useLogin = () => {
 };
 
 export default useLogin;
-
-

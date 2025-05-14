@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerApplicant } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
+import api from '../api/api';
 
 const useRegister = () => {
   const dispatch = useDispatch();
@@ -14,7 +15,23 @@ const useRegister = () => {
     email: '',
     password: '',
   });
-  
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get('/categories'); 
+        setCategoryOptions(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+        setCategoryOptions([]);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
@@ -22,19 +39,41 @@ const useRegister = () => {
         email: formData.email,
         password: formData.password,
         fullName: formData.fullname,
-        nida: formData.nida
+        nida: formData.nida,
+        categoryIds: selectedCategories || [],
       }));
 
-      if (result.payload?.token) {
-        navigate('/login')
+      // Check if registration was successful
+      if (!result.error) {
+        console.log("Registration successful, redirecting to login");
+        setRegistrationSuccess(true);
+        // Clear the form
+        setFormData({
+          fullname: '',
+          nida: '',
+          email: '',
+          password: '',
+        });
+        setSelectedCategories([]);
+        
+        // Navigate to login page
+        navigate('/login');
+      } else {
+        console.error('Registration failed:', result.error);
       }
     } catch (err) {
-      console.error('Registration failed:', err);
+      console.error('Registration error:', err);
     }
   };
 
   return {
-    ...formData,
+    fullname: formData.fullname,
+    nida: formData.nida,
+    email: formData.email,
+    password: formData.password,
+    selectedCategories,
+    setSelectedCategories,
+    categoryOptions,
     setFullname: (value) => setFormData({ ...formData, fullname: value }),
     setNida: (value) => setFormData({ ...formData, nida: value }),
     setEmail: (value) => setFormData({ ...formData, email: value }),
@@ -42,6 +81,7 @@ const useRegister = () => {
     handleRegister,
     loading,
     error,
+    registrationSuccess
   };
 };
 
