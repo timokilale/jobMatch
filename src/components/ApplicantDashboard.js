@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
 import AcademicQualifications from "./SidebarItems/AcademicQualifications"
 import WorkExperience from "./SidebarItems/WorkExperience";
 import LanguageProficiency from "./SidebarItems/LanguageProficiency";
 import ComputerSkills from "./SidebarItems/ComputerSkills";
-
+import JobListings from "./JobListings";
 
 const ApplicantDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ const ApplicantDashboard = () => {
       key: "home",
       title: "Dashboard",
       icon: "dashboard",
-      component: null,
+      component: <JobListings category={null} />,
     },
     {
       key: "academic",
@@ -217,25 +217,23 @@ const ApplicantDashboard = () => {
         </div>
 
         {/* Main Content */}
-        <div className={`flex-1 bg-gray-50 p-5 ${
+        <div className={`flex-1 bg-gray-50 p-5 overflow-y-auto ${
           sidebarOpen ? "ml-64" : "ml-0"
         } transition-all duration-300 flex flex-col justify-center items-center min-h-[calc(100vh-4rem)]`}>
           {loading ? (
-             <div className="flex flex-col items-center justify-center w-full h-full  space-y-6">
+             <div className="flex flex-col items-center justify-center w-full h-full space-y-6">
                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-700"></div>
                <p className="text-green-700 text-xl font-semibold">{loadingText}</p>
              </div>
           ) : activeSection ? (
-            sections.find(s => s.key === activeSection)?.component
+            <div className="w-full">
+              {sections.find(s => s.key === activeSection)?.component || 
+              <JobListings category={activeSection} />}
+            </div>
           ) : (
-
-          <div className="text-center space-y-4">
-            <img src="assets/empty folder.svg" alt="No Jobs" className="w-1/2 h-auto mx-auto mb-4" />
-          {/* <i className="fas fa-folder-open text-8xl text-green-700 mb-4"></i> */}
-          <h2 className="text-xl font-semibold text-gray-600">
-           {activeSection ? '' : 'No matching jobs yet'}
-          </h2>
-          </div>
+            <div className="w-full">
+              <JobListings category={null} />
+            </div>
           )} 
         </div>
       </div>

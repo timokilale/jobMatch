@@ -1,0 +1,142 @@
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchApplicantJobs } from "../redux/slices/jobsSlice";
+
+const JobListings = ({ category }) => {
+  const dispatch = useDispatch();
+  const { applicantJobs = [], loading } = useSelector((state) => state.jobs);
+  const { user } = useSelector((state) => state.auth);
+
+  const [expandedJobId, setExpandedJobId] = useState(null);
+
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(fetchApplicantJobs(user.id));
+    }
+  }, [dispatch, user]);
+
+  const toggleJobExpansion = (jobId) => {
+    setExpandedJobId((prevId) => (prevId === jobId ? null : jobId));
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const calculateDaysAgo = (dateString) => {
+    const postedDate = new Date(dateString);
+    const currentDate = new Date();
+    const diffTime = Math.abs(currentDate - postedDate);
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+
+  const filteredJobs = category && category !== "home"
+    ? applicantJobs.filter(job =>
+        job.categories?.some(cat => cat.key === category)
+      )
+    : applicantJobs;
+  
+    console.log("Available jobs:", applicantJobs);
+    console.log("Filtered jobs:", filteredJobs);  
+
+  if (loading) {
+    return <p className="text-center text-gray-600">Loading jobs...</p>;
+  }
+  
+
+  if (!filteredJobs.length) {
+    return (
+      <div className="text-center space-y-4">
+        <img src="assets/empty folder.svg" alt="No Jobs" className="w-24 h-auto mx-auto mb-4" />
+        <h2 className="text-xl font-semibold text-gray-600">
+          No matching jobs yet
+        </h2>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full max-w-4xl mx-auto">
+      <h2 className="text-2xl font-bold text-green-800 mb-6">
+        {category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Jobs` : 'All Available Jobs'}
+      </h2>
+      
+      <div className="space-y-6">
+        {filteredJobs.map(job => (
+          <div 
+            key={job.id} 
+            className="bg-white rounded-lg shadow-md overflow-hidden border-l-4 border-green-700"
+          >
+            <div className="p-6">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-800">{job.title}</h3>
+                  <p className="text-gray-600 mt-1">{job.company} • {job.location}</p>
+                </div>
+                <div className="flex flex-col items-end">
+                  <span className="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
+                    {job.salary}
+                  </span>
+                  <span className="text-gray-500 text-sm mt-1">
+                    Posted {calculateDaysAgo(job.postedDate)} days ago
+                  </span>
+                </div>
+              </div>
+              
+              <p className="mt-4 text-gray-700">{job.description}</p>
+              
+              <div className="mt-4 flex justify-between items-center">
+                <button
+                  onClick={() => toggleJobExpansion(job.id)}
+                  className="text-green-700 hover:text-green-900 font-medium flex items-center"
+                >
+                  {expandedJobId === job.id ? 'View Less' : 'View More'}
+                  <i className={`fas fa-chevron-${expandedJobId === job.id ? 'up' : 'down'} ml-1`}></i>
+                </button>
+                
+                <button className="bg-green-700 hover:bg-green-800 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center">
+                  <i className="fas fa-paper-plane mr-2"></i>
+                  Apply Now
+                </button>
+              </div>
+              
+              {expandedJobId === job.id && (
+                <div className="mt-6 border-t border-gray-200 pt-4">
+                  <h4 className="font-semibold text-gray-800 mb-2">Requirements:</h4>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                    {job.requirements.map((req, index) => (
+                      <li key={index}>{req}</li>
+                    ))}
+                  </ul>
+                  
+                  <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
+                    <div className="flex items-center text-gray-600">
+                      <i className="far fa-calendar-alt mr-2"></i>
+                      <span>Posted on {formatDate(job.postedDate)}</span>
+                    </div>
+                    
+                    <div className="flex space-x-2">
+                      <button className="text-gray-600 hover:text-green-700 transition-colors">
+                        <i className="far fa-bookmark"></i>
+                      </button>
+                      <button className="text-gray-600 hover:text-green-700 transition-colors">
+                        <i className="fas fa-share-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default JobListings;
