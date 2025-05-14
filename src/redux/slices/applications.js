@@ -29,33 +29,16 @@ export const getApplicantApplications = createAsyncThunk(
   }
 );
 
-export const checkApplicationStatus = createAsyncThunk(
-  'applications/checkStatus',
-  async ({ applicantId, jobId }, { rejectWithValue }) => {
-    try {
-      const response = await api.get(`/applications/${applicantId}/status/${jobId}`);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || 'Failed to check application status');
-    }
-  }
-);
-
 const applicationsSlice = createSlice({
   name: 'applications',
   initialState: {
     applications: [],
     applicationStatus: {},
-    loading: false,
+    loadingApplications: false,
     applyingToJob: false,
     error: null
   },
-  reducers: {
-    resetApplicationStatus: (state) => {
-      state.applyingToJob = false;
-      state.error = null;
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       // Apply to job
@@ -65,13 +48,12 @@ const applicationsSlice = createSlice({
       })
       .addCase(applyToJob.fulfilled, (state, action) => {
         state.applyingToJob = false;
-        state.applications.push(action.payload);
-        // Update status for this job
         state.applicationStatus[action.payload.jobId] = 'applied';
+        state.applications.push(action.payload);
       })
       .addCase(applyToJob.rejected, (state, action) => {
         state.applyingToJob = false;
-        state.error = action.payload;
+        state.error = action.payload?.error || 'Failed to apply to job';
       })
       
       // Get applicant applications
@@ -82,24 +64,14 @@ const applicationsSlice = createSlice({
       .addCase(getApplicantApplications.fulfilled, (state, action) => {
         state.loading = false;
         state.applications = action.payload;
-        
-        // Create a map of applied jobs for easy lookup
-        const statusMap = {};
+
         action.payload.forEach(app => {
-          statusMap[app.jobId] = 'applied';
+          state.applicationStatus[app.jobId] = 'applied';
         });
-        state.applicationStatus = { ...state.applicationStatus, ...statusMap };
       })
       .addCase(getApplicantApplications.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
-      })
-      
-      // Check application status
-      .addCase(checkApplicationStatus.fulfilled, (state, action) => {
-        if (action.payload.exists) {
-          state.applicationStatus[action.payload.jobId] = 'applied';
-        }
+        state.error = action.payload?.error || 'Failed to fetch applications';
       });
   }
 });

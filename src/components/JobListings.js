@@ -9,14 +9,19 @@ const JobListings = ({ category }) => {
   const { applicantJobs = [], loading } = useSelector((state) => state.jobs);
   const { user } = useSelector((state) => state.auth);
   const {
+    applications = [],
     applicationStatus = {},
-    applyingToJob,
-    error: applicationError
+    applyingToJob: isApplying,
+    error: applicationError,
+    loadingApplications
   } = useSelector((state) => state.applications);
 
   const [expandedJobId, setExpandedJobId] = useState(null);
   const [localApplicationStatus, setLocalApplicationStatus] = useState({});
 
+  const isApplied = (jobId) =>
+    applications.some(app => app.jobId === jobId) ||
+    applicationStatus[jobId] === 'applied';
 
   useEffect(() => {
     if (user?.id) {
@@ -28,6 +33,14 @@ const JobListings = ({ category }) => {
   useEffect(() => {
     setLocalApplicationStatus(applicationStatus);
   }, [applicationStatus]);
+
+  useEffect(() => {
+    const statusMap = {};
+    applications.forEach(app => {
+      statusMap[app.jobId] = 'applied';
+    });
+    setLocalApplicationStatus(statusMap);
+  }, [applications]);
 
   useEffect(() => {
     if (applicationError) {
@@ -75,19 +88,16 @@ const JobListings = ({ category }) => {
 
   const handleApplyNow = async (jobId) => {
     if (!user?.id) {
-      alert("please login to apply");
+      alert("Please login to apply");
       return;
     }
-
-    setLocalApplicationStatus(prev => ({
-      ...prev,
-      [jobId]: 'pending'
-    }));
-
-    dispatch(applyToJob({
-      applicantId: user.id,
-      jobId
-    }));
+  
+    try {
+      await dispatch(applyToJob({ applicantId: user.id, jobId })).unwrap();
+      dispatch(getApplicantApplications(user.id));
+    } catch (error) {
+      console.error("Application failed:", error);
+    }
   };
 
   const filteredJobs = category && category !== "home"
@@ -153,15 +163,15 @@ const JobListings = ({ category }) => {
                   <i className={`fas fa-chevron-${expandedJobId === job.id ? 'up' : 'down'} ml-1`}></i>
                 </button>
                 
-                {localApplicationStatus[job.id] === 'pending' || (applyingToJob && applicationStatus[job.id] === 'pending') ? (
-                  <button className="bg-gray-200 text-green-700 font-medium py-2 px-4 rounded-lg transition-colors flex items-center" disabled>
-                    <i className="fas fa-spinner fa-spin mr-2"></i>
-                    Applying...
-                  </button>
-                ) : localApplicationStatus[job.id] === 'applied' || applicationStatus[job.id] === 'applied' ? (
+                {isApplied(job.id) ? (
                   <button className="bg-green-500 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center" disabled>
                     <i className="fas fa-check mr-2"></i>
                     Applied
+                  </button>
+                ) : isApplying ? (
+                  <button className="bg-gray-200 text-green-700 font-medium py-2 px-4 rounded-lg transition-colors flex items-center" disabled>
+                    <i className="fas fa-spinner fa-spin mr-2"></i>
+                    Applying...
                   </button>
                 ) : (
                 <button 
