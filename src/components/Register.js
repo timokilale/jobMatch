@@ -44,7 +44,7 @@ const RegisterPage = () => {
               <span className="text-sm font-light text-gray-600">Register below</span>
             </p>
             <form onSubmit={handleRegister}  className="space-y-4 max-w-md mx-auto">
-              <input
+               <input
                 type="text"
                 placeholder="Fullname"
                 className="w-full px-3 py-2 border border-green-700 rounded mb-3 placeholder:text-green-700 placeholder:font-light focus:outline-none "

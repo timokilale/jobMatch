@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import useEmployerRegister from '../hooks/EmployerRegister';
 
 const RegisterPage = () => {
@@ -53,6 +54,7 @@ const RegisterPage = () => {
                 className="w-full px-3 py-2 border border-green-700 rounded mb-3 placeholder:text-green-700 placeholder:font-light focus:outline-none"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="chrome-off"
                 required
               />
                <input
@@ -69,6 +71,7 @@ const RegisterPage = () => {
                 className="w-full px-3 py-2 border border-green-700 rounded mb-3 placeholder:text-green-700 placeholder:font-light focus:outline-none"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="chrome-off"
                 required
               />
               <div className="text-left mt-3">
