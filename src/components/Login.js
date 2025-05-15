@@ -31,7 +31,6 @@ const LoginPage = () => {
            <p className="text-green-700 text-xl font-semibold">Logging in...</p>
            </div>
       ) : (
-        <div className="w-4/5 md:flex rounded-lg shadow-2xl bg-green-700 h-[auto] max-h-[600px] overflow-hidden">
 
       <div className="w-4/5 md:flex rounded-lg shadow-2xl bg-green-700 h-[auto] max-h-[600px] overflow-hidden">
         <div className="flex-1 bg-white p-8 flex flex-col justify-between rounded-l-lg overflow-auto">
@@ -79,7 +78,6 @@ const LoginPage = () => {
         <div className="flex-1  hidden md:block">
           <img src="assets/pattern.svg" alt="Pattern" className="w-full h-full object-cover rounded-r-lg" />
         </div>
-      </div>
       </div>
       )}
     </div>
