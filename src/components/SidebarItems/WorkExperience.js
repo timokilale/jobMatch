@@ -1,5 +1,6 @@
 import React from 'react';
-import Work from '../../hooks/Work';
+import { useEffect } from 'react';
+import useWork from '../../hooks/Work';
 
 const WorkExperience = () => {
 const {
@@ -12,7 +13,14 @@ const {
         handleEdit,
         handleDelete,
         savedWorkExperience
-} = Work();
+} = useWork();
+
+useEffect(() => {
+  if (savedWorkExperience.length === 0) {
+    setShowForm(true);
+  }
+}, [savedWorkExperience, setShowForm]);
+
 
 const formatDate = (isoDate) => {
   if (!isoDate) return '';
@@ -26,7 +34,7 @@ const formatDate = (isoDate) => {
 
   return (
     <div className="p-8 min-h-screen flex flex-col">
-      <h1 className="text-xl font-bold text-green-800 mb-6">Work Experience</h1>
+      <h1 className="text-xl font-bold text-green-800 mt-14">Work Experience</h1>
 
       {showForm ? (
       <form onSubmit={handleSave} className="space-y-6 flex-1">

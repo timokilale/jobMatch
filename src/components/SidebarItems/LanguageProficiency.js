@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LanguageProficiencyLogic from '../../hooks/Language';
 
 const LanguageProficiency = () => {
@@ -24,14 +24,20 @@ const LanguageProficiency = () => {
     editId,
   } = LanguageProficiencyLogic();
 
+  useEffect(() => {
+    if (savedLanguages.length === 0) {
+      setShowForm(true);
+    }
+  }, [savedLanguages, setShowForm]);
 
+  
   return (
     <div className="p-6">
       <div className=" p-6 shadow-sm">
         <h1 className="text-2xl font-bold text-green-800 mb-6">Language Proficiency</h1>
 
         {showForm ? (
-        <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mb-32">
           
           {/* Language Dropdown */}
           <div className="flex flex-col">

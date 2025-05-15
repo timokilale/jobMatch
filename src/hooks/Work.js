@@ -8,7 +8,7 @@ import {
 } from '../redux/slices/workSlice';
 
 
-const Work = () => {
+const useWork = () => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
     const applicantId = user?.id;
@@ -94,6 +94,7 @@ const Work = () => {
         showForm,
         setShowForm,
         formData,
+        setFormData,
         handleChange,
         handleSave,
         handleEdit,
@@ -103,4 +104,4 @@ const Work = () => {
 }
 
 
-export default Work;
+export default useWork;

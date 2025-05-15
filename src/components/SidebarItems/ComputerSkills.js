@@ -26,7 +26,7 @@ const ComputerSkills = () => {
         <h1 className="text-2xl font-bold text-green-800 mb-6">Computer Skills</h1>
 
         {showForm ? (
-          <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+          <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mb-60">
             {/* Skill Dropdown */}
             <div className="flex flex-col">
               <label className="text-green-800 font-semibold mb-2">Skill</label>
