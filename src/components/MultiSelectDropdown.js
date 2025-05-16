@@ -29,18 +29,18 @@ const MultiSelectDropdown = ({ options, selected, setSelected }) => {
   }, []);
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative text-green-700" ref={dropdownRef}>
       <button
         type="button"
         onClick={toggleDropdown}
-        className="w-full border border-gray-300 rounded-md px-4 py-2 text-left focus:outline-none"
+        className="w-full border border-green-700 rounded-md px-4 py-2 text-left focus:outline-none"
       >
         <span>
         {selected && selected.length > 0
           ? `Selected (${selected.length})`
           : 'Select categories'}
         </span>
-        <i className="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+        <i className="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-green-700 pointer-events-none"></i>
       </button>
 
       {isOpen && (

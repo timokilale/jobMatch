@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import useRegister from '../hooks/Register';
 import MultiSelectDropdown from './MultiSelectDropdown';
 
@@ -15,6 +16,8 @@ const RegisterPage = () => {
     error
   } = useRegister();
 
+  const [showPassword, setShowPassword] = useState(false);
+ 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 pt-20">
       <nav className="fixed top-0 left-0 right-0 flex items-center justify-start gap-5 px-10 py-4 bg-transparent ">
@@ -73,6 +76,7 @@ const RegisterPage = () => {
                 selected={selectedCategories}
                 setSelected={setSelectedCategories}
               />
+              <div className="relative mb-3">
               <input
                 type="password"
                 placeholder="Password"
@@ -81,6 +85,20 @@ const RegisterPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <button
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-green-700 focus:outline-none"
+                    onClick={() => setShowPassword(!showPassword)}
+                    tabIndex="-1"
+                  >
+                    {showPassword ? (
+                      <i className="fas fa-eye-slash"></i>
+                    ) : (
+                      <i className="fas fa-eye"></i>
+                    )}
+                  </button>
+              </div>
+              
               <div className="text-left mt-3">
                 <button
                   type="submit"
