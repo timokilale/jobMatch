@@ -18,6 +18,24 @@ const JobPostingsSection = ({ employerId }) => {
   } = useJobs(employerId);
   
   const { applications } = useSelector((state) => state.applications);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [jobToDelete, setJobToDelete] = useState(null);
+
+  const openDeleteConfirmation = (jobId) => {
+    setJobToDelete(jobId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    handleDeleteJob(jobToDelete);
+    setShowDeleteModal(false);
+    setJobToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setJobToDelete(null);
+  };
 
  if (loading && jobPostings.length === 0) {
   return (
@@ -82,7 +100,7 @@ const JobPostingsSection = ({ employerId }) => {
                   </button>
                 <button 
                   className="text-red-400 hover:text-red-600"
-                  onClick={() => handleDeleteJob(job.id)}>
+                  onClick={() => openDeleteConfirmation(job.id)}>
                      <i className="fas fa-trash"></i>
                 </button>
               </div>
@@ -175,6 +193,35 @@ const JobPostingsSection = ({ employerId }) => {
                 </div>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4 shadow-xl">
+            <div className="text-center mb-6">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                <i className="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Confirm Deletion</h3>
+              <p className="text-sm text-gray-500">
+                Are you sure you want to delete this job ? This action cannot be undone.
+              </p>
+            </div>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={cancelDelete}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 border border-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}
