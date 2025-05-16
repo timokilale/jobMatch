@@ -116,7 +116,13 @@ const ComputerSkills = () => {
               </div>
             )}
             <button 
-              onClick={() => setShowForm(true)}
+              onClick={() => {
+                setShowForm(true);
+                setEditingId(null);
+                setCurrentSkill('');
+                setSkillLevel('');
+              }
+              }
               className="fixed bottom-8 right-8 w-14 h-14 bg-green-600 text-white rounded-full hover:bg-green-700 transition shadow-lg flex items-center justify-center text-2xl"
             >
               <i className="fas fa-plus"></i>

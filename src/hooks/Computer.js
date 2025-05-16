@@ -15,7 +15,7 @@ const Computer = () => {
     const [showForm, setShowForm] = useState(false);
     const [currentSkill, setCurrentSkill] = useState('');
     const [skillLevel, setSkillLevel] = useState('');
-    const [editingId, setEditingId] = useState('null');
+    const [editingId, setEditingId] = useState(null);
  
 
     useEffect(() => {
@@ -32,7 +32,8 @@ const Computer = () => {
         }
       }, [skills]);
 
-    const handleSave = (e) => {
+
+    const handleSave = async (e) => {
         e.preventDefault();
         if (!currentSkill || !skillLevel) {
             alert('Please fill in all fields');
@@ -44,19 +45,27 @@ const Computer = () => {
           skill: currentSkill,
           proficiency: skillLevel,
         };
-        if (editingId) {
-          dispatch(updateSkill({
-            id: editingId,
-            ...payload
-          }));
+
+        try {
+          setCurrentSkill('');
+          setSkillLevel('');
+          setEditingId(null);
+
+
+          if (editingId) {
+            await dispatch(updateSkill({
+                id: editingId,
+                ...payload
+            })).unwrap();
         } else {
-          dispatch(createSkill(payload));
+          await dispatch(createSkill(payload)).unwrap();
         }  
-        
-        setCurrentSkill('');
-        setSkillLevel('');
-        setEditingId(null);
+
+        dispatch(fetchSkills(applicantId));
         setShowForm(false);
+      } catch (error) {
+        console.error("failed to save skill:", error);
+      }
       };
 
     const handleDelete = (id) => {
