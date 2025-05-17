@@ -25,7 +25,11 @@ exports.createJob = async (req, res) => {
 exports.getEmployerJobs = async (req, res) => {
   try {
     const employerId = parseInt(req.params.employerId);
-    const jobs = await prisma.job.findMany({ where: { employerId } });
+    const jobs = await prisma.job.findMany({ 
+      where: { employerId },
+      skip: parseInt(req.query.skip) || 0,
+      take: parseInt(req.query.take) || 10,
+    });
     res.json(jobs);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch jobs' });

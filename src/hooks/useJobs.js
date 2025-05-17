@@ -56,7 +56,7 @@ export const useJobs = (employerId) => {
       location: newJob.location,
       status: newJob.status,
       employerId: parseInt(employerId),
-      categoryId: newJob.categoryId,
+      categoryIds: [parseInt(newJob.categoryId)],
     };
     
     if (selectedJob) {

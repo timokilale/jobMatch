@@ -86,7 +86,7 @@ const initialState = {
     description: '',
     location: '',
     status: 'Draft',
-    categoryId: null,
+    categoryId: '',
   }
 };
 
