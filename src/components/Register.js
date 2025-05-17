@@ -141,8 +141,6 @@ const RegisterPage = () => {
                   >
                    {loading ? 'Registering...' : 'Register'}
                   </button>
-
-                  {error && <p className="text-red-500">{error}</p>}
                 </div>
               </form>
             </div>
