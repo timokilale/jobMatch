@@ -67,9 +67,7 @@ export const useJobs = (employerId) => {
   };
 
   const handleDeleteJob = (jobId) => {
-    if (window.confirm('Are you sure you want to delete this job posting?')) {
       dispatch(deleteJob(jobId));
-    }
   };
 
   const handleJobChange = (field, value) => {
