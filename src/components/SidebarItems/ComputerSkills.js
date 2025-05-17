@@ -21,7 +21,7 @@ const ComputerSkills = () => {
 
 
   return (
-    <div className="p-6 mb-60">
+    <div className="p-6">
       <h1 className="text-2xl font-bold text-green-800 mb-6 flex justify-center">Computer Skills</h1>
         {showForm ? (
           <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mb-60">
@@ -74,7 +74,7 @@ const ComputerSkills = () => {
         ) : (
           <>
             {skills.length > 0 && (
-              <div className="mt-6 flex justify-center">
+              <div className="mb-60 flex justify-center">
                 <table className="w-1/2 border-collapse border border-green-200">
                   <thead>
                     <tr className="bg-green-100 text-green-700">
