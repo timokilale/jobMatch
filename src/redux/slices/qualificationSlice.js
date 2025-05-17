@@ -18,14 +18,17 @@ export const addQualification = createAsyncThunk(
     async (formData, thunkAPI) => {     
       try {
         const payload = new FormData();
-        payload.append('level', formData.educationlevel);
+        // FIXED: Changed from educationlevel to educationLevel to match component state
+        payload.append('educationLevel', formData.educationLevel);
         payload.append('country', formData.country);
         payload.append('institution', formData.institution);
-        payload.append('fieldOfStudy', formData.program);
+        payload.append('program', formData.program);
         payload.append('startDate', formData.startDate);
         payload.append('endDate', formData.endDate);
         payload.append('applicantId', formData.applicantId);
-        if (formData.certificate) {  
+        
+        // Only append certificate if it exists and is a file
+        if (formData.certificate && formData.certificate instanceof File) {  
           payload.append('certificate', formData.certificate);
         }
 
@@ -46,14 +49,19 @@ export const addQualification = createAsyncThunk(
     async ({ id, data }, thunkAPI) => {
       try {
         const payload = new FormData();
-        payload.append('level', data.educationLevel);
+        // FIXED: Changed field names to match backend controller expectations
+        payload.append('educationLevel', data.educationLevel);
         payload.append('country', data.country);
         payload.append('institution', data.institution);
-        payload.append('fieldOfStudy', data.program);
+        payload.append('program', data.program);
+        
+        // Format dates properly for backend
         payload.append('startDate', data.startDate);
-        payload.append('endDate', data.endDate);
+        payload.append('endDate', data.endDate || '');
         payload.append('applicantId', data.applicantId);
-        if (data.certificate) {
+        
+        // Only append certificate if it's a new file
+        if (data.certificate && data.certificate instanceof File) {
           payload.append('certificate', data.certificate);
         }
   
@@ -90,9 +98,15 @@ const qualificationSlice = createSlice({
       loading: false,
       error: null,
     },
-    reducers: {},
+    reducers: {
+      // Add a reducer to clear errors
+      clearErrors: (state) => {
+        state.error = null;
+      }
+    },
     extraReducers: (builder) => {
       builder
+        // Fetch qualifications
         .addCase(fetchQualifications.pending, (state) => {
           state.loading = true;
           state.error = null; 
@@ -106,6 +120,7 @@ const qualificationSlice = createSlice({
           state.error = action.payload;
         })
 
+        // Add qualification
         .addCase(addQualification.pending, (state) => {
           state.loading = true;
           state.error = null; 
@@ -118,17 +133,39 @@ const qualificationSlice = createSlice({
           state.loading = false;
           state.error = action.payload;
         })
+        
+        // Update qualification
+        .addCase(updateQualification.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
         .addCase(updateQualification.fulfilled, (state, action) => {
+          state.loading = false;
           const index = state.list.findIndex(q => q.id === action.payload.id);
           if (index !== -1) {
             state.list[index] = action.payload;
           }
         })
+        .addCase(updateQualification.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload;
+        })
+        
+        // Delete qualification
+        .addCase(deleteQualification.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
         .addCase(deleteQualification.fulfilled, (state, action) => {
+          state.loading = false;
           state.list = state.list.filter(q => q.id !== action.payload);
-        });        
+        })
+        .addCase(deleteQualification.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload;
+        });
     },
   });
   
+  export const { clearErrors } = qualificationSlice.actions;
   export default qualificationSlice.reducer;
-

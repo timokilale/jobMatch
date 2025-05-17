@@ -21,10 +21,8 @@ const ComputerSkills = () => {
 
 
   return (
-    <div className="p-6">
-      <div className="p-6 shadow-sm">
-        <h1 className="text-2xl font-bold text-green-800 mb-6">Computer Skills</h1>
-
+    <div className="p-6 mb-60">
+      <h1 className="text-2xl font-bold text-green-800 mb-6 flex justify-center">Computer Skills</h1>
         {showForm ? (
           <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mb-60">
             {/* Skill Dropdown */}
@@ -76,8 +74,8 @@ const ComputerSkills = () => {
         ) : (
           <>
             {skills.length > 0 && (
-              <div className="mt-6">
-                <table className="w-full border-collapse border border-green-200">
+              <div className="mt-6 flex justify-center">
+                <table className="w-1/2 border-collapse border border-green-200">
                   <thead>
                     <tr className="bg-green-100 text-green-700">
                       <th className="p-2 border border-green-200">Skill</th>
@@ -90,7 +88,8 @@ const ComputerSkills = () => {
                       <tr key={skill.id} className="hover:bg-green-50">
                         <td className="p-2 border border-green-200">{skill.skill}</td>
                         <td className="p-2 border border-green-200">{skill.proficiency}</td>
-                        <td className="p-2 border border-green-200 space-x-2">
+                        <td className="p-2 border border-green-200 text-center">
+                         <div className="flex justify-center items-center space-x-4">
                           <button
                             onClick={() => {
                               setCurrentSkill(skill.skill);
@@ -98,7 +97,7 @@ const ComputerSkills = () => {
                               setEditingId(skill.id); 
                               setShowForm(true);
                             }}
-                             className="text-gray-600 mr-4"
+                             className="text-gray-600 mr-8"
                           >
                             <i className="fas fa-pen"></i>
                           </button>
@@ -108,6 +107,7 @@ const ComputerSkills = () => {
                           >
                            <i className="fas fa-trash"></i>
                           </button>
+                          </div>
                        </td>
                       </tr>
                     ))}
@@ -129,7 +129,6 @@ const ComputerSkills = () => {
             </button>
           </>
         )}
-      </div>
     </div>
   );
 };

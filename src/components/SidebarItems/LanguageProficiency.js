@@ -32,12 +32,11 @@ const LanguageProficiency = () => {
 
   
   return (
-    <div className="p-6">
-      <div className=" p-6 shadow-sm">
+    <div className="p-6 flex flex-col">
         <h1 className="text-2xl font-bold text-green-800 mb-6">Language Proficiency</h1>
 
         {showForm ? (
-        <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mb-32">
+        <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mb-8">
           
           {/* Language Dropdown */}
           <div className="flex flex-col">
@@ -98,7 +97,7 @@ const LanguageProficiency = () => {
       ) : (
         <>
         {savedLanguages.length > 0 && (
-          <div className="mt-4">
+          <div className=" mb-60">
             <table className="w-full border-collapse border border-green-200">
               <thead>
                 <tr className="bg-green-100 text-green-800">
@@ -116,10 +115,11 @@ const LanguageProficiency = () => {
                     <td className="p-2 border border-green-200">{lang.speak}</td>
                     <td className="p-2 border border-green-200">{lang.read}</td>
                     <td className="p-2 border border-green-200">{lang.write}</td>
-                    <td className="p-2 border border-green-200 min-w-[120px] space-x-2">
+                    <td className="p-2 border border-green-200 text-center">
+                      <div className="flex justify-center items-center space-x-4"></div>
                       <button 
                         onClick={() => handleEdit(lang)} 
-                        className="text-gray-600 mr-4"
+                        className="text-gray-600 mr-8"
                       >
                         <i className="fas fa-pen"></i>
                       </button>
@@ -144,7 +144,6 @@ const LanguageProficiency = () => {
          </button>
          </>
       )}
-      </div>
     </div>
   );
 };
