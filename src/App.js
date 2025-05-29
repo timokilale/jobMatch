@@ -25,6 +25,7 @@ function App() {
         <Route element={<ProtectedRoute allowedRoles={['EMPLOYER']} />}>
           <Route path="/employer_dashboard" element={<EmployerDashboard />} />
         </Route>
+      
         <Route path="/" element={
           <div className="bg-gray-50 min-h-screen">
             <Header />

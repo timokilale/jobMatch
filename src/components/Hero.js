@@ -15,8 +15,9 @@ const Hero = () => {
         </h2>
         <p className="text-gray-600 text-lg md:text-xl max-w-2xl leading-relaxed">
           This platform helps you connect with employers looking for your skills. 
-          Whether you're a student, graduate, or professional - get started today!
+          Whether you're a student, graduate, or professional
         </p>
+         <span className="text-green-700 text-lg font-bold md:text-xl max-w-2xl leading-relaxed">get started today!</span> 
       </div>
 
       <div className="flex-1 animate-slideInRight">

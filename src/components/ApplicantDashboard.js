@@ -6,6 +6,7 @@ import WorkExperience from "./SidebarItems/WorkExperience";
 import LanguageProficiency from "./SidebarItems/LanguageProficiency";
 import ComputerSkills from "./SidebarItems/ComputerSkills";
 import JobListings from "./JobListings";
+import AppliedJobs from "./AppliedJobs";
 
 const ApplicantDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -26,6 +27,12 @@ const ApplicantDashboard = () => {
       title: "Dashboard",
       icon: "dashboard",
       component: <JobListings category={null} />,
+    },
+    {
+      key: "applied-jobs",
+      title: "Applied Jobs",
+      icon: "clipboard-list",
+      component: <AppliedJobs />,
     },
     {
       key: "academic",
@@ -204,8 +211,14 @@ const ApplicantDashboard = () => {
                 className="h-12 w-auto ml-12"
               />
             </div>
-
             <div className="flex items-center gap-4">
+              <button
+                onClick={() => handleSectionClick(sections.find(s => s.key === "applied-jobs"))}
+                className="flex items-center space-x-2 text-green-700 hover:text-green-500 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors"
+              >
+                <i className="fas fa-briefcase text-xl"></i>
+                <span className="hidden md:inline"></span>
+              </button>
               <button className="text-green-700 hover:text-green-900 relative p-2 rounded-lg transition-colors">
                 <i className="fas fa-bell text-xl"></i>
                 <span className="absolute -top-1 -right-1 bg-white border-2  border-green-700  text-green-700 text-xs rounded-full h-5 w-5 flex items-center justify-center">
