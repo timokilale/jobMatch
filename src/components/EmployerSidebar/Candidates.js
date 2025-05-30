@@ -9,6 +9,10 @@ const Candidates = () => {
     loading = false,
     error = null 
   } = useSelector((state) => state.applications) || {};
+
+  const [selectedApplicantId, setSelectedApplicantId] = useState(null);
+  const [selectedApplicationId, setSelectedApplicationId] = useState(null);
+
   
   const { user } = useSelector((state) => state.auth);
   const [searchTerm, setSearchTerm] = useState('');
