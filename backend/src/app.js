@@ -5,6 +5,8 @@ const prisma = require('./prisma');
 const routes = require('./routes');
 const cookieParser = require('cookie-parser');
 const qualificationRouter = require('./routes/qualifications');
+const pdfRouter = require('./routes/pdf');
+const cvRouter = require('./routes/cv');
 const app = express();
 
 
@@ -32,6 +34,9 @@ app.use('/api/skills', require('./routes/computerSkill'));
 app.use('/api/jobs', require('./routes/jobs'));
 app.use('/api/applications', require('./routes/applications'));
 app.use('/api/categories', require('./routes/categories'));
+app.use('/api/cv', require('./routes/cv'));
+app.use('/api/pdf', require('./routes/pdf'));
+
 
 // Error Handling
 app.use((err, req, res, next) => {

@@ -6,8 +6,9 @@ import WorkExperience from "./SidebarItems/WorkExperience";
 import LanguageProficiency from "./SidebarItems/LanguageProficiency";
 import ComputerSkills from "./SidebarItems/ComputerSkills";
 import JobListings from "./JobListings";
-import AppliedJobs from "./AppliedJobs";
+import AppliedJobs from "./SidebarItems/AppliedJobs";
 import Notifications from "./Notifications";
+import CVPreview from "./SidebarItems/CVPreview";
 import { getApplicantApplications } from "../redux/slices/applications";
 
 const ApplicantDashboard = () => {
@@ -74,6 +75,12 @@ const ApplicantDashboard = () => {
       title: "Computer Skills",
       icon: "laptop-code",
       component: <ComputerSkills />,
+    },
+    {
+      key: "cv",
+      title: "CV Preview",
+      icon: "file-alt",
+      component: <CVPreview applicantId={user.id} />,
     },
     {
       key: "logout",

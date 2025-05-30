@@ -10,6 +10,8 @@ import languageReducer from './slices/languageSlice';
 import computerSkillReducer from './slices/computerSlice';
 import jobsReducer from './slices/jobsSlice';
 import applicationsReducer from './slices/applications';
+import cvReducer from './slices/cvSlice'; 
+import pdfReducer from './slices/pdfSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -19,6 +21,8 @@ const rootReducer = combineReducers({
   computerSkill: computerSkillReducer,
   jobs: jobsReducer,
   applications: applicationsReducer,
+  cv: cvReducer,
+  pdf: pdfReducer,
 });
 
 const persistConfig = {

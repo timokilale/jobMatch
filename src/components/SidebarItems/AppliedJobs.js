@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getApplicantApplications } from "../redux/slices/applications";
+import { getApplicantApplications } from "../../redux/slices/applications";
 
 const AppliedJobs = () => {
   const dispatch = useDispatch();
