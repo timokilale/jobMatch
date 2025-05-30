@@ -158,9 +158,9 @@ const JobListings = ({ category }) => {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-4xl mx-auto mb-36">
       <h2 className="text-2xl font-bold text-green-800 mb-6">
-        {category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Jobs` : 'Matching Jobs'}
+        {category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Jobs` : 'Recent Jobs'}
       </h2>
       
       <div className="space-y-6">

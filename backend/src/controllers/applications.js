@@ -60,7 +60,11 @@ exports.getApplicantApplications = async (req, res) => {
         applicantId: parseInt(applicantId) 
       },
       include: { 
-        job: true,
+        job: {
+          include: {
+            employer: true
+          }
+        },
         applicant: {
           select: {
             fullName: true,

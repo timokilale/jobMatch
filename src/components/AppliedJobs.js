@@ -87,22 +87,24 @@ const AppliedJobs = () => {
         return 'fas fa-question-circle';
     }
   };
-
+  
   const filteredApplications = applications.filter(app => {
+    const status = app.status?.toLowerCase();
     if (filterStatus === 'all') return true;
-    return app.status?.toLowerCase() === filterStatus.toLowerCase();
+    if (filterStatus === 'pending') return status === 'applied';
+    return status === filterStatus.toLowerCase();
   });
 
   const statusCounts = {
     all: applications.length,
-    pending: applications.filter(app => app.status?.toLowerCase() === 'pending' || app.status?.toLowerCase() === 'applied').length,
+    pending: applications.filter(app => app.status?.toLowerCase() ===  'applied').length,
     accepted: applications.filter(app => app.status?.toLowerCase() === 'accepted').length,
     rejected: applications.filter(app => app.status?.toLowerCase() === 'rejected').length,
   };
 
   if (loadingApplications) {
     return (
-      <div className="flex justify-center items-center min-h-64">
+      <div className="mt-16 flex justify-center items-center min-h-64">
         <div className="text-center">
           <i className="fas fa-spinner fa-spin text-green-700 text-3xl mb-4"></i>
           <p className="text-gray-600">Loading your applications...</p>
@@ -113,7 +115,7 @@ const AppliedJobs = () => {
 
   if (applicationError) {
     return (
-      <div className="text-center py-8">
+      <div className="mt-16 text-center py-8">
         <i className="fas fa-exclamation-triangle text-red-500 text-3xl mb-4"></i>
         <p className="text-red-600">Error loading applications: {applicationError}</p>
       </div>
@@ -121,18 +123,13 @@ const AppliedJobs = () => {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-green-800 mb-2">My Applied Jobs</h1>
-        <p className="text-gray-600">Track the status of your job applications</p>
-      </div>
-
+    <div className="w-full max-w-6xl mx-auto px-6 py-4 mb-36">
       {/* Filter Tabs */}
-      <div className="mb-6">
+      <div className="mb-18">
         <div className="flex flex-wrap gap-2 border-b border-gray-200">
           {[
-            { key: 'all', label: 'All Applications', count: statusCounts.all },
-            { key: 'pending', label: 'Pending', count: statusCounts.pending },
+            { key: 'all', label: 'All', count: statusCounts.all },
+            { key: 'pending', label: 'Waiting', count: statusCounts.pending },
             { key: 'accepted', label: 'Accepted', count: statusCounts.accepted },
             { key: 'rejected', label: 'Rejected', count: statusCounts.rejected },
           ].map((filter) => (
@@ -156,13 +153,18 @@ const AppliedJobs = () => {
         <div className="text-center py-12">
           <img src="assets/empty folder.svg" alt="No Applications" className="w-24 h-auto mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-600 mb-2">
-            {filterStatus === 'all' ? 'No applications yet' : `No ${filterStatus} applications`}
+            {filterStatus === 'all' 
+              ? 'No applications yet'
+              : filterStatus === 'pending'
+                ? 'No applications waiting for feedback'
+                : `No ${filterStatus} applications`}
           </h3>
           <p className="text-gray-500">
             {filterStatus === 'all' 
               ? 'Start applying to jobs to see them here'
-              : `You don't have any ${filterStatus} applications at the moment`
-            }
+              : filterStatus === 'pending'
+                ? 'You have no applications currently waiting for employer feedback.'
+                : `You don't have any ${filterStatus} applications at the moment`}
           </p>
         </div>
       ) : (
@@ -181,7 +183,7 @@ const AppliedJobs = () => {
                           {application.job?.title || 'Job Title Not Available'}
                         </h3>
                         <p className="text-gray-600 mt-1">
-                          {application.job?.company || 'Company'} • {application.job?.location || 'Location'}
+                          {application.job?.employer?.companyName || 'Company'} • {application.job?.location || 'Location'}
                         </p>
                       </div>
                       <div className="flex flex-col items-end space-y-2">
