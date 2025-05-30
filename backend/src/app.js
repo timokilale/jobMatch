@@ -15,7 +15,17 @@ app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'Accept',
+    'Content-Disposition',
+    'Access-Control-Allow-Origin',   
+  ],
+  exposedHeaders: [
+    'Content-Disposition',
+    'Access-Control-Allow-Origin',
+  ],
   preflightContinue: false,
   optionsSuccessStatus: 204, 
 }));

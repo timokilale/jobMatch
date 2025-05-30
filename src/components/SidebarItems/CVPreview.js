@@ -133,7 +133,7 @@ const CVPreview = ({ applicantId }) => {
       </div>
 
       <div className="mt-6">
-        <DownloadButton applicantId={applicantId} />
+        <DownloadButton applicantId={cv?.id || applicantId} />
       </div>
     </div>
   );
