@@ -7,135 +7,111 @@ const CVPreview = ({ applicantId }) => {
   const dispatch = useDispatch();
   const { cv, loading, error } = useSelector(state => state.cv);
 
-  console.log('=== CV PREVIEW DEBUG ===');
-  console.log('Received applicantId prop:', applicantId);
-  console.log('CV state:', cv);
-  console.log('Loading state:', loading);
-  console.log('Error state:', error);
-
   useEffect(() => {
-    if (applicantId) {
-      console.log('Dispatching fetchCvData with ID:', applicantId);
-      dispatch(fetchCvData(applicantId));
-    } else {
-      console.log('No applicantId provided to useEffect');
-    }
+    if (applicantId) dispatch(fetchCvData(applicantId));
   }, [dispatch, applicantId]);
 
-  // Helper function to safely render error messages
-  const safeRenderError = (error) => {
-    if (!error) return '';
-    if (typeof error === 'string') return error;
-    if (typeof error === 'object') {
-      if (error.message) return error.message;
-      if (error.error) return error.error;
-      // Better handling for empty objects
-      const errorStr = JSON.stringify(error);
-      if (errorStr === '{}') return 'An unknown error occurred';
-      return errorStr;
-    }
-    return String(error);
-  };
-
-  if (loading) return <p>Loading CV...</p>;
-  if (error) return <p>Error: {safeRenderError(error)}</p>;
-  if (!cv) return <p>No CV data found.</p>;
-
-  // Helper function to safely render values
   const safeRender = (value) => {
     if (value === null || value === undefined) return 'N/A';
-    if (typeof value === 'object') {
-      // Handle empty objects
-      if (Object.keys(value).length === 0) return 'N/A';
-      return JSON.stringify(value);
-    }
+    if (typeof value === 'object') return Object.keys(value).length ? JSON.stringify(value) : 'N/A';
     return String(value);
   };
 
-  // Add comprehensive logging to identify the problematic field
-  console.log('=== DETAILED CV STRUCTURE ===');
-  console.log('cv.fullName type:', typeof cv.fullName, 'value:', cv.fullName);
-  console.log('cv.user type:', typeof cv.user, 'value:', cv.user);
-  console.log('cv.nida type:', typeof cv.nida, 'value:', cv.nida);
-  console.log('cv.qualifications type:', typeof cv.qualifications, 'length:', cv.qualifications?.length);
-  console.log('cv.experiences type:', typeof cv.experiences, 'length:', cv.experiences?.length);
-  console.log('cv.languages type:', typeof cv.languages, 'length:', cv.languages?.length);
-  console.log('cv.skills type:', typeof cv.skills, 'length:', cv.skills?.length);
-  console.log('cv.categories type:', typeof cv.categories, 'length:', cv.categories?.length);
+  const safeRenderError = (error) => {
+    if (!error) return '';
+    if (typeof error === 'string') return error;
+    if (typeof error === 'object') return error.message || error.error || JSON.stringify(error);
+    return String(error);
+  };
+
+  if (loading) return <p className="text-center mt-10 text-gray-500">Loading CV...</p>;
+  if (error) return <p className="text-center mt-10 text-red-500">Error: {safeRenderError(error)}</p>;
+  if (!cv) return <p className="text-center mt-10 text-gray-500">No CV data found.</p>;
 
   return (
-    <div className="bg-white p-6 rounded shadow w-full mt-32">
-      <h2 className="text-2xl font-bold ">{safeRender(cv?.fullName)}</h2>
-      <p className="text-sm text-gray-600 mb-4">
-        {safeRender(cv?.user?.email || cv?.email)} | NIDA: {safeRender(cv?.nida)}
-      </p>
-
-      <div className="space-y-3">
-        <section>
-          <h3 className="font-semibold text-lg mb-1">Academic Qualifications</h3>
-          {Array.isArray(cv?.qualifications) && cv.qualifications.length > 0 ? (
-            cv.qualifications.map((q, index) => (
-              <p key={q?.id || index}>
-                {safeRender(q?.level)} in {safeRender(q?.fieldOfStudy)} - {safeRender(q?.institution)}
-              </p>
-            ))
-          ) : (
-            <p>No qualifications found</p>
-          )}
-        </section>
-
-        <section>
-          <h3 className="font-semibold text-lg mt-4 mb-1">Work Experience</h3>
-          {Array.isArray(cv?.experiences) && cv.experiences.length > 0 ? (
-            cv.experiences.map((e, index) => (
-              <div key={e?.id || index}>
-                <p>{safeRender(e?.jobTitle)} at {safeRender(e?.institution)}</p>
-                <p className="text-sm text-gray-500">{safeRender(e?.duties)}</p>
-              </div>
-            ))
-          ) : (
-            <p>No work experience found</p>
-          )}
-        </section>
-
-        <section>
-          <h3 className="font-semibold text-lg mt-4 mb-1">Languages</h3>
-          {Array.isArray(cv?.languages) && cv.languages.length > 0 ? (
-            cv.languages.map((l, index) => (
-              <p key={l?.id || index}>
-                {safeRender(l?.language)}: Speak - {safeRender(l?.speak)}, Read - {safeRender(l?.read)}, Write - {safeRender(l?.write)}
-              </p>
-            ))
-          ) : (
-            <p>No languages found</p>
-          )}
-        </section>
-
-        <section>
-          <h3 className="font-semibold text-lg mt-4 mb-1">Computer Skills</h3>
-          {Array.isArray(cv?.skills) && cv.skills.length > 0 ? (
-            cv.skills.map((s, index) => (
-              <p key={s?.id || index}>{safeRender(s?.skill)} - {safeRender(s?.proficiency)}</p>
-            ))
-          ) : (
-            <p>No computer skills found</p>
-          )}
-        </section>
-
-        <section>
-          <h3 className="font-semibold text-lg mt-4 mb-1">Preferred Categories</h3>
-          {Array.isArray(cv?.categories) && cv.categories.length > 0 ? (
-            cv.categories.map((c, index) => <p key={c?.id || index}>{safeRender(c?.name)}</p>)
-          ) : (
-            <p>No categories found</p>
-          )}
-        </section>
+    <>
+    <div className="bg-gray-50 rounded-xl shadow-md p-8 mt-18 max-w-5xl mx-auto">
+      <div className="flex flex-col md:flex-row items-start justify-between md:items-center border-b pb-4 mb-6">
+        <div>
+          <h2 className="text-3xl font-bold text-green-800">{safeRender(cv?.fullName)}</h2>
+          <p className="text-gray-600 text-sm mt-1">
+            {safeRender(cv?.user?.email || cv?.email)} | NIDA: {safeRender(cv?.nida)}
+          </p>
+        </div>
       </div>
 
-      <div className="mt-6">
-        <DownloadButton applicantId={cv?.id || applicantId} />
+      <div className="grid md:grid-cols-3 gap-8">
+        <div className="space-y-6">
+          <section>
+            <h3 className="flex items-center text-lg font-semibold text-green-600 mb-2">
+              <i className="fas fa-laptop-code mr-2"></i> Computer Skills
+            </h3>
+            {cv?.skills?.length ? (
+              <ul className="list-disc list-inside text-sm text-gray-700">
+                {cv.skills.map((s, idx) => (
+                  <li key={s?.id || idx}>{safeRender(s?.skill)} - <span className="text-gray-500">{safeRender(s?.proficiency)}</span></li>
+                ))}
+              </ul>
+            ) : <p className="text-gray-500 text-sm">No computer skills found</p>}
+          </section>
+
+          <section>
+            <h3 className="flex items-center text-lg font-semibold text-green-600 mb-2">
+              <i className="fas fa-language mr-2"></i> Languages
+            </h3>
+            {cv?.languages?.length ? (
+              <ul className="text-sm text-gray-700 space-y-1">
+                {cv.languages.map((l, idx) => (
+                  <li key={l?.id || idx}>
+                    {safeRender(l?.language)} - 
+                    <span className="text-gray-500 ml-1">Speak: {safeRender(l?.speak)}, Read: {safeRender(l?.read)}, Write: {safeRender(l?.write)}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : <p className="text-gray-500 text-sm">No languages found</p>}
+          </section>
+        </div>
+
+        <div className="md:col-span-2 space-y-6">
+          <section>
+            <h3 className="flex items-center text-lg font-semibold text-green-600 mb-2">
+              <i className="fas fa-graduation-cap mr-2"></i> Academic Qualifications
+            </h3>
+            {cv?.qualifications?.length ? (
+              <div className="space-y-2 text-sm text-gray-700">
+                {cv.qualifications.map((q, idx) => (
+                  <div key={q?.id || idx} className="border-l-4 pl-3 border-green-300">
+                    <p><strong>{safeRender(q?.level)}</strong> in {safeRender(q?.fieldOfStudy)}</p>
+                    <p className="text-gray-500">{safeRender(q?.institution)}</p>
+                  </div>
+                ))}
+              </div>
+            ) : <p className="text-gray-500 text-sm">No qualifications found</p>}
+          </section>
+
+          <section>
+            <h3 className="flex items-center text-lg font-semibold text-green-600 mb-2">
+              <i className="fas fa-briefcase mr-2"></i> Work Experience
+            </h3>
+            {cv?.experiences?.length ? (
+              <div className="space-y-4 text-sm text-gray-700">
+                {cv.experiences.map((e, idx) => (
+                  <div key={e?.id || idx} className="p-3 bg-white rounded shadow-sm border">
+                    <p className="font-medium">{safeRender(e?.jobTitle)} at {safeRender(e?.institution)}</p>
+                    <p className="text-gray-500 text-xs mt-1">{safeRender(e?.duties)}</p>
+                  </div>
+                ))}
+              </div>
+            ) : <p className="text-gray-500 text-sm">No work experience found</p>}
+          </section>
+        </div>
       </div>
     </div>
+    <div className="mb-4 md:mt-4">
+      <DownloadButton applicantId={cv?.id || applicantId} />
+    </div>
+    </>
+    
   );
 };
 
