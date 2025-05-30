@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import {  useSelector } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
 import AcademicQualifications from "./SidebarItems/AcademicQualifications"
 import WorkExperience from "./SidebarItems/WorkExperience";
@@ -7,19 +7,36 @@ import LanguageProficiency from "./SidebarItems/LanguageProficiency";
 import ComputerSkills from "./SidebarItems/ComputerSkills";
 import JobListings from "./JobListings";
 import AppliedJobs from "./AppliedJobs";
+import Notifications from "./Notifications";
+import { getApplicantApplications } from "../redux/slices/applications";
 
 const ApplicantDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(null);
-  const{ role, user } = useSelector((state) => state.auth);
+  const { role, user } = useSelector((state) => state.auth);
   const [avatar, setAvatar] = useState(user?.avatar || null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
+
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(getApplicantApplications(user.id));
+      const pollInterval = setInterval(() => {
+        dispatch(getApplicantApplications(user.id));
+      }, 30000);
+
+      return () => clearInterval(pollInterval);
+    }
+  }, [dispatch, user?.id]);
+
   
   if (role !== 'APPLICANT') {
     return <Navigate to="/login" />;
   }
+
 
   const sections = [
     {
@@ -219,12 +236,9 @@ const ApplicantDashboard = () => {
                 <i className="fas fa-briefcase text-xl"></i>
                 <span className="hidden md:inline"></span>
               </button>
-              <button className="text-green-700 hover:text-green-900 relative p-2 rounded-lg transition-colors">
-                <i className="fas fa-bell text-xl"></i>
-                <span className="absolute -top-1 -right-1 bg-white border-2  border-green-700  text-green-700 text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  3
-                </span>
-              </button>
+              
+              {/* Replace the old notification button with the new Notifications component */}
+              <Notifications />
              </div>
           </div>
         </div>
