@@ -133,11 +133,12 @@ const JobListings = ({ category }) => {
     }
   };
 
-  const filteredJobs = category && category !== "home"
+  const filteredJobs = (category && category !== "home"
     ? applicantJobs.filter(job =>
         job.categories?.some(cat => cat.key === category)
       )
     : applicantJobs
+    ).filter(job => !isApplied(job.id) && !hiddenJobs.has(job.id));
   
     console.log("Available jobs:", applicantJobs);
     console.log("Filtered jobs:", filteredJobs);  
