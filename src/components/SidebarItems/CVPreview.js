@@ -24,6 +24,34 @@ const CVPreview = ({ applicantId }) => {
     return String(error);
   };
 
+  const formatDateRange = (start, end) => {
+    if (!start || !end) return '';
+    const startDate = new Date(start);
+    const endDate = end ? new Date(end) : null;
+
+    const yearDiff = endDate
+      ? endDate.getFullYear() - startDate.getFullYear()
+      : 1;
+    const monthDiff = endDate
+      ? endDate.getMonth() - startDate.getMonth() + yearDiff * 12
+      : 12;
+
+    const options = { year: 'numeric', month: 'short' };
+
+    const endText = endDate
+      ? (monthDiff >= 12 
+          ? `${endDate.getFullYear()}`
+          : `${endDate.toLocaleDateString('en-US', options)}`)
+      : 'Present';    
+
+    return monthDiff >= 12 
+      ? `${startDate.getFullYear()} - ${endText}`
+      : `${startDate.toLocaleDateString('en-US', options)} - ${endText}`;
+ 
+  };
+
+
+
   if (loading) return <p className="text-center mt-10 text-gray-500">Loading CV...</p>;
   if (error) return <p className="text-center mt-10 text-red-500">Error: {safeRenderError(error)}</p>;
   if (!cv) return <p className="text-center mt-10 text-gray-500">No CV data found.</p>;
@@ -81,10 +109,16 @@ const CVPreview = ({ applicantId }) => {
               <div className="space-y-2 text-sm text-gray-700">
                 {cv.qualifications.map((q, idx) => (
                   <div key={q?.id || idx} className="border-l-4 pl-3 border-green-300">
-                    <p><strong>{safeRender(q?.level)}</strong> in {safeRender(q?.fieldOfStudy)}</p>
-                    <p className="text-gray-500">{safeRender(q?.institution)}</p>
-                  </div>
-                ))}
+                  <p><strong>{safeRender(q?.level)}</strong> in {safeRender(q?.fieldOfStudy)}</p>
+                  <p className="text-gray-500">{safeRender(q?.institution)}</p>
+                  {q.startDate && q.endDate && (
+                    <p className="text-xs text-gray-400 italic">
+                      {formatDateRange(q.startDate, q.endDate)}
+                    </p>
+                  )}
+                </div>
+              ))}
+
               </div>
             ) : <p className="text-gray-500 text-sm">No qualifications found</p>}
           </section>
@@ -98,9 +132,14 @@ const CVPreview = ({ applicantId }) => {
                 {cv.experiences.map((e, idx) => (
                   <div key={e?.id || idx} className="p-3 bg-white rounded shadow-sm border">
                     <p className="font-medium">{safeRender(e?.jobTitle)} at {safeRender(e?.institution)}</p>
+                    {e.startDate && e.endDate && (
+                      <p className="text-xs text-gray-400 italic">
+                        {formatDateRange(e.startDate, e.endDate)}
+                      </p>
+                    )}
                     <p className="text-gray-500 text-xs mt-1">{safeRender(e?.duties)}</p>
                   </div>
-                ))}
+               ))}
               </div>
             ) : <p className="text-gray-500 text-sm">No work experience found</p>}
           </section>
