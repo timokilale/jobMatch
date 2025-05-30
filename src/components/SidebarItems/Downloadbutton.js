@@ -6,6 +6,19 @@ const DownloadButton = ({ applicantId }) => {
   const dispatch = useDispatch();
   const { loading, error, successMessage } = useSelector(state => state.pdf);
 
+  // Helper function to safely render error/success messages
+  const safeRenderMessage = (message) => {
+    if (!message) return null;
+    if (typeof message === 'string') return message;
+    if (typeof message === 'object') {
+      // Handle different error object structures
+      if (message.message) return message.message;
+      if (message.error) return message.error;
+      return JSON.stringify(message);
+    }
+    return String(message);
+  };
+
   const handleDownload = () => {
     dispatch(downloadCvPdf(applicantId));
   };
@@ -15,8 +28,8 @@ const DownloadButton = ({ applicantId }) => {
       <button onClick={handleDownload} disabled={loading}>
         {loading ? 'Downloading...' : 'Download CV PDF'}
       </button>
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+      {error && <p style={{ color: 'red' }}>Error: {safeRenderMessage(error)}</p>}
+      {successMessage && <p style={{ color: 'green' }}>{safeRenderMessage(successMessage)}</p>}
     </div>
   );
 };

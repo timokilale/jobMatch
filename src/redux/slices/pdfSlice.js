@@ -1,6 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../api/api';
 
+// Helper function to extract error message
+const getErrorMessage = (error) => {
+  if (typeof error === 'string') return error;
+  if (error?.response?.data) {
+    if (typeof error.response.data === 'string') return error.response.data;
+    if (error.response.data.message) return error.response.data.message;
+    if (error.response.data.error) return error.response.data.error;
+  }
+  if (error?.message) return error.message;
+  return 'An unknown error occurred';
+};
+
 // Async thunk for downloading the CV PDF
 export const downloadCvPdf = createAsyncThunk(
   'pdf/downloadCvPdf',
@@ -21,7 +33,7 @@ export const downloadCvPdf = createAsyncThunk(
 
       return 'Download successful';
     } catch (error) {
-      return rejectWithValue(error.response?.data || 'Failed to download PDF');
+      return rejectWithValue(getErrorMessage(error));
     }
   }
 );
