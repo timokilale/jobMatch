@@ -12,6 +12,12 @@ enum Role {
   EMPLOYER
 }
 
+enum NotificationType {
+  STATUS_CHANGE
+  NEW_APPLICATION
+  GENERAL
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -39,16 +45,16 @@ model Applicant {
   userId      Int      @unique
   user        User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
-
-  applications Application[]
-  qualifications AcademicQualification[]
-  experiences    WorkExperience[]
-  languages      LanguageProficiency[]
-  skills         ComputerSkill[]
-
+  
+  applications    Application[]
+  qualifications  AcademicQualification[]
+  experiences     WorkExperience[]
+  languages       LanguageProficiency[]
+  skills          ComputerSkill[]
+  notifications   Notification[]
+  
   categories     JobCategory[] @relation("ApplicantCategories")
 }
-
 
 model Employer {
   id         Int      @id @default(autoincrement())
@@ -59,6 +65,7 @@ model Employer {
   createdAt  DateTime @default(now())
   
   jobs Job[]
+  notifications Notification[]
 }
 
 model Job {
@@ -72,12 +79,10 @@ model Job {
   employer    Employer @relation(fields: [employerId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
+  
   applications Application[]
-
   categories   JobCategory[] @relation("JobCategories")
 }
-
 
 model Application {
   id          Int      @id @default(autoincrement())
@@ -87,6 +92,27 @@ model Application {
   applicantId Int
   applicant   Applicant @relation(fields: [applicantId], references: [id])
   createdAt   DateTime @default(now())
+  
+  notifications Notification[]
+}
+
+model Notification {
+  id            Int              @id @default(autoincrement())
+  type          NotificationType
+  title         String
+  message       String
+  isRead        Boolean          @default(false)
+  createdAt     DateTime         @default(now())
+  readAt        DateTime?
+  expiresAt     DateTime?
+  
+  // Relations
+  applicantId   Int?
+  applicant     Applicant?       @relation(fields: [applicantId], references: [id])
+  employerId    Int?
+  employer      Employer?        @relation(fields: [employerId], references: [id])
+  applicationId Int?
+  application   Application?     @relation(fields: [applicationId], references: [id])
 }
 
 model AcademicQualification {
@@ -100,9 +126,7 @@ model AcademicQualification {
   certificateUrl String?
   applicantId    Int
   applicant      Applicant @relation(fields: [applicantId], references: [id])
-  // degree field removed
 }
-
 
 model WorkExperience {
   id                 Int      @id @default(autoincrement())
@@ -119,7 +143,6 @@ model WorkExperience {
   applicant          Applicant @relation(fields: [applicantId], references: [id])
 }
 
-
 model LanguageProficiency {
   id          Int        @id @default(autoincrement())
   language    String
@@ -129,7 +152,6 @@ model LanguageProficiency {
   applicantId Int
   applicant   Applicant  @relation(fields: [applicantId], references: [id])
 }
-
 
 model ComputerSkill {
   id             Int      @id @default(autoincrement())

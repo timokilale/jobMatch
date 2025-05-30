@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require ('../middleware/auth');
 const { registerApplicant, registerEmployer, login } = require('../controllers/authController');
 const qualificationsRoutes = require('./qualifications');
-
+const notificationsController = require('../controllers/notifications');
 // Auth Routes
 router.post('/auth/login', login);
 router.post('/auth/register/applicant', registerApplicant);
@@ -19,6 +19,8 @@ router.get('/me', auth(), async (req, res) => {
       }
     });
   });
+
+  
 
   router.post('/logout', (req, res) => {
     res.clearCookie('token', {
