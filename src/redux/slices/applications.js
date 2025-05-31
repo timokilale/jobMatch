@@ -41,6 +41,19 @@ export const fetchEmployerApplications = createAsyncThunk(
   }
 );
 
+export const updateApplicationStatus = createAsyncThunk(
+  'applications/updateApplicationStatus',
+  async ({ applicationId, status }, { rejectWithValue }) => {
+    try {
+      const response = await api.patch(`/applications/${applicationId}/decision`, { status });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Failed to update application status');
+    }
+  }
+);
+
+
 // Helper function to safely access array length
 const safeArrayLength = (arr) => {
   return Array.isArray(arr) ? arr.length : 0;
@@ -145,6 +158,7 @@ const applicationsSlice = createSlice({
       state.unreadNotificationCount = 0;
     }
   },
+  
   extraReducers: (builder) => {
     builder
       // Apply to job
@@ -241,6 +255,42 @@ const applicationsSlice = createSlice({
       .addCase(fetchEmployerApplications.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.error || 'Failed to fetch applications';
+      })
+      .addCase(updateApplicationStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateApplicationStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        const updated = action.payload;
+
+        state.applications = state.applications.map(app =>
+          app.id === updated.id ? updated : app
+        );
+
+        if (updated.status === 'accepted' || updated.status === 'rejected') {
+          const notification = {
+            id: `${updated.id}_${updated.status}_${Date.now()}`,
+            applicationId: updated.id,
+            jobTitle: updated.job?.title || 'Job',
+            companyName: updated.job?.employer?.companyName || 'Company',
+            status: updated.status,
+            type: 'status_change',
+            message: updated.status === 'accepted' 
+              ? `Great news! Your application for ${updated.job?.title || 'the position'} at ${updated.job?.employer?.companyName || 'the company'} has been accepted.`
+              : `Your application for ${updated.job?.title || 'the position'} at ${updated.job?.employer?.companyName || 'the company'} has been rejected.`,
+            createdAt: new Date().toISOString(),
+            isRead: false,
+            readAt: null,
+            expiresAt: null
+          };
+          state.notifications.unshift(notification);
+          state.unreadNotificationCount += 1;
+        }
+      })
+      .addCase(updateApplicationStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.error || 'Failed to update application status';
       });
   }
 });

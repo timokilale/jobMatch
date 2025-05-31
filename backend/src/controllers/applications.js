@@ -127,6 +127,7 @@ exports.getEmployerApplications = async (req, res) => {
         },
         applicant: {
           select: {
+            id: true,
             fullName: true,
             user: {
               select: {

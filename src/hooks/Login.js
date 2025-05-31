@@ -22,9 +22,9 @@ const useLogin = () => {
       console.log("Login result:", result);
       
       // Using the correct way to check for fulfilled action
-      if (result.meta.requestStatus === 'fulfilled') {
-        const { role } = result.payload;
-        console.log("Login successful, role:", role);
+      if (loginUser.fulfilled.match(result)) {
+        const { role, token } = result.payload;
+        console.log("Login successful, role:", role, "token:", token ? "present" : "missing");
         
         // Navigate based on role
         if (role === 'APPLICANT') {
@@ -35,7 +35,7 @@ const useLogin = () => {
           console.error('Unknown role:', role);
         }
       } else {
-        console.error('Login failed:', result.error);
+        console.error('Login failed:', result.payload || result.error);
       }
     } catch (err) {
       console.error('Login error:', err);

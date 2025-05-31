@@ -9,6 +9,36 @@ const api = axios.create({
     },
 });
 
+api.interceptors.request.use(
+    (config) => {
+       
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            // Clear token from localStorage
+            localStorage.removeItem('token');
+            
+            // Redirect to login
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
+
+function getTokenFromStorage() {
+    try {
+        return localStorage.getItem('token');
+    } catch (error) {
+        return null;
+    }
+}
 
 export default api;

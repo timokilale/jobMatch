@@ -2,12 +2,17 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCvData } from '../../redux/slices/cvSlice';
 import DownloadButton from './Downloadbutton';
+import { updateApplicationStatus } from '../../redux/slices/applications';
 
-const CVPreview = ({ applicantId }) => {
+
+const CVPreview = ({ applicantId, isEmployerView = false }) => {
   const dispatch = useDispatch();
   const { cv, loading, error } = useSelector(state => state.cv);
+  const { role, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
+    console.log("Token from localStorage:", localStorage.getItem('token'));
+    console.log("Auth state:", { role, user });
     if (applicantId) dispatch(fetchCvData(applicantId));
   }, [dispatch, applicantId]);
 
@@ -50,6 +55,17 @@ const CVPreview = ({ applicantId }) => {
  
   };
 
+  const handleDecision = (decision) => {
+    if (!cv?.applicationId) {
+      console.error('Missing application ID for decision.');
+      return;
+    }
+
+    dispatch(updateApplicationStatus({ 
+      applicationId: cv.applicationId, 
+      status: decision }));
+  };
+
 
 
   if (loading) return <p className="text-center mt-10 text-gray-500">Loading CV...</p>;
@@ -58,7 +74,7 @@ const CVPreview = ({ applicantId }) => {
 
   return (
     <>
-    <div className="bg-gray-50 rounded-xl shadow-md p-8 mt-18 max-w-5xl mx-auto">
+    <div className={`bg-gray-50 rounded-xl shadow-md p-8 mt-18 max-w-5xl mx-auto ${isEmployerView ? 'mt-0' : ''}`}>
       <div className="flex flex-col md:flex-row items-start justify-between md:items-center border-b pb-4 mb-6">
         <div>
           <h2 className="text-3xl font-bold text-green-800">{safeRender(cv?.fullName)}</h2>
@@ -146,11 +162,28 @@ const CVPreview = ({ applicantId }) => {
         </div>
       </div>
     </div>
-    <div className="mb-4 md:mt-4">
-      <DownloadButton applicantId={cv?.id || applicantId} />
-    </div>
-    </>
-    
+    {!isEmployerView && (
+      <div className="mb-4 md:mt-4">
+        <DownloadButton applicantId={cv?.id || applicantId} />
+      </div>
+    )}
+    {isEmployerView && cv && (
+       <div className="flex justify-center gap-4 mt-6 p-4 bg-white border-t">
+         <button
+           onClick={() => handleDecision('rejected')}
+           className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+         >
+           Reject 
+         </button>
+         <button
+           onClick={() => handleDecision('accepted')}
+           className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+         >
+           Accept
+         </button>
+        </div>
+      )}
+    </>  
   );
 };
 

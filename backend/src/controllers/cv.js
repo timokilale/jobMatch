@@ -37,6 +37,21 @@ exports.getCVData = async (req, res) => {
       return res.status(404).json({ error: 'Applicant not found' });
     }
 
+    if (req.user.role === 'EMPLOYER') {
+      const applicationCount = await prisma.application.count({
+        where: {
+          applicantId: applicant.id,
+          job: {
+            employerId: req.user.employer.id
+          }
+        }
+      });
+
+      if (applicationCount === 0) {
+        return res.status(403).json({ error: 'Unauthorized to view this CV' });
+      }
+    }
+
     res.json(applicant);
   } catch (error) {
     console.error('CV fetch error:', error);
