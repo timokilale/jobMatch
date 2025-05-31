@@ -180,7 +180,9 @@ const Candidates = () => {
                   </button>
                 </div>
                 <div className="p-4">
-                  <CVPreview applicantId={viewingApplicantId} />
+                  <CVPreview 
+                    applicantId={viewingApplicantId}
+                    isEmployerView = {true} />
                 </div>
               </div>
             </div>
