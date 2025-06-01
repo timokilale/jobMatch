@@ -171,6 +171,20 @@ exports.Prisma.ApplicationScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  isRead: 'isRead',
+  createdAt: 'createdAt',
+  readAt: 'readAt',
+  expiresAt: 'expiresAt',
+  applicantId: 'applicantId',
+  employerId: 'employerId',
+  applicationId: 'applicationId'
+};
+
 exports.Prisma.AcademicQualificationScalarFieldEnum = {
   id: 'id',
   level: 'level',
@@ -254,6 +268,11 @@ exports.Prisma.ApplicationOrderByRelevanceFieldEnum = {
   status: 'status'
 };
 
+exports.Prisma.NotificationOrderByRelevanceFieldEnum = {
+  title: 'title',
+  message: 'message'
+};
+
 exports.Prisma.AcademicQualificationOrderByRelevanceFieldEnum = {
   level: 'level',
   country: 'country',
@@ -288,6 +307,12 @@ exports.Role = exports.$Enums.Role = {
   EMPLOYER: 'EMPLOYER'
 };
 
+exports.NotificationType = exports.$Enums.NotificationType = {
+  STATUS_CHANGE: 'STATUS_CHANGE',
+  NEW_APPLICATION: 'NEW_APPLICATION',
+  GENERAL: 'GENERAL'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   JobCategory: 'JobCategory',
@@ -295,6 +320,7 @@ exports.Prisma.ModelName = {
   Employer: 'Employer',
   Job: 'Job',
   Application: 'Application',
+  Notification: 'Notification',
   AcademicQualification: 'AcademicQualification',
   WorkExperience: 'WorkExperience',
   LanguageProficiency: 'LanguageProficiency',

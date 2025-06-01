@@ -65,8 +65,9 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false }) => {
     console.log('Making decision:', decision, 'for application:', appId);
     dispatch(updateApplicationStatus({ 
       applicationId: appId, 
-      status: decision === 'accepted' ? 'HIRED' : 'REJECTED'
+      status: decision
     }));
+    console.log('Dispatching with:', { applicationId: appId, decision });
   };
 
   if (loading) return <p className="text-center mt-10 text-gray-500">Loading CV...</p>;
@@ -171,13 +172,13 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false }) => {
     {isEmployerView && cv && (
        <div className="flex justify-center gap-4 mt-6 p-4 bg-white border-t">
          <button
-           onClick={() => handleDecision('rejected')}
+           onClick={() => handleDecision('reject')}
            className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
          >
            Reject 
          </button>
          <button
-           onClick={() => handleDecision('accepted')}
+           onClick={() => handleDecision('accept')}
            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
          >
            Accept

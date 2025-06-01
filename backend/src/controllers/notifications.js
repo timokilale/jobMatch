@@ -225,6 +225,8 @@ exports.cleanupExpiredNotifications = async (req, res) => {
 // Helper function to create application status change notification
 exports.createStatusChangeNotification = async (applicationId, newStatus) => {
   try {
+    console.log('Creating status change notification for application:', applicationId, 'with status:', newStatus);
+    
     const application = await prisma.application.findUnique({
       where: { id: applicationId },
       include: {
@@ -272,6 +274,7 @@ exports.createStatusChangeNotification = async (applicationId, newStatus) => {
       }
     });
 
+    console.log('Notification created successfully:', notification.id);
     return notification;
   } catch (error) {
     console.error('Create Status Change Notification Error:', error);
