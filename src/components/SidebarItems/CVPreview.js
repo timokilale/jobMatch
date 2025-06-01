@@ -4,7 +4,7 @@ import { fetchCvData } from '../../redux/slices/cvSlice';
 import DownloadButton from './Downloadbutton';
 import { updateApplicationStatus } from '../../redux/slices/applications';
 
-const CVPreview = ({ applicantId, applicationId, isEmployerView = false }) => {
+const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecisionMade }) => {
   const dispatch = useDispatch();
   const { cv, loading, error } = useSelector(state => state.cv);
   const { role, user } = useSelector((state) => state.auth);
@@ -54,9 +54,7 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false }) => {
   };
 
   const handleDecision = (decision) => {
-    // Use the passed applicationId prop or fallback to cv.applicationId
     const appId = applicationId || cv?.applicationId;
-    
     if (!appId) {
       console.error('Missing application ID for decision. ApplicationId prop:', applicationId, 'CV applicationId:', cv?.applicationId);
       return;
@@ -67,6 +65,9 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false }) => {
       applicationId: appId, 
       status: decision
     }));
+    if (onDecisionMade) {
+      onDecisionMade();  // Close modal after decision
+    }
     console.log('Dispatching with:', { applicationId: appId, decision });
   };
 

@@ -183,7 +183,9 @@ const Candidates = () => {
                   <CVPreview 
                     applicantId={viewingApplication.applicant.id}
                     applicationId={viewingApplication.id}
-                    isEmployerView = {true} />
+                    isEmployerView = {true}
+                    onDecisionMade={() => setViewingApplication(null)}
+                  />
                 </div>
               </div>
             </div>
