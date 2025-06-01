@@ -149,7 +149,7 @@ exports.getEmployerApplications = async (req, res) => {
   }
 };
 
-// Update application status (new endpoint)
+// Updated application status endpoint for employer decisions
 exports.updateApplicationStatus = async (req, res) => {
   try {
     const applicationId = parseInt(req.params.applicationId);
@@ -159,8 +159,12 @@ exports.updateApplicationStatus = async (req, res) => {
       return res.status(400).json({ error: "Invalid application ID format" });
     }
 
-    if (!status || !['applied', 'reviewed', 'accepted', 'rejected'].includes(status)) {
-      return res.status(400).json({ error: "Invalid status. Must be: applied, reviewed, accepted, or rejected" });
+    // Updated validation for employer decisions
+    const validStatuses = ['APPLIED', 'REVIEWED', 'ACCEPTED', 'REJECTED'];
+    if (!status || !validStatuses.includes(status.toUpperCase())) {
+      return res.status(400).json({ 
+        error: "Invalid status. Must be: APPLIED, REVIEWED, ACCEPTED, or REJECTED" 
+      });
     }
 
     // Get the current application to check for status change
@@ -171,6 +175,75 @@ exports.updateApplicationStatus = async (req, res) => {
     if (!currentApplication) {
       return res.status(404).json({ error: 'Application not found' });
     }
+
+    // Update the application status (convert to uppercase for consistency)
+    const updatedApplication = await prisma.application.update({
+      where: { id: applicationId },
+      data: { status: status.toUpperCase() },
+      include: {
+        job: {
+          include: {
+            employer: true
+          }
+        },
+        applicant: {
+          select: {
+            fullName: true,
+            user: {
+              select: {
+                email: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Create notification if status changed to accepted or rejected - PASS LOWERCASE VALUE
+    const finalStatus = status.toUpperCase();
+    if (currentApplication.status !== finalStatus && ['ACCEPTED', 'REJECTED'].includes(finalStatus)) {
+      const notificationStatus = finalStatus === 'ACCEPTED' ? 'accepted' : 'rejected';
+      await createStatusChangeNotification(applicationId, notificationStatus);
+    }
+
+    res.json(updatedApplication);
+  } catch (error) {
+    console.error('Update Application Status Error:', error);
+    res.status(500).json({ 
+      error: 'Failed to update application status',
+      details: error.message
+    });
+  }
+};
+
+
+// Optional: Add a specific endpoint for employer decisions (accept/reject only)
+exports.makeApplicationDecision = async (req, res) => {
+  try {
+    const applicationId = parseInt(req.params.applicationId);
+    const { decision } = req.body; // 'accept' or 'reject'
+
+    if (isNaN(applicationId)) {
+      return res.status(400).json({ error: "Invalid application ID format" });
+    }
+
+    if (!decision || !['accept', 'reject'].includes(decision.toLowerCase())) {
+      return res.status(400).json({ 
+        error: "Invalid decision. Must be 'accept' or 'reject'" 
+      });
+    }
+
+    // Get the current application
+    const currentApplication = await prisma.application.findUnique({
+      where: { id: applicationId }
+    });
+
+    if (!currentApplication) {
+      return res.status(404).json({ error: 'Application not found' });
+    }
+
+    // Map decision to status
+    const status = decision.toLowerCase() === 'accept' ? 'ACCEPTED' : 'REJECTED';
 
     // Update the application status
     const updatedApplication = await prisma.application.update({
@@ -195,16 +268,19 @@ exports.updateApplicationStatus = async (req, res) => {
       }
     });
 
-    // Create notification if status changed to accepted or rejected
-    if (currentApplication.status !== status && ['accepted', 'rejected'].includes(status)) {
-      await createStatusChangeNotification(applicationId, status);
+    // Create notification for status change - PASS LOWERCASE VALUE
+    if (currentApplication.status !== status) {
+      await createStatusChangeNotification(applicationId, decision.toLowerCase() === 'accept' ? 'accepted' : 'rejected');
     }
 
-    res.json(updatedApplication);
+    res.json({
+      ...updatedApplication,
+      decision: decision.toLowerCase()
+    });
   } catch (error) {
-    console.error('Update Application Status Error:', error);
+    console.error('Make Application Decision Error:', error);
     res.status(500).json({ 
-      error: 'Failed to update application status',
+      error: 'Failed to make application decision',
       details: error.message
     });
   }

@@ -41,11 +41,19 @@ export const fetchEmployerApplications = createAsyncThunk(
   }
 );
 
+// Updated to use the decision endpoint with correct format
 export const updateApplicationStatus = createAsyncThunk(
   'applications/updateApplicationStatus',
   async ({ applicationId, status }, { rejectWithValue }) => {
     try {
-      const response = await api.patch(`/applications/${applicationId}/decision`, { status });
+      // Convert status to decision format
+      const decision = status.toLowerCase() === 'accepted' || status.toLowerCase() === 'accept' 
+        ? 'accept' 
+        : 'reject';
+      
+      const response = await api.patch(`/applications/${applicationId}/decision`, { 
+        decision 
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to update application status');
@@ -53,109 +61,115 @@ export const updateApplicationStatus = createAsyncThunk(
   }
 );
 
+// Alternative thunk that directly accepts accept/reject decisions
+export const makeApplicationDecision = createAsyncThunk(
+  'applications/makeApplicationDecision',
+  async ({ applicationId, decision }, { rejectWithValue }) => {
+    try {
+      const response = await api.patch(`/applications/${applicationId}/decision`, { 
+        decision // 'accept' or 'reject'
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Failed to make application decision');
+    }
+  }
+);
 
-// Helper function to safely access array length
-const safeArrayLength = (arr) => {
-  return Array.isArray(arr) ? arr.length : 0;
-};
+// New thunk to fetch notifications from backend
+export const fetchApplicantNotifications = createAsyncThunk(
+  'applications/fetchApplicantNotifications',
+  async (applicantId, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/notifications/applicant/${applicantId}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Failed to fetch notifications');
+    }
+  }
+);
+
+// New thunk to mark notification as read
+export const markNotificationAsReadAsync = createAsyncThunk(
+  'applications/markNotificationAsRead',
+  async (notificationId, { rejectWithValue }) => {
+    try {
+      const response = await api.patch(`/notifications/${notificationId}/read`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Failed to mark notification as read');
+    }
+  }
+);
+
+// New thunk to mark all notifications as read
+export const markAllNotificationsAsReadAsync = createAsyncThunk(
+  'applications/markAllNotificationsAsRead',
+  async ({ userId, userType }, { rejectWithValue }) => {
+    try {
+      const response = await api.patch('/notifications/mark-all-read', { userId, userType });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Failed to mark all notifications as read');
+    }
+  }
+);
 
 const applicationsSlice = createSlice({
   name: 'applications',
   initialState: {
     applications: [],
     applicationStatus: {},
-    notifications: [], // Always initialize as empty array
+    notifications: [],
     unreadNotificationCount: 0,
     loadingApplications: false,
+    loadingNotifications: false,
     applyingToJob: false,
     error: null,
     loading: false
   },
   reducers: {
+    // Local notification management (for immediate UI feedback)
     markNotificationAsRead: (state, action) => {
-      // Ensure notifications is an array
-      if (!Array.isArray(state.notifications)) {
-        state.notifications = [];
-        return;
-      }
-      
       const notificationId = action.payload;
       const notification = state.notifications.find(n => n.id === notificationId);
       if (notification && !notification.isRead) {
         notification.isRead = true;
         notification.readAt = new Date().toISOString();
-        notification.expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(); // 7 days from read
         state.unreadNotificationCount = Math.max(0, state.unreadNotificationCount - 1);
       }
     },
     markAllNotificationsAsRead: (state) => {
-      // Ensure notifications is an array
-      if (!Array.isArray(state.notifications)) {
-        state.notifications = [];
-        return;
-      }
-      
-      const currentTime = new Date().toISOString();
-      const expireTime = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-      
       state.notifications.forEach(notification => {
         if (!notification.isRead) {
           notification.isRead = true;
-          notification.readAt = currentTime;
-          notification.expiresAt = expireTime;
+          notification.readAt = new Date().toISOString();
         }
       });
       state.unreadNotificationCount = 0;
     },
+    // Add the missing cleanup functionality
     cleanupExpiredNotifications: (state) => {
-      // Ensure notifications is an array before accessing length
-      if (!Array.isArray(state.notifications)) {
-        state.notifications = [];
-        state.unreadNotificationCount = 0;
-        return;
-      }
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
       
-      const currentTime = new Date().toISOString();
-      const initialLength = state.notifications.length;
-      
+      // Remove notifications that are read and older than 7 days
       state.notifications = state.notifications.filter(notification => {
-        return !notification.expiresAt || notification.expiresAt > currentTime;
+        if (!notification.isRead) return true; // Keep unread notifications
+        
+        const readDate = new Date(notification.readAt || notification.createdAt);
+        return readDate > sevenDaysAgo; // Keep notifications newer than 7 days
       });
       
-      // Recalculate unread count in case expired notifications were unread
+      // Recalculate unread count
       state.unreadNotificationCount = state.notifications.filter(n => !n.isRead).length;
-    },
-    createNotification: (state, action) => {
-      // Ensure notifications is an array
-      if (!Array.isArray(state.notifications)) {
-        state.notifications = [];
-      }
-      
-      const { applicationId, jobTitle, companyName, status, type } = action.payload;
-      const notificationId = `${applicationId}_${status}_${Date.now()}`;
-      
-      const notification = {
-        id: notificationId,
-        applicationId,
-        jobTitle,
-        companyName,
-        status,
-        type, // 'status_change'
-        message: status === 'accepted' 
-          ? `Great news! Your application for ${jobTitle} at ${companyName} has been accepted.`
-          : `Your application for ${jobTitle} at ${companyName} has been rejected.`,
-        createdAt: new Date().toISOString(),
-        isRead: false,
-        readAt: null,
-        expiresAt: null
-      };
-      
-      state.notifications.unshift(notification);
-      state.unreadNotificationCount += 1;
     },
     clearAllNotifications: (state) => {
       state.notifications = [];
       state.unreadNotificationCount = 0;
+    },
+    resetError: (state) => {
+      state.error = null;
     }
   },
   
@@ -170,7 +184,6 @@ const applicationsSlice = createSlice({
         state.applyingToJob = false;
         state.applicationStatus[action.payload.jobId] = 'applied';
         
-        // Ensure applications is an array
         if (!Array.isArray(state.applications)) {
           state.applications = [];
         }
@@ -188,54 +201,11 @@ const applicationsSlice = createSlice({
       })
       .addCase(getApplicantApplications.fulfilled, (state, action) => {
         state.loading = false;
-        const newApplications = action.payload || [];
-        const oldApplications = state.applications || [];
-
-        // Ensure notifications is an array
-        if (!Array.isArray(state.notifications)) {
-          state.notifications = [];
-        }
-
-        // Check for status changes and create notifications
-        newApplications.forEach(newApp => {
-          const oldApp = oldApplications.find(app => app.id === newApp.id);
-          
-          if (oldApp && oldApp.status !== newApp.status) {
-            // Status changed - create notification for accepted or rejected
-            if (newApp.status === 'accepted' || newApp.status === 'rejected') {
-              const notificationId = `${newApp.id}_${newApp.status}_${Date.now()}`;
-              
-              // Check if notification already exists to avoid duplicates
-              const existingNotification = state.notifications.find(
-                n => n.applicationId === newApp.id && n.status === newApp.status
-              );
-              
-              if (!existingNotification) {
-                const notification = {
-                  id: notificationId,
-                  applicationId: newApp.id,
-                  jobTitle: newApp.job?.title || 'Job',
-                  companyName: newApp.job?.employer?.companyName || 'Company',
-                  status: newApp.status,
-                  type: 'status_change',
-                  message: newApp.status === 'accepted' 
-                    ? `Great news! Your application for ${newApp.job?.title || 'the position'} at ${newApp.job?.employer?.companyName || 'the company'} has been accepted.`
-                    : `Your application for ${newApp.job?.title || 'the position'} at ${newApp.job?.employer?.companyName || 'the company'} has been rejected.`,
-                  createdAt: new Date().toISOString(),
-                  isRead: false,
-                  readAt: null,
-                  expiresAt: null
-                };
-                
-                state.notifications.unshift(notification);
-                state.unreadNotificationCount += 1;
-              }
-            }
-          }
-        });
-
-        state.applications = newApplications;
-        newApplications.forEach(app => {
+        const applications = action.payload || [];
+        state.applications = applications;
+        
+        // Update application status mapping
+        applications.forEach(app => {
           state.applicationStatus[app.jobId] = 'applied';
         });
       })
@@ -244,6 +214,7 @@ const applicationsSlice = createSlice({
         state.error = action.payload?.error || 'Failed to fetch applications';
       })
 
+      // Fetch employer applications
       .addCase(fetchEmployerApplications.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -256,6 +227,8 @@ const applicationsSlice = createSlice({
         state.loading = false;
         state.error = action.payload?.error || 'Failed to fetch applications';
       })
+      
+      // Update application status
       .addCase(updateApplicationStatus.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -264,44 +237,78 @@ const applicationsSlice = createSlice({
         state.loading = false;
         const updated = action.payload;
 
+        // Update the application in the list
         state.applications = state.applications.map(app =>
           app.id === updated.id ? updated : app
         );
-
-        if (updated.status === 'accepted' || updated.status === 'rejected') {
-          const notification = {
-            id: `${updated.id}_${updated.status}_${Date.now()}`,
-            applicationId: updated.id,
-            jobTitle: updated.job?.title || 'Job',
-            companyName: updated.job?.employer?.companyName || 'Company',
-            status: updated.status,
-            type: 'status_change',
-            message: updated.status === 'accepted' 
-              ? `Great news! Your application for ${updated.job?.title || 'the position'} at ${updated.job?.employer?.companyName || 'the company'} has been accepted.`
-              : `Your application for ${updated.job?.title || 'the position'} at ${updated.job?.employer?.companyName || 'the company'} has been rejected.`,
-            createdAt: new Date().toISOString(),
-            isRead: false,
-            readAt: null,
-            expiresAt: null
-          };
-          state.notifications.unshift(notification);
-          state.unreadNotificationCount += 1;
-        }
       })
       .addCase(updateApplicationStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.error || 'Failed to update application status';
+      })
+      
+      // Make application decision
+      .addCase(makeApplicationDecision.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(makeApplicationDecision.fulfilled, (state, action) => {
+        state.loading = false;
+        const updated = action.payload;
+
+        // Update the application in the list
+        state.applications = state.applications.map(app =>
+          app.id === updated.id ? updated : app
+        );
+      })
+      .addCase(makeApplicationDecision.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.error || 'Failed to make application decision';
+      })
+
+      // Fetch notifications
+      .addCase(fetchApplicantNotifications.pending, (state) => {
+        state.loadingNotifications = true;
+      })
+      .addCase(fetchApplicantNotifications.fulfilled, (state, action) => {
+        state.loadingNotifications = false;
+        state.notifications = action.payload || [];
+        state.unreadNotificationCount = state.notifications.filter(n => !n.isRead).length;
+      })
+      .addCase(fetchApplicantNotifications.rejected, (state, action) => {
+        state.loadingNotifications = false;
+        state.error = action.payload?.error || 'Failed to fetch notifications';
+      })
+
+      // Mark notification as read
+      .addCase(markNotificationAsReadAsync.fulfilled, (state, action) => {
+        const updatedNotification = action.payload;
+        const index = state.notifications.findIndex(n => n.id === updatedNotification.id);
+        if (index !== -1) {
+          state.notifications[index] = updatedNotification;
+          if (!updatedNotification.isRead) {
+            state.unreadNotificationCount = Math.max(0, state.unreadNotificationCount - 1);
+          }
+        }
+      })
+
+      // Mark all notifications as read
+      .addCase(markAllNotificationsAsReadAsync.fulfilled, (state, action) => {
+        state.notifications.forEach(notification => {
+          notification.isRead = true;
+          notification.readAt = new Date().toISOString();
+        });
+        state.unreadNotificationCount = 0;
       });
   }
 });
 
 export const { 
-  resetApplicationStatus,
   markNotificationAsRead,
   markAllNotificationsAsRead,
   cleanupExpiredNotifications,
-  createNotification,
-  clearAllNotifications
+  clearAllNotifications,
+  resetError
 } = applicationsSlice.actions;
 
 export default applicationsSlice.reducer;

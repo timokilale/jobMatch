@@ -12,7 +12,7 @@ const Candidates = () => {
     error = null 
   } = useSelector((state) => state.applications) || {};
 
-  const [viewingApplicantId, setViewingApplicantId] = useState(null);
+  const [viewingApplication, setViewingApplication] = useState(null);
 
   const { user } = useSelector((state) => state.auth);
   const [searchTerm, setSearchTerm] = useState('');
@@ -166,14 +166,14 @@ const Candidates = () => {
             <span>Actions</span>
           </div>
 
-          {viewingApplicantId && (
+          {viewingApplication && (
             <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
               <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-auto">
                 <div className="sticky top-0 bg-white p-4 flex justify-between items-center border-b z-10">
                   <h3 className="text-xl font-bold text-green-800">Applicant CV</h3>
                   
                   <button 
-                    onClick={() => setViewingApplicantId(null)}
+                    onClick={() => setViewingApplication(null)}
                     className="text-gray-500 hover:text-gray-700"
                   >
                     <i className="fas fa-times text-2xl"></i>
@@ -181,7 +181,8 @@ const Candidates = () => {
                 </div>
                 <div className="p-4">
                   <CVPreview 
-                    applicantId={viewingApplicantId}
+                    applicantId={viewingApplication.applicant.id}
+                    applicationId={viewingApplication.id}
                     isEmployerView = {true} />
                 </div>
               </div>
@@ -236,7 +237,7 @@ const Candidates = () => {
                       <i className="fas fa-envelope text-green-600"></i>
                     </button>
                     <button 
-                      onClick={() => setViewingApplicantId(application.applicant.id)}
+                      onClick={() => setViewingApplication(application)}
                       className="p-2 hover:bg-green-100 rounded-full transition-colors"
                       title="View CV"
                     >

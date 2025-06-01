@@ -4,8 +4,7 @@ import { fetchCvData } from '../../redux/slices/cvSlice';
 import DownloadButton from './Downloadbutton';
 import { updateApplicationStatus } from '../../redux/slices/applications';
 
-
-const CVPreview = ({ applicantId, isEmployerView = false }) => {
+const CVPreview = ({ applicantId, applicationId, isEmployerView = false }) => {
   const dispatch = useDispatch();
   const { cv, loading, error } = useSelector(state => state.cv);
   const { role, user } = useSelector((state) => state.auth);
@@ -52,21 +51,23 @@ const CVPreview = ({ applicantId, isEmployerView = false }) => {
     return monthDiff >= 12 
       ? `${startDate.getFullYear()} - ${endText}`
       : `${startDate.toLocaleDateString('en-US', options)} - ${endText}`;
- 
   };
 
   const handleDecision = (decision) => {
-    if (!cv?.applicationId) {
-      console.error('Missing application ID for decision.');
+    // Use the passed applicationId prop or fallback to cv.applicationId
+    const appId = applicationId || cv?.applicationId;
+    
+    if (!appId) {
+      console.error('Missing application ID for decision. ApplicationId prop:', applicationId, 'CV applicationId:', cv?.applicationId);
       return;
     }
 
+    console.log('Making decision:', decision, 'for application:', appId);
     dispatch(updateApplicationStatus({ 
-      applicationId: cv.applicationId, 
-      status: decision }));
+      applicationId: appId, 
+      status: decision === 'accepted' ? 'HIRED' : 'REJECTED'
+    }));
   };
-
-
 
   if (loading) return <p className="text-center mt-10 text-gray-500">Loading CV...</p>;
   if (error) return <p className="text-center mt-10 text-red-500">Error: {safeRenderError(error)}</p>;
