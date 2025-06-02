@@ -133,7 +133,7 @@ const LoginPage = () => {
           </div>
 
           <div className="flex-1  hidden md:block">
-            <img src="assets/pattern.svg" alt="Pattern" className="w-full h-full object-cover rounded-r-lg" />
+            <img src="assets/pattern.png" alt="Pattern" className="w-full h-full object-cover rounded-r-lg" />
           </div>
         </div>
       )}
