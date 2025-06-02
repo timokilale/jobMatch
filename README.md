@@ -24,11 +24,6 @@ PORT=5000
           ii. npx peisma generate
           iii. npx prisma migrate dev
 following above will migate all database tables from prisma schema to database created automatically
-## in package.json of backend add this
-"scripts": {
-  "seed:categories": "node prisma/seedCategories.js"
-}
-
 ## then run 
 npm run seed:categories
 
