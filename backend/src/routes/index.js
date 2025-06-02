@@ -3,6 +3,8 @@ const router = express.Router();
 const auth = require ('../middleware/auth');
 const { registerApplicant, registerEmployer, login } = require('../controllers/authController');
 const qualificationsRoutes = require('./qualifications');
+const notificationsController = require('../controllers/notifications');
+const cvRoutes = require('./cv');
 
 // Auth Routes
 router.post('/auth/login', login);
@@ -20,6 +22,8 @@ router.get('/me', auth(), async (req, res) => {
     });
   });
 
+  
+
   router.post('/logout', (req, res) => {
     res.clearCookie('token', {
       httpOnly: true,
@@ -32,5 +36,5 @@ router.get('/me', auth(), async (req, res) => {
 
 // Qualifications Routes
 router.use('/qualifications', qualificationsRoutes);
-
+router.use('/cv', cvRoutes);
 module.exports = router;

@@ -1,3 +1,4 @@
+// middleware/auth.js
 const jwt = require('jsonwebtoken');
 const prisma = require('../prisma');
 
@@ -19,8 +20,26 @@ const auth = (roles = []) => {
       if (!user || (roles.length && !roles.includes(user.role))) {
         throw new Error('Unauthorized');
       }
+      
+      // Employer CV access validation
+      if (req.originalUrl.includes('/cv/') && user.role === "EMPLOYER") {
+        const applicantId = parseInt(req.params.id);
 
-      req.user = user;
+        const applicationCount = await prisma.application.count({
+          where: {
+            applicantId: applicantId,
+            job: {
+              employerId: user.employer.id
+            }
+          }
+        });
+        
+        if (applicationCount === 0) {
+          throw new Error('Unauthorized CV access');
+        }
+      }
+      
+      req.user = user; // Make sure to attach user to request
       next();
     } catch (error) {
       console.error('Auth error:', error.message);

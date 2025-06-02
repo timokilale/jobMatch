@@ -8,6 +8,10 @@ export const registerApplicant = createAsyncThunk(
   async (formData, { rejectWithValue }) => {
     try {
       const res = await api.post('/auth/register/applicant', formData);
+      if (res.data.token) {
+        localStorage.setItem('token', res.data.token);
+      }
+      
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -20,6 +24,10 @@ export const registerEmployer = createAsyncThunk(
   async (formData, { rejectWithValue }) => {
     try {
       const res = await api.post('/auth/register/employer', formData);
+      
+      if (res.data.token) {
+        localStorage.setItem('token', res.data.token);
+      }
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -34,7 +42,23 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const res = await api.post('/auth/login', credentials);
+      
+      if (res.data.token) {
+        localStorage.setItem('token', res.data.token);
+      }
       return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  'auth/logoutUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      await api.post('/auth/logout');
+      return {};
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -47,6 +71,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: {},
+    token: localStorage.getItem('token') || null,
     role: null,
     loading: false,
     error: null,
@@ -56,6 +81,11 @@ const authSlice = createSlice({
       state.token = null;
       state.role = null;
       state.user = null;
+      state.error = null;
+      localStorage.removeItem('token');
+    },
+    clearError: (state) => {
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -99,6 +129,7 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
+        state.token = 'cookie-auth';
         state.role = action.payload.role; 
         state.error = null;
       })
@@ -109,5 +140,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, clearError } = authSlice.actions;
 export default authSlice.reducer;

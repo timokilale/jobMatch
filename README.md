@@ -21,9 +21,9 @@ PORT=5000
 ## 3. Initialize prisma in backend and run migrations
      in your backend terminal run to initialize prisma
     run : i. npx prisma init
-          ii. npx peisma generate
+          ii. npx prisma generate
           iii. npx prisma migrate dev
-following above will migate all database tables from prisma schema to database created automatically
+following above will migate all database tables from prisma schema to database created automaticall
 ## then run 
 npm run seed:categories
 

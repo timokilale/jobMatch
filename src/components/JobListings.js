@@ -70,7 +70,7 @@ const JobListings = ({ category }) => {
     }
   };
 
-  const calculateDaysAgo = (dateString) => {
+  const calculateTimeAgo = (dateString) => {
     if (!dateString) return "?";
 
     try {
@@ -79,12 +79,39 @@ const JobListings = ({ category }) => {
 
       const currentDate = new Date();
       const diffTime = Math.abs(currentDate - postedDate);
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      const seconds = Math.floor(diffTime / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      const weeks = Math.floor(days / 7);
+      const months = Math.floor(days / 30);
+      const years = Math.floor(days / 365);
+
+      if (seconds < 60) {
+        
+        return seconds === 1 ? "1 second" : `${seconds} seconds`;
+      } else if (minutes < 60) {
+        return minutes === 1 ? "1 minute" : `${minutes} minutes`;
+      } else if (hours < 24) {
+        return hours === 1 ? "1 hour" : `${hours} hours`;
+      } else if (days < 7) {
+        return days === 1 ? "1 day" : `${days} days`;
+      } else if (weeks < 4) {
+        return weeks === 1 ? "1 week" : `${weeks} weeks`;
+      } else if (months < 12) {
+        return months === 1 ? "1 month" : `${months} months`;
+      } else {
+        return years === 1 ? "1 year" : `${years} years`;
+      }
     } catch (error) {
-      console.error("Error calculating days:", error);
+      console.error("Error calculating time:", error);
       return "?";
     }
   };
+
+
+  const [hiddenJobs, setHiddenJobs] = useState(new Set());
 
   const handleApplyNow = async (jobId) => {
     if (!user?.id) {
@@ -94,17 +121,24 @@ const JobListings = ({ category }) => {
   
     try {
       await dispatch(applyToJob({ applicantId: user.id, jobId })).unwrap();
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
       dispatch(getApplicantApplications(user.id));
+
+      setTimeout(() => {
+      setHiddenJobs(prev => new Set([...prev, jobId]));
+    }, 3000);
     } catch (error) {
       console.error("Application failed:", error);
     }
   };
 
-  const filteredJobs = category && category !== "home"
+  const filteredJobs = (category && category !== "home"
     ? applicantJobs.filter(job =>
         job.categories?.some(cat => cat.key === category)
       )
-    : applicantJobs;
+    : applicantJobs
+    ).filter(job => !isApplied(job.id) && !hiddenJobs.has(job.id));
   
     console.log("Available jobs:", applicantJobs);
     console.log("Filtered jobs:", filteredJobs);  
@@ -125,13 +159,17 @@ const JobListings = ({ category }) => {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-4xl mx-auto mb-36">
       <h2 className="text-2xl font-bold text-green-800 mb-6">
-        {category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Jobs` : 'All Available Jobs'}
+        {category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Jobs` : 'Recent Jobs'}
       </h2>
       
       <div className="space-y-6">
-        {filteredJobs.map(job => (
+        {filteredJobs.map(job => {
+          console.log("Job posted date:", job.postedDate);
+          console.log("Full job object:", job);
+        
+          return (
           <div 
             key={job.id} 
             className="bg-white rounded-lg shadow-md overflow-hidden border-l-4 border-green-700"
@@ -143,11 +181,11 @@ const JobListings = ({ category }) => {
                   <p className="text-gray-600 mt-1">{job.company} • {job.location}</p>
                 </div>
                 <div className="flex flex-col items-end">
-                  <span className="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
+                  {/* <span className="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
                     {job.salary}
-                  </span>
-                  <span className="text-gray-500 text-sm mt-1">
-                    Posted {calculateDaysAgo(job.postedDate)} days ago
+                  </span> */}
+                  <span className="text-green-800 text-sm mt-1">
+                     Posted {calculateTimeAgo(job.createdAt)} ago
                   </span>
                 </div>
               </div>
@@ -216,7 +254,8 @@ const JobListings = ({ category }) => {
               )}
             </div>
           </div>
-        ))}
+        )
+    })}
       </div>
     </div>
   );

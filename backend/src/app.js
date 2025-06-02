@@ -12,13 +12,24 @@ const app = express();
 app.use(cors({
   origin: 'http://localhost:3001',
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'Accept',
+    'Content-Disposition',
+    'Access-Control-Allow-Origin',   
+  ],
+  exposedHeaders: [
+    'Content-Disposition',
+    'Access-Control-Allow-Origin',
+  ],
   preflightContinue: false,
   optionsSuccessStatus: 204, 
 }));
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 
@@ -32,6 +43,8 @@ app.use('/api/skills', require('./routes/computerSkill'));
 app.use('/api/jobs', require('./routes/jobs'));
 app.use('/api/applications', require('./routes/applications'));
 app.use('/api/categories', require('./routes/categories'));
+app.use('/api/pdf', require('./routes/pdf'));
+
 
 // Error Handling
 app.use((err, req, res, next) => {

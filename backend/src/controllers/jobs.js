@@ -27,6 +27,13 @@ exports.getEmployerJobs = async (req, res) => {
     const employerId = parseInt(req.params.employerId);
     const jobs = await prisma.job.findMany({ 
       where: { employerId },
+      include: { 
+        employer: {
+          select: {
+            companyName: true,
+          }
+        }
+      },
       skip: parseInt(req.query.skip) || 0,
       take: parseInt(req.query.take) || 10,
     });
@@ -57,9 +64,22 @@ exports.getApplicantJobs = async (req, res) => {
             }
           }
         }
-      }
+      },
+      include: {
+        employer: {
+          select: {
+            companyName: true,
+          }
+        },
+        categories: true,
+      },
     });
-    res.json(jobs);
+
+    const jobsWithCompany = jobs.map(job => ({
+      ...job,
+      company: job.employer.companyName
+    }));
+    res.json(jobsWithCompany);
   } catch (error) {
     console.error('Error feching jobs for applicant:', error);
     res.status(500).json({ error: 'Internal server error'});

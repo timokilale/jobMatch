@@ -43,6 +43,7 @@ const registerApplicant = async (req, res) => {
 
     res.status(201).json({ 
       role: 'APPLICANT',
+      token: token,
       user: {
         ...user.applicant,
         email: user.email
@@ -96,10 +97,11 @@ const registerEmployer = async (req, res) => {
 
     res.status(201).json({ 
       role: 'EMPLOYER',
+      token: token,
       user: {
         ...user.employer ,
         email: user.email
-      }
+      },
     });
   } catch (error) {
     console.error('Employer registration error:', error);
@@ -140,11 +142,12 @@ const login = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', 
       sameSite: 'Lax',
-      maxAge: 3600000 
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     const responsePayload = {
       role: user.role,
+      token: token,
       user: {
         email: user.email,
         ...(user.role === 'APPLICANT' ? user.applicant : user.employer),
@@ -157,4 +160,8 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { registerApplicant, registerEmployer, login };
+const logout = async (req, res) => {
+  res.clearCookie('token');
+  res.json({ message: 'Logged out successfully' });
+};
+module.exports = { registerApplicant, registerEmployer, login, logout };

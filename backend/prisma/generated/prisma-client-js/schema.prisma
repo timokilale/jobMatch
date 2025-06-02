@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "./generated/prisma-client-js"
+  output   = "../prisma/generated/prisma-client-js"
 }
 
 datasource db {
@@ -11,6 +11,12 @@ datasource db {
 enum Role {
   APPLICANT
   EMPLOYER
+}
+
+enum NotificationType {
+  STATUS_CHANGE
+  NEW_APPLICATION
+  GENERAL
 }
 
 model User {
@@ -46,6 +52,7 @@ model Applicant {
   experiences    WorkExperience[]
   languages      LanguageProficiency[]
   skills         ComputerSkill[]
+  notifications  Notification[]
 
   categories JobCategory[] @relation("ApplicantCategories")
 }
@@ -58,7 +65,8 @@ model Employer {
   user        User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
 
-  jobs Job[]
+  jobs          Job[]
+  notifications Notification[]
 }
 
 model Job {
@@ -74,8 +82,7 @@ model Job {
   updatedAt   DateTime @updatedAt
 
   applications Application[]
-
-  categories JobCategory[] @relation("JobCategories")
+  categories   JobCategory[] @relation("JobCategories")
 }
 
 model Application {
@@ -86,6 +93,27 @@ model Application {
   applicantId Int
   applicant   Applicant @relation(fields: [applicantId], references: [id])
   createdAt   DateTime  @default(now())
+
+  notifications Notification[]
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  readAt    DateTime?
+  expiresAt DateTime?
+
+  // Relations
+  applicantId   Int?
+  applicant     Applicant?   @relation(fields: [applicantId], references: [id])
+  employerId    Int?
+  employer      Employer?    @relation(fields: [employerId], references: [id])
+  applicationId Int?
+  application   Application? @relation(fields: [applicationId], references: [id])
 }
 
 model AcademicQualification {
@@ -99,7 +127,6 @@ model AcademicQualification {
   certificateUrl String?
   applicantId    Int
   applicant      Applicant @relation(fields: [applicantId], references: [id])
-  // degree field removed
 }
 
 model WorkExperience {

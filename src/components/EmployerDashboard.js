@@ -7,7 +7,6 @@ import Candidates from './EmployerSidebar/Candidates';
 import Analytics from './EmployerSidebar/Analytics';
 import Settings from './EmployerSidebar/Settings';
 import { fetchEmployerApplications } from '../redux/slices/applications';
-
 import { logout } from '../redux/slices/authSlice';
 
 
@@ -206,7 +205,9 @@ const EmployerDashboard = () => {
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-semibold">Recent Applications</h2>
                       {applications.length > 3 && (
-                        <button className="text-green-600 hover:text-green-800">
+                        <button
+                          onClick={() => setActiveView('candidates')} 
+                          className="text-green-600 hover:text-green-800">
                           View All →
                         </button>
                       )}
