@@ -46,6 +46,11 @@ exports.getEmployerJobs = async (req, res) => {
 exports.getApplicantJobs = async (req, res) => {
   const applicantId = parseInt(req.params.id);
   try {
+    // Add pagination parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
     const applicant = await prisma.applicant.findUnique({
       where: { id: applicantId},
       include: { categories: true}
@@ -57,6 +62,7 @@ exports.getApplicantJobs = async (req, res) => {
 
     const jobs = await prisma.job.findMany({
       where: {
+        status: 'Active', // Only fetch active jobs
         categories: {
           some: {
             id: {
@@ -73,13 +79,41 @@ exports.getApplicantJobs = async (req, res) => {
         },
         categories: true,
       },
+      orderBy: {
+        createdAt: 'desc' // Show newest jobs first
+      },
+      skip: skip,
+      take: limit
     });
 
     const jobsWithCompany = jobs.map(job => ({
       ...job,
       company: job.employer.companyName
     }));
-    res.json(jobsWithCompany);
+
+    // Get total count for pagination
+    const totalJobs = await prisma.job.count({
+      where: {
+        status: 'Active',
+        categories: {
+          some: {
+            id: {
+              in: applicant.categories.map(cat => cat.id)
+            }
+          }
+        }
+      }
+    });
+
+    res.json({
+      jobs: jobsWithCompany,
+      pagination: {
+        page,
+        limit,
+        total: totalJobs,
+        totalPages: Math.ceil(totalJobs / limit)
+      }
+    });
   } catch (error) {
     console.error('Error feching jobs for applicant:', error);
     res.status(500).json({ error: 'Internal server error'});

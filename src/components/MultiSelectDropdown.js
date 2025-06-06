@@ -82,25 +82,25 @@ const MultiSelectDropdown = ({ options, selected, setSelected }) => {
       <button
         type="button"
         onClick={toggleDropdown}
-        className="w-full border border-green-700 rounded-md px-4 py-2 text-left focus:outline-none"
+        className="w-full border border-green-700 rounded-lg px-4 py-3 sm:py-2 text-left focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent text-base touch-target"
       >
-        <span className="block truncate">
+        <span className="block truncate text-green-700">
           {getSelectedCategoryNames()}
         </span>
-        <i className="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-green-700 pointer-events-none"></i>
+        <i className={`fas fa-chevron-${isOpen ? 'up' : 'down'} absolute right-3 top-1/2 -translate-y-1/2 text-green-700 pointer-events-none transition-transform duration-200`}></i>
       </button>
-      
+
       {isOpen && (
-        <div className="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto custom-scrollbar">
+        <div className="absolute z-20 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto custom-scrollbar">
           {safeOptions.map((option) => (
-            <label key={option.id} className="flex items-center p-2 hover:bg-gray-50">
+            <label key={option.id} className="flex items-center p-3 sm:p-2 hover:bg-gray-50 cursor-pointer touch-target">
               <input
                 type="checkbox"
                 checked={selected && selected.includes(option.id)}
                 onChange={() => handleCheckboxChange(option.id)}
-                className="mr-2"
+                className="mr-3 sm:mr-2 w-4 h-4 text-green-700 focus:ring-green-700 border-gray-300 rounded"
               />
-              {option.name}
+              <span className="text-sm sm:text-base text-gray-700">{option.name}</span>
             </label>
           ))}
         </div>

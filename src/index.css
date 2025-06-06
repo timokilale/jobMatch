@@ -203,6 +203,60 @@ code {
     overflow-y: auto !important;
   }
 
+  /* Mobile-specific improvements for auth screens */
+  @media (max-width: 640px) {
+    .page-container {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* Ensure forms are properly sized on mobile */
+    .mobile-form-container {
+      width: 100% !important;
+      max-width: none !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+    }
+
+    /* Improve touch targets for mobile */
+    button, input, select, textarea {
+      min-height: 44px;
+    }
+
+    /* Better spacing for mobile forms */
+    .mobile-form input,
+    .mobile-form select,
+    .mobile-form textarea,
+    .mobile-form button {
+      font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    /* Navigation improvements for mobile */
+    nav {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+
+    /* Ensure dropdowns work well on mobile */
+    .dropdown-mobile {
+      position: fixed !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      width: 90vw !important;
+      max-width: 400px !important;
+      max-height: 70vh !important;
+      z-index: 9999 !important;
+    }
+  }
+
+  /* Tablet improvements */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .tablet-container {
+      max-width: 90% !important;
+    }
+  }
+
   /* Fix for any remaining fixed height containers */
   .h-screen {
     min-height: 100vh !important;
@@ -213,5 +267,132 @@ code {
   .modal-content {
     max-height: 90vh;
     overflow-y: auto;
+  }
+
+  /* Z-index hierarchy for proper layering */
+  .z-navbar { z-index: 30; }
+  .z-sidebar { z-index: 50; }
+  .z-overlay { z-index: 40; }
+  .z-modal { z-index: 60; }
+  .z-dropdown { z-index: 55; }
+
+  /* Fixed navbar spacing */
+  .navbar-fixed {
+    padding-top: 4rem; /* 64px for navbar height */
+  }
+
+  /* Sidebar positioning fixes */
+  .sidebar-fixed {
+    top: 4rem; /* Start below navbar */
+    height: calc(100vh - 4rem); /* Full height minus navbar */
+  }
+
+  /* Additional mobile improvements for specific components */
+  @media (max-width: 640px) {
+    /* Header dropdown improvements */
+    .header-dropdown {
+      position: fixed !important;
+      top: 64px !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      border-radius: 0 !important;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+      z-index: 55 !important;
+    }
+
+    /* Job card mobile optimizations */
+    .job-card {
+      margin: 0.5rem !important;
+      padding: 1rem !important;
+      border-radius: 0.5rem !important;
+    }
+
+    /* Dashboard stats grid */
+    .stats-grid {
+      grid-template-columns: 1fr !important;
+      gap: 0.75rem !important;
+    }
+
+    /* Notification dropdown mobile */
+    .notification-dropdown {
+      position: fixed !important;
+      top: 64px !important;
+      left: 1rem !important;
+      right: 1rem !important;
+      width: auto !important;
+      max-height: 70vh !important;
+      z-index: 55 !important;
+    }
+
+    /* Sidebar overlay */
+    .sidebar-overlay {
+      position: fixed !important;
+      inset: 0 !important;
+      background-color: rgba(0, 0, 0, 0.5) !important;
+      z-index: 40 !important;
+    }
+
+    /* Mobile sidebar positioning */
+    .mobile-sidebar {
+      top: 64px !important;
+      height: calc(100vh - 64px) !important;
+      z-index: 50 !important;
+    }
+
+    /* Mobile-specific button improvements */
+    .mobile-action-button {
+      width: 100% !important;
+      padding: 0.75rem 1rem !important;
+      font-size: 1rem !important;
+      border-radius: 0.5rem !important;
+    }
+
+    /* Form improvements */
+    .mobile-form-field {
+      margin-bottom: 1rem !important;
+    }
+
+    .mobile-form-field input,
+    .mobile-form-field select,
+    .mobile-form-field textarea {
+      padding: 0.75rem !important;
+      font-size: 16px !important; /* Prevents zoom on iOS */
+      border-radius: 0.5rem !important;
+    }
+
+    /* Table responsive */
+    .mobile-table {
+      display: block !important;
+      overflow-x: auto !important;
+      white-space: nowrap !important;
+    }
+
+    /* Card improvements */
+    .mobile-card-stack {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 1rem !important;
+    }
+
+    /* Prevent horizontal scroll */
+    body {
+      overflow-x: hidden !important;
+    }
+  }
+
+  /* Landscape mobile improvements */
+  @media (max-width: 896px) and (orientation: landscape) {
+    .landscape-mobile {
+      padding: 0.5rem !important;
+    }
+
+    .landscape-mobile .sidebar {
+      width: 200px !important;
+    }
+
+    .landscape-mobile .main-content {
+      padding: 0.5rem !important;
+    }
   }
 }

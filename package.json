@@ -23,7 +23,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set DANGEROUSLY_DISABLE_HOST_CHECK=true&& set WDS_SOCKET_HOST=0.0.0.0&& set WDS_SOCKET_PORT=0&& react-scripts start",
+    "start-safe": "react-scripts start",
+    "start-ngrok": "set DANGEROUSLY_DISABLE_HOST_CHECK=true&& set WDS_SOCKET_HOST=0.0.0.0&& set WDS_SOCKET_PORT=0&& set FAST_REFRESH=false&& react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -46,6 +48,7 @@
       "last 1 safari version"
     ]
   },
+  "proxy": "http://localhost:5000",
   "devDependencies": {
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",

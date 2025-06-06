@@ -490,7 +490,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\MSA WIN10 G\\Desktop\\job-matching\\job-matching\\backend\\prisma\\generated\\prisma-client-js",
+      "value": "C:\\Users\\Timo Kilale\\Desktop\\tembeko\\backend\\prisma\\generated\\prisma-client-js",
       "fromEnvVar": null
     },
     "config": {
@@ -504,7 +504,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\MSA WIN10 G\\Desktop\\job-matching\\job-matching\\backend\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\Timo Kilale\\Desktop\\tembeko\\backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -518,6 +518,7 @@ const config = {
     "db"
   ],
   "activeProvider": "mysql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

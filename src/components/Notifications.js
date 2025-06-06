@@ -89,15 +89,15 @@ const Notifications = () => {
 
       {/* Notifications Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-hidden">
+        <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-hidden">
           {/* Header */}
-          <div className="p-4 border-b border-gray-200 bg-gray-50">
+          <div className="p-3 sm:p-4 border-b border-gray-200 bg-gray-50">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-800">Notifications</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">Notifications</h3>
               {unreadNotificationCount > 0 && (
                 <button
                   onClick={handleMarkAllAsRead}
-                  className="text-sm text-green-600 hover:text-green-800 font-medium"
+                  className="text-xs sm:text-sm text-green-600 hover:text-green-800 font-medium touch-target px-2 py-1"
                 >
                   Mark all read
                 </button>
@@ -108,9 +108,9 @@ const Notifications = () => {
           {/* Notifications List */}
           <div className="max-h-80 overflow-y-auto">
             {notifications.length === 0 ? (
-              <div className="p-6 text-center">
-                <i className="fas fa-bell-slash text-gray-400 text-2xl mb-2"></i>
-                <p className="text-gray-500">No notifications yet</p>
+              <div className="p-4 sm:p-6 text-center">
+                <i className="fas fa-bell-slash text-gray-400 text-xl sm:text-2xl mb-2"></i>
+                <p className="text-gray-500 text-sm sm:text-base">No notifications yet</p>
               </div>
             ) : (
               <div className="divide-y divide-gray-100">
@@ -118,13 +118,13 @@ const Notifications = () => {
                   <div
                     key={notification.id}
                     onClick={() => handleNotificationClick(notification.id)}
-                    className={`p-4 cursor-pointer transition-colors hover:bg-gray-50 ${
+                    className={`p-3 sm:p-4 cursor-pointer transition-colors hover:bg-gray-50 touch-target ${
                       !notification.isRead ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
                     }`}
                   >
-                    <div className="flex items-start space-x-3">
+                    <div className="flex items-start space-x-2 sm:space-x-3">
                       <div className="flex-shrink-0 mt-1">
-                        <i className={`${getNotificationIcon(notification.status)} text-lg`}></i>
+                        <i className={`${getNotificationIcon(notification.status)} text-base sm:text-lg`}></i>
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">

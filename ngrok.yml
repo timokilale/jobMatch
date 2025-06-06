@@ -1,0 +1,13 @@
+version: "2"
+authtoken: ""
+tunnels:
+  frontend:
+    addr: 3000
+    proto: http
+    host_header: rewrite
+    inspect: false
+  backend:
+    addr: 5000
+    proto: http
+    host_header: rewrite
+    inspect: false

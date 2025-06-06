@@ -1,6 +1,7 @@
 const { PrismaClient } = require('../prisma/generated/prisma-client-js');
 const prisma = new PrismaClient({
-    log: ['query', 'info', 'warn', 'error'],
+    // Disable query logging in production for better performance
+    log: process.env.NODE_ENV === 'development' ? ['warn', 'error'] : ['error'],
 });
 
 prisma.$connect()

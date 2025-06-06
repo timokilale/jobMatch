@@ -110,66 +110,81 @@ const JobPostingsSection = ({ employerId }) => {
       )}
 
       {showJobModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg w-full max-w-2xl mx-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-green-800">
-                {selectedJob ? 'Edit Job' : 'Create New Job'}</h3>
-              <button onClick={() => toggleJobModal(false)} 
-                className="text-gray-500 hover:text-gray-700">
-                 <i className="fas fa-times"></i>
-              </button>
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 sm:p-6 rounded-t-lg">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg sm:text-xl font-bold text-green-800">
+                  {selectedJob ? 'Edit Job' : 'Create New Job'}
+                </h3>
+                <button
+                  onClick={() => toggleJobModal(false)}
+                  className="text-gray-500 hover:text-gray-700 p-2 touch-target"
+                >
+                  <i className="fas fa-times text-lg"></i>
+                </button>
+              </div>
             </div>
-            <form onSubmit={handleSubmitJob}>
-              <div className="space-y-4">
+
+            {/* Form Content */}
+            <form onSubmit={handleSubmitJob} className="p-4 sm:p-6">
+              <div className="space-y-4 sm:space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Job Title</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Job Title</label>
                   <input
                     type="text"
                     required
-                    className="mt-1 block w-full border border-gray-300 p-2 rounded-md"
+                    className="w-full border border-gray-300 p-3 rounded-lg text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     value={newJob.title}
                     onChange={(e) => handleJobChange('title', e.target.value)}
+                    placeholder="Enter job title"
                   />
                 </div>
+
                 <div>
-                <label className="block text-sm font-medium text-gray-700">Category</label>
-                <select
-                  id="category"
-                  className="mt-1 block w-full border border-gray-300 p-2 rounded-md"
-                  value={newJob.categoryId}
-                  onChange={(e) => handleJobChange('categoryId', e.target.value)}
-                >
-                  <option value=""> Select Category</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                  <select
+                    id="category"
+                    className="w-full border border-gray-300 p-3 rounded-lg text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    value={newJob.categoryId}
+                    onChange={(e) => handleJobChange('categoryId', e.target.value)}
+                  >
+                    <option value="">Select Category</option>
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Description</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
                   <textarea
                     rows="4"
-                    className="mt-1 block w-full border border-gray-300 p-2 rounded-md"
+                    className="w-full border border-gray-300 p-3 rounded-lg text-base focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
                     value={newJob.description || ''}
-                    onChange={(e) => handleJobChange('description', e.target.value )}
-                  ></textarea>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Location</label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full border border-gray-300 p-2 rounded-md"
-                    value={newJob.location || ''}
-                    onChange={(e) => handleJobChange('location', e.target.value)}
+                    onChange={(e) => handleJobChange('description', e.target.value)}
+                    placeholder="Describe the job requirements and responsibilities"
                   />
                 </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Status</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                  <input
+                    type="text"
+                    className="w-full border border-gray-300 p-3 rounded-lg text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    value={newJob.location || ''}
+                    onChange={(e) => handleJobChange('location', e.target.value)}
+                    placeholder="Enter job location"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
                   <select
-                    className="mt-1 block w-full border border-gray-300 p-2 rounded-md"
+                    className="w-full border border-gray-300 p-3 rounded-lg text-base focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     value={newJob.status}
                     onChange={(e) => handleJobChange('status', e.target.value)}
                   >
@@ -178,17 +193,21 @@ const JobPostingsSection = ({ employerId }) => {
                     <option value="Closed">Closed</option>
                   </select>
                 </div>
-                <div className="flex justify-end space-x-4">
-                  <button 
-                    type="button" 
-                    onClick={() => toggleJobModal(false)} 
-                    className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={() => toggleJobModal(false)}
+                    className="w-full sm:w-auto px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors touch-target text-base font-medium"
+                  >
                     Cancel
                   </button>
-                  <button 
-                    type="submit" 
-                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                    {selectedJob ? 'Update' : 'Create'}
+                  <button
+                    type="submit"
+                    className="w-full sm:w-auto px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors touch-target text-base font-medium"
+                  >
+                    {selectedJob ? 'Update Job' : 'Create Job'}
                   </button>
                 </div>
               </div>
@@ -197,30 +216,33 @@ const JobPostingsSection = ({ employerId }) => {
         </div>
       )}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4 shadow-xl">
-            <div className="text-center mb-6">
-              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-                <i className="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-md shadow-xl">
+            <div className="p-4 sm:p-6">
+              <div className="text-center mb-6">
+                <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                  <i className="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Confirm Deletion</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  Are you sure you want to delete this job? This action cannot be undone.
+                </p>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Confirm Deletion</h3>
-              <p className="text-sm text-gray-500">
-                Are you sure you want to delete this job ? This action cannot be undone.
-              </p>
-            </div>
-            <div className="flex justify-center space-x-4">
-              <button
-                onClick={cancelDelete}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 border border-gray-300"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-              >
-                Delete
-              </button>
+
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <button
+                  onClick={cancelDelete}
+                  className="w-full sm:w-auto px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 border border-gray-300 transition-colors touch-target text-base font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  className="w-full sm:w-auto px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors touch-target text-base font-medium"
+                >
+                  Delete Job
+                </button>
+              </div>
             </div>
           </div>
         </div>

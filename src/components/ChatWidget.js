@@ -18,6 +18,22 @@ const ChatWidget = () => {
 
   const { user, token } = useSelector(state => state.auth);
 
+  // Helper function to get cookie value
+  const getCookieValue = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  };
+
+  // Debug logging
+  useEffect(() => {
+    console.log('ChatWidget - User:', user);
+    console.log('ChatWidget - Token:', token ? 'Token exists' : 'No token');
+    console.log('ChatWidget - Cookie token:', getCookieValue('token') ? 'Cookie token exists' : 'No cookie token');
+    console.log('ChatWidget - Auth state:', { user: !!user, token: !!token });
+  }, [user, token]);
+
   // Handle window resize for mobile detection
   useEffect(() => {
     const handleResize = () => {
@@ -29,38 +45,65 @@ const ChatWidget = () => {
   }, []);
   
   useEffect(() => {
-    if (user && token) {
+    if (user) {
+      console.log('Initializing socket for user:', user);
       initializeSocket();
     }
-    
+
     return () => {
       if (socket) {
+        console.log('Disconnecting socket');
         socket.disconnect();
       }
     };
-  }, [user, token]);
+  }, [user]); // Removed token dependency since we'll get it from localStorage
   
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-  
+
   const initializeSocket = () => {
+    console.log('Creating socket connection...');
     const newSocket = io('http://localhost:5000', {
-      withCredentials: true
+      withCredentials: true,
+      transports: ['websocket', 'polling']
     });
-    
+
     newSocket.on('connect', () => {
       console.log('Connected to chat server');
-      newSocket.emit('authenticate', token);
+      // Get token from cookies or localStorage
+      const authToken = getCookieValue('token') || localStorage.getItem('token') || token;
+      console.log('Authenticating with token:', authToken ? 'Token found' : 'No token');
+      if (authToken) {
+        newSocket.emit('authenticate', authToken);
+      } else {
+        console.error('No authentication token available');
+        // Try to authenticate with user ID if available
+        if (user?.id) {
+          console.log('Attempting authentication with user ID:', user.id);
+          // Create a temporary token or use a different auth method
+          newSocket.emit('authenticate_user', { userId: user.id });
+        }
+      }
     });
     
     newSocket.on('authenticated', (data) => {
-      console.log('Authenticated:', data);
+      console.log('Authenticated successfully:', data);
       setIsConnected(true);
     });
-    
+
     newSocket.on('auth_error', (error) => {
       console.error('Authentication error:', error);
+      setIsConnected(false);
+    });
+
+    newSocket.on('connect_error', (error) => {
+      console.error('Connection error:', error);
+      setIsConnected(false);
+    });
+
+    newSocket.on('disconnect', (reason) => {
+      console.log('Disconnected:', reason);
       setIsConnected(false);
     });
     
@@ -327,8 +370,9 @@ const ChatWidget = () => {
       {/* Chat Toggle Button */}
       <button
         onClick={toggleChat}
-        className="bg-green-600 text-white w-14 h-14 rounded-full shadow-lg hover:bg-green-700 flex items-center justify-center relative touch-target"
+        className={`${isConnected ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-500 hover:bg-gray-600'} text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center relative touch-target transition-colors`}
         data-tutorial="chat-widget"
+        title={isConnected ? 'Chat Support - Connected' : 'Chat Support - Connecting...'}
       >
         <i className={`fas ${isOpen ? 'fa-times' : 'fa-comments'} text-xl`}></i>
         {unreadCount > 0 && !isOpen && (
@@ -336,6 +380,8 @@ const ChatWidget = () => {
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
+        {/* Connection status indicator */}
+        <span className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${isConnected ? 'bg-green-400' : 'bg-red-400'}`}></span>
       </button>
     </div>
   );

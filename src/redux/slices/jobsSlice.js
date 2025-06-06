@@ -16,9 +16,9 @@ export const fetchEmployerJobs = createAsyncThunk(
 
 export const fetchApplicantJobs = createAsyncThunk(
   'jobs/fetchApplicantJobs',
-  async (applicantId, { rejectWithValue }) => {
+  async ({ applicantId, page = 1, limit = 20 }, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/jobs/applicant/${applicantId}/jobs`);
+      const response = await api.get(`/jobs/applicant/${applicantId}/jobs?page=${page}&limit=${limit}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch jobs');
@@ -78,6 +78,12 @@ const initialState = {
   jobPostings: [],
   applicantJobs:[],
   categories: [],
+  pagination: {
+    page: 1,
+    limit: 20,
+    total: 0,
+    totalPages: 0
+  },
   loading: false,
   error: null,
   showJobModal: false,
@@ -141,7 +147,13 @@ const jobsSlice = createSlice({
       })
       .addCase(fetchApplicantJobs.fulfilled, (state, action) => {
         state.loading = false;
-        state.applicantJobs = action.payload;
+        // Handle both old format (array) and new format (object with jobs and pagination)
+        if (Array.isArray(action.payload)) {
+          state.applicantJobs = action.payload;
+        } else {
+          state.applicantJobs = action.payload.jobs || [];
+          state.pagination = action.payload.pagination || state.pagination;
+        }
       })
       .addCase(fetchApplicantJobs.rejected, (state, action) => {
         state.loading = false;

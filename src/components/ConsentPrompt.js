@@ -40,17 +40,17 @@ const ConsentPrompt = ({
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-        <div className="p-6">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-4 sm:p-6">
           {/* Header */}
-          <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-              <i className="fas fa-shield-alt text-blue-600 text-xl"></i>
+          <div className="flex items-center mb-4 sm:mb-6">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+              <i className="fas fa-shield-alt text-blue-600 text-lg sm:text-xl"></i>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-              <p className="text-sm text-gray-500">Privacy Consent Required</p>
+            <div className="flex-1">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-tight">{title}</h3>
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">Privacy Consent Required</p>
             </div>
           </div>
 

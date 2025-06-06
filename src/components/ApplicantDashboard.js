@@ -15,6 +15,8 @@ import AccessibilitySettings from "./AccessibilitySettings";
 import SkillsAnalysis from "./SkillsAnalysis";
 import MarketAnalytics from "./MarketAnalytics";
 import PrivacySettings from "./PrivacySettings";
+import PerformanceMonitor from "./PerformanceMonitor";
+import ChatWidget from "./ChatWidget";
 import { getApplicantApplications } from "../redux/slices/applications";
 
 const ApplicantDashboard = () => {
@@ -53,11 +55,8 @@ const ApplicantDashboard = () => {
   useEffect(() => {
     if (user?.id) {
       dispatch(getApplicantApplications(user.id));
-      const pollInterval = setInterval(() => {
-        dispatch(getApplicantApplications(user.id));
-      }, 30000);
-
-      return () => clearInterval(pollInterval);
+      // Removed polling interval to improve performance
+      // Real-time updates should be handled via WebSocket if needed
     }
   }, [dispatch, user?.id]);
 
@@ -177,219 +176,168 @@ const ApplicantDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen relative page-container dashboard-grid"
-         style={{
-           display: 'grid',
-           gridTemplateColumns: isMobile ? '1fr' : (sidebarOpen ? '256px 1fr' : '1fr'),
-           transition: 'grid-template-columns 0.3s ease-in-out'
-         }}>
+    <div className="min-h-screen bg-gray-50 page-container">
       {/* Mobile Overlay */}
       {isMobile && sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-20"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={() => setSidebarOpen(false)}
         />
       )}
-       <style>{`
-        .sidebar-scroll::-webkit-scrollbar {
-          width: 4px;
-          height: 4px;
-        }
 
-        .sidebar-scroll::-webkit-scrollbar-track {
-          background: transparent;
-        }
-
-        .sidebar-scroll::-webkit-scrollbar-thumb {
-          background: #9CA3AF;
-          border-radius: 4px;
-          opacity: 0;
-          transition: opacity 0.3s;
-        }
-
-        .sidebar-scroll:hover::-webkit-scrollbar-thumb,
-        .sidebar-scroll:active::-webkit-scrollbar-thumb {
-          opacity: 1;
-        }
-
-        @supports (scrollbar-width: thin) {
-          .sidebar-scroll {
-            scrollbar-width: thin;
-            scrollbar-color: #9CA3AF transparent;
-          }
-        }
-
-        /* Smooth layout transitions */
-        .dashboard-layout {
-          transition: grid-template-columns 0.3s ease-in-out;
-        }
-
-        /* Ensure smooth grid transitions */
-        .dashboard-grid {
-          transition: grid-template-columns 0.3s ease-in-out;
-        }
-      `}</style>
-
-      {/* Sidebar */}
-      {(isMobile || sidebarOpen) && (
-        <div
-          className={`${isMobile ? 'fixed' : 'relative'} top-0 left-0 h-full bg-gray-100 text-green-800 flex flex-col transform transition-transform duration-300 z-30 shadow-xl ${
-            isMobile ? 'w-80' : 'w-64'
-          } ${
-            sidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-        {/* Fixed Profile Section */}
-        <div className="flex-shrink-0 mt-12 ml-4 mr-4 flex flex-col items-center">
-          <div className="relative group">
-            <label htmlFor="avatar-upload" className="cursor-pointer relative">
-              {user?.avatar ? (
-                <img
-                  src={user?.avatar}
-                  alt="Profile"
-                  className="h-24 w-24 rounded-full object-cover border-4 border-green-700 hover:border-green-700 transition-all duration-300"
-              />
-              ) : (
-                <div className="h-24 w-24 rounded-full border-4 border-green-700 bg-gray-100 hover:border-green-900 transition-all duration-300 flex items-center justify-center">
-                   <i className="fas fa-user-circle text-6xl text-green-700"></i>
-                </div>
-              )}
-               <div className="absolute -bottom-1 -right-1 bg-green-700 rounded-full border-2 border-white hover:bg-green-900 transition-colors z-10 w-8 h-8 flex items-center justify-center">
-               <i className="fas fa-camera text-white text-sm"></i>
-              </div>
-            </label>
-
-            <input
-              type="file"
-              id="avatar-upload"
-              className="hidden"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file) {
-                  const reader = new FileReader();
-                  reader.onload = (event) => {
-                    // TODO: Implement avatar upload functionality
-                    console.log('Avatar selected:', event.target.result);
-                  };
-                  reader.readAsDataURL(file);
-                }
-              }}
+      {/* Top Navbar - Fixed */}
+      <div className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 flex items-center shadow-sm z-30">
+        <div className="flex items-center justify-between w-full px-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleSidebar}
+              className="text-green-700 hover:text-green-900 p-2 rounded-lg transition-colors touch-target"
+              title={isMobile ? (sidebarOpen ? "Close menu" : "Open menu") : (sidebarOpen ? "Hide sidebar" : "Show sidebar")}
+            >
+              <i className={`fas ${
+                isMobile
+                  ? (sidebarOpen ? "fa-times" : "fa-bars")
+                  : (sidebarOpen ? "fa-chevron-left" : "fa-bars")
+              } text-xl`}></i>
+            </button>
+            <img
+              src="assets/logo.png"
+              alt="Logo"
+              className="h-10 w-auto"
             />
           </div>
-          
-          <div className="mt-4 text-center">
-            <h3 className="text-lg font-bold">{user?.fullName || 'Loading...'}</h3>
-            <p className="text-sm text-green-700">{user?.email || 'Loading...'}</p>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handleSectionClick(sections.find(s => s.key === "applied-jobs"))}
+              className="flex items-center space-x-2 text-green-700 hover:text-green-500 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors touch-target"
+            >
+              <i className="fas fa-briefcase text-lg"></i>
+              <span className="hidden md:inline text-sm">Applied Jobs</span>
+            </button>
+
+            <div data-tutorial="notifications">
+              <Notifications />
+            </div>
+
+            <button
+              onClick={() => handleSectionClick(sections.find(s => s.key === "logout"))}
+              className="flex items-center space-x-2 text-green-700 hover:text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors touch-target"
+              title="Logout"
+            >
+              <i className="fas fa-sign-out-alt text-lg"></i>
+              <span className="hidden md:inline text-sm font-medium">Logout</span>
+            </button>
           </div>
         </div>
+      </div>
 
-        <hr className="my-6 mx-4 border-t border-green-700 flex-shrink-0" />
+      {/* Main Layout Container */}
+      <div className="pt-16 min-h-screen flex">
+        {/* Sidebar */}
+        {(isMobile || sidebarOpen) && (
+          <div
+            className={`${
+              isMobile
+                ? 'fixed top-16 left-0 bottom-0 bg-white shadow-xl z-50 w-80 transform transition-transform duration-300'
+                : 'w-64 bg-white border-r border-gray-200 flex-shrink-0'
+            } ${
+              sidebarOpen ? "translate-x-0" : "-translate-x-full"
+            } flex flex-col`}
+          >
+            {/* Profile Section */}
+            <div className="flex-shrink-0 p-4 flex flex-col items-center border-b border-gray-200">
+              <div className="relative group">
+                <label htmlFor="avatar-upload" className="cursor-pointer relative">
+                  {user?.avatar ? (
+                    <img
+                      src={user?.avatar}
+                      alt="Profile"
+                      className="h-20 w-20 rounded-full object-cover border-4 border-green-700 hover:border-green-800 transition-all duration-300"
+                    />
+                  ) : (
+                    <div className="h-20 w-20 rounded-full border-4 border-green-700 bg-gray-100 hover:border-green-800 transition-all duration-300 flex items-center justify-center">
+                       <i className="fas fa-user-circle text-5xl text-green-700"></i>
+                    </div>
+                  )}
+                   <div className="absolute -bottom-1 -right-1 bg-green-700 rounded-full border-2 border-white hover:bg-green-800 transition-colors z-10 w-7 h-7 flex items-center justify-center">
+                   <i className="fas fa-camera text-white text-xs"></i>
+                  </div>
+                </label>
 
-        {/* Scrollable Navigation Section */}
-        <div className="flex-1 overflow-y-auto sidebar-scroll" data-tutorial="profile-sections">
-          <ul className="space-y-4 px-4 pb-4">
-            {sections.map((section, index) => (
-             <li key={index} className="border-b border-green-700 last:border-b-0">
-               <button
-                 onClick={() => handleSectionClick(section)}
-                 className="w-full text-left p-3 rounded-md hover:bg-green-100 transition-colors flex items-center gap-3 text-green-700 touch-target">
-
-                 {section.customIcon ? (
-                  <img
-                    src={section.customIcon.src}
-                    alt={section.customIcon.alt}
-                    className={`${section.customIcon.className} text-green-700`}
-                  />
-                ) : (
-                  <i className={`fas fa-${section.icon} text-green-700 w-5 text-center`}></i>
-                )}
-                  {section.title}
-              </button>
-            </li>
-            ))}
-          </ul>
-        </div>
-        </div>
-      )}
-
-      {/* Main Content Area */}
-      <div className="flex flex-col transition-all duration-300 min-w-0">
-        {/* Navbar */}
-        <div className={`h-16 bg-gray-100 flex items-center shadow-md z-20 transition-all duration-300 ${
-          isMobile ? 'px-4' : 'px-5'
-        }`}>
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-4 relative">
-              <button
-                onClick={toggleSidebar}
-                className="text-green-700 hover:text-green-900 p-2 rounded-lg transition-colors touch-target relative group"
-                data-tutorial="menu-button"
-                title={isMobile ? (sidebarOpen ? "Close menu" : "Open menu") : (sidebarOpen ? "Hide sidebar" : "Show sidebar")}
-              >
-                <i className={`fas ${
-                  isMobile
-                    ? (sidebarOpen ? "fa-times" : "fa-bars")
-                    : (sidebarOpen ? "fa-chevron-left" : "fa-bars")
-                } ${isMobile ? 'text-xl' : 'text-2xl'}`}></i>
-
-                {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                  {isMobile ? (sidebarOpen ? "Close menu" : "Open menu") : (sidebarOpen ? "Hide sidebar" : "Show sidebar")}
-                </div>
-              </button>
-              <img
-                src="assets/logo.png"
-                alt="Logo"
-                className={`h-12 w-auto ${isMobile ? 'ml-4' : 'ml-12'}`}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handleSectionClick(sections.find(s => s.key === "applied-jobs"))}
-                className="flex items-center space-x-2 text-green-700 hover:text-green-500 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors touch-target"
-              >
-                <i className={`fas fa-briefcase ${isMobile ? 'text-lg' : 'text-xl'}`}></i>
-                <span className="hidden md:inline"></span>
-              </button>
-
-              {/* Replace the old notification button with the new Notifications component */}
-              <div data-tutorial="notifications">
-                <Notifications />
+                <input
+                  type="file"
+                  id="avatar-upload"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        // TODO: Implement avatar upload functionality
+                        console.log('Avatar selected:', event.target.result);
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                />
               </div>
 
-              {/* Logout Button */}
-              <button
-                onClick={() => handleSectionClick(sections.find(s => s.key === "logout"))}
-                className="flex items-center space-x-2 text-green-700 hover:text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors touch-target"
-                title="Logout"
-              >
-                <i className={`fas fa-sign-out-alt ${isMobile ? 'text-lg' : 'text-xl'}`}></i>
-                <span className="hidden md:inline text-sm font-medium">Logout</span>
-              </button>
-             </div>
-          </div>
-        </div>
+              <div className="mt-3 text-center">
+                <h3 className="text-base font-bold text-gray-800">{user?.fullName || 'Loading...'}</h3>
+                <p className="text-xs text-green-700">{user?.email || 'Loading...'}</p>
+              </div>
+            </div>
 
-        {/* Main Content */}
-        <div className={`flex-1 bg-gray-50 overflow-y-auto transition-all duration-300 flex flex-col min-h-screen w-full ${
-          isMobile ? 'p-4' : 'p-5'
+            {/* Navigation Section */}
+            <div className="flex-1 overflow-y-auto" data-tutorial="profile-sections">
+              <nav className="p-2">
+                {sections.map((section, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSectionClick(section)}
+                    className="w-full text-left p-3 mb-1 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-3 text-gray-700 hover:text-green-700 touch-target"
+                  >
+                    {section.customIcon ? (
+                      <img
+                        src={section.customIcon.src}
+                        alt={section.customIcon.alt}
+                        className={`${section.customIcon.className} text-green-700`}
+                      />
+                    ) : (
+                      <i className={`fas fa-${section.icon} text-green-700 w-5 text-center`}></i>
+                    )}
+                    <span className="text-sm font-medium">{section.title}</span>
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </div>
+        )}
+
+        {/* Main Content Area */}
+        <div className={`flex-1 bg-gray-50 overflow-y-auto transition-all duration-300 ${
+          !isMobile && sidebarOpen ? 'ml-0' : ''
         }`}>
-          {loading ? (
-             <div className="flex flex-col items-center justify-center w-full h-full space-y-6">
-               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-700"></div>
-               <p className="text-green-700 text-xl font-semibold">{loadingText}</p>
-             </div>
-          ) : activeSection ? (
-            <div className="w-full">
-              {sections.find(s => s.key === activeSection)?.component ||
-              <JobListings category={activeSection} />}
-            </div>
-          ) : (
-            <div className="w-full" data-tutorial="job-listings">
-              <JobListings category={null} />
-            </div>
-          )}
+          <div className="p-4 lg:p-6">
+            {loading ? (
+               <div className="flex flex-col items-center justify-center w-full h-full space-y-6 min-h-[60vh]">
+                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-700"></div>
+                 <p className="text-green-700 text-xl font-semibold">{loadingText || "Loading dashboard..."}</p>
+                 <p className="text-gray-500 text-sm">This should only take a moment</p>
+               </div>
+            ) : activeSection ? (
+              <div className="w-full">
+                {sections.find(s => s.key === activeSection)?.component ||
+                <JobListings category={activeSection} />}
+              </div>
+            ) : (
+              <div className="w-full" data-tutorial="job-listings">
+                <JobListings category={null} />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -407,6 +355,9 @@ const ApplicantDashboard = () => {
         isOpen={showPrivacySettings}
         onClose={() => setShowPrivacySettings(false)}
       />
+
+      {/* Performance Monitor - only in development */}
+      <PerformanceMonitor enabled={process.env.NODE_ENV === 'development'} />
     </div>
   );
 };

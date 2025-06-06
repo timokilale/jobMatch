@@ -76,6 +76,12 @@ model Job {
 
   applications Application[]
   categories   JobCategory[] @relation("JobCategories")
+
+  // Add indexes for better performance
+  @@index([status])
+  @@index([employerId])
+  @@index([createdAt])
+  @@index([status, createdAt])
 }
 
 model Application {
@@ -90,6 +96,14 @@ model Application {
   notifications Notification[]
   interviews    Interview[]
   emailLogs     EmailLog[]
+
+  // Add indexes for better performance
+  @@index([applicantId])
+  @@index([jobId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([applicantId, jobId])
+  @@unique([applicantId, jobId])
 }
 
 model Notification {
