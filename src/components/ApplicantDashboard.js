@@ -11,6 +11,9 @@ import Notifications from "./Notifications";
 import CVPreview from "./SidebarItems/CVPreview";
 import TutorialSystem, { useTutorial } from "./TutorialSystem";
 import AccessibilitySettings from "./AccessibilitySettings";
+import SkillsAnalysis from "./SkillsAnalysis";
+import MarketAnalytics from "./MarketAnalytics";
+import PrivacySettings from "./PrivacySettings";
 import { getApplicantApplications } from "../redux/slices/applications";
 
 const ApplicantDashboard = () => {
@@ -20,6 +23,7 @@ const ApplicantDashboard = () => {
   const [activeSection, setActiveSection] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showAccessibilitySettings, setShowAccessibilitySettings] = useState(false);
+  const [showPrivacySettings, setShowPrivacySettings] = useState(false);
   const { role, user } = useSelector((state) => state.auth);
   const [avatar, setAvatar] = useState(user?.avatar || null);
   const navigate = useNavigate();
@@ -76,6 +80,18 @@ const ApplicantDashboard = () => {
       component: <AppliedJobs />,
     },
     {
+      key: "skills-analysis",
+      title: "Skills Analysis",
+      icon: "brain",
+      component: <SkillsAnalysis applicantId={user?.id} />,
+    },
+    {
+      key: "market-insights",
+      title: "Market Insights",
+      icon: "chart-line",
+      component: <MarketAnalytics />,
+    },
+    {
       key: "academic",
       title: "Academic Qualifications",
       icon: "graduation-cap",
@@ -111,6 +127,13 @@ const ApplicantDashboard = () => {
       icon: "universal-access",
       isAction: true,
       action: () => setShowAccessibilitySettings(true)
+    },
+    {
+      key: "privacy",
+      title: "Privacy Settings",
+      icon: "shield-alt",
+      isAction: true,
+      action: () => setShowPrivacySettings(true)
     },
     {
       key: "logout",
@@ -203,13 +226,14 @@ const ApplicantDashboard = () => {
       {/* Sidebar */}
       {(isMobile || sidebarOpen) && (
         <div
-          className={`${isMobile ? 'fixed' : 'relative'} top-0 left-0 h-full bg-gray-100 text-green-800 p-5 flex flex-col justify-between transform transition-transform duration-300 z-30 shadow-xl ${
+          className={`${isMobile ? 'fixed' : 'relative'} top-0 left-0 h-full bg-gray-100 text-green-800 flex flex-col transform transition-transform duration-300 z-30 shadow-xl ${
             isMobile ? 'w-80' : 'w-64'
           } ${
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-        <div className="mt-12 ml-4 flex flex-col items-center">
+        {/* Fixed Profile Section */}
+        <div className="flex-shrink-0 mt-12 ml-4 mr-4 flex flex-col items-center">
           <div className="relative group">
             <label htmlFor="avatar-upload" className="cursor-pointer relative">
               {user?.avatar ? (
@@ -252,10 +276,11 @@ const ApplicantDashboard = () => {
           </div>
         </div>
 
-        <hr className="my-6 border-t border-green-700" />
+        <hr className="my-6 mx-4 border-t border-green-700 flex-shrink-0" />
 
+        {/* Scrollable Navigation Section */}
         <div className="flex-1 overflow-y-auto sidebar-scroll" data-tutorial="profile-sections">
-          <ul className="space-y-4 px-4">
+          <ul className="space-y-4 px-4 pb-4">
             {sections.map((section, index) => (
              <li key={index} className="border-b border-green-700 last:border-b-0">
                <button
@@ -357,6 +382,12 @@ const ApplicantDashboard = () => {
       <AccessibilitySettings
         isOpen={showAccessibilitySettings}
         onClose={() => setShowAccessibilitySettings(false)}
+      />
+
+      {/* Privacy Settings */}
+      <PrivacySettings
+        isOpen={showPrivacySettings}
+        onClose={() => setShowPrivacySettings(false)}
       />
     </div>
   );

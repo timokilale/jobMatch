@@ -6,6 +6,7 @@ import { useJobs } from '../hooks/useJobs';
 import Candidates from './EmployerSidebar/Candidates';
 import Analytics from './EmployerSidebar/Analytics';
 import Settings from './EmployerSidebar/Settings';
+import MarketAnalytics from './MarketAnalytics';
 import { fetchEmployerApplications } from '../redux/slices/applications';
 import { logout } from '../redux/slices/authSlice';
 
@@ -92,15 +93,16 @@ const EmployerDashboard = () => {
 
       <div className="max-w-7xl mx-auto px-4 py-6 flex gap-6">
         {/* Sidebar Navigation */}
-        <nav className="w-64 bg-white-100 text-green-800 p-5 flex flex-col justify-between shadow-xl">
-          <div className="flex flex-col items-center">
+        <nav className="w-64 bg-white-100 text-green-800 flex flex-col shadow-xl">
+          {/* Fixed Profile Section */}
+          <div className="flex-shrink-0 p-5 flex flex-col items-center">
             <div className="relative group">
 
               <label htmlFor="avatar-upload" className="cursor-pointer relative">
                 {avatar ? (
-                  <img 
-                    src={user.avatar} 
-                    alt="Profile" 
+                  <img
+                    src={user.avatar}
+                    alt="Profile"
                     className="h-24 w-24 rounded-full object-cover border-4 border-green-700 hover:border-green-700 transition-all duration-300" />
                 ) : (
                   <div className="h-24 w-24 rounded-full border-4 border-green-700 bg-gray-100 hover:border-green-900 transition-all duration-300 flex items-center justify-center">
@@ -108,15 +110,15 @@ const EmployerDashboard = () => {
                   </div>
                 )}
                 <div className="absolute -bottom-1 -right-1 bg-green-700 rounded-full border-2 border-white hover:bg-green-900 transition-colors z-10 w-8 h-8 flex items-center justify-center">
-                  <i className="fas fa-camera text-white text-sm"></i> 
+                  <i className="fas fa-camera text-white text-sm"></i>
                 </div>
               </label>
-              <input 
-                type="file" 
-                id="avatar-upload" 
-                className="hidden" 
+              <input
+                type="file"
+                id="avatar-upload"
+                className="hidden"
                 accept="image/*"
-                onChange={handleAvatarChange} 
+                onChange={handleAvatarChange}
               />
             </div>
 
@@ -124,20 +126,25 @@ const EmployerDashboard = () => {
               <h3 className="text-md font-bold">{user?.companyName}</h3>
               <p className="text-xs text-green-700">{user?.email}</p>
             </div>
-            <hr className="border-t border-green-700 w-full my-4" />
+          </div>
 
-            <div className="w-full space-y-2 mt-2">
+          <hr className="border-t border-green-700 mx-5 flex-shrink-0" />
+
+          {/* Scrollable Navigation Section */}
+          <div className="flex-1 overflow-y-auto p-5">
+            <div className="w-full space-y-2">
               {[
                 { label: 'Dashboard', icon: 'tachometer-alt', view: 'dashboard' },
                 { label: 'Candidates', icon: 'users', view: 'candidates' },
                 { label: 'Analytics', icon: 'chart-bar', view: 'analytics' },
+                { label: 'Market Insights', icon: 'chart-line', view: 'market-analytics' },
                 { label: 'Settings', icon: 'cog', view: 'settings' },
                 { label: 'Logout', icon: 'sign-out-alt', action: 'logout' }
               ].map((item, i) => (
-                 <button 
-                   key={i} 
+                 <button
+                   key={i}
                    className={`w-full flex items-center space-x-2 px-2 py-1.5 rounded-lg transition-colors ${
-                    activeView === item.view 
+                    activeView === item.view
                       ? 'bg-green-100  text-green-800'
                       : 'text-green-600 hover:bg-green-50'
                   }`}
@@ -249,6 +256,12 @@ const EmployerDashboard = () => {
         <Candidates />
       ) : activeView === 'analytics' ? (
         <Analytics />
+      ) : activeView === 'market-analytics' ? (
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-2xl font-bold text-green-800 mb-4">Market Analytics & Insights</h2>
+          <p className="text-gray-600 mb-6">Comprehensive market data to inform your hiring strategy</p>
+          <MarketAnalytics />
+        </div>
       ) : activeView === 'settings' ? (
         <Settings />
       ) : null}

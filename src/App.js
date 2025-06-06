@@ -7,6 +7,7 @@ import Register from './components/Register';
 import EmployerRegister from './components/EmployerRegister';
 import ApplicantDashboard from './components/ApplicantDashboard';
 import EmployerDashboard from './components/EmployerDashboard';
+import TestDashboard from './components/TestDashboard';
 import ChatWidget from './components/ChatWidget';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -27,6 +28,9 @@ function App() {
         <Route element={<ProtectedRoute allowedRoles={['EMPLOYER']} />}>
           <Route path="/employer_dashboard" element={<EmployerDashboard />} />
         </Route>
+
+        {/* Test Dashboard - Public access for testing */}
+        <Route path="/test" element={<TestDashboard />} />
 
         <Route path="/" element={
           <div className="bg-gray-50 min-h-screen">

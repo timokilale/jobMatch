@@ -270,6 +270,34 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.UserConsentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  consentType: 'consentType',
+  granted: 'granted',
+  grantedAt: 'grantedAt',
+  revokedAt: 'revokedAt',
+  purpose: 'purpose',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  details: 'details',
+  timestamp: 'timestamp'
+};
+
+exports.Prisma.AnonymizedDataScalarFieldEnum = {
+  id: 'id',
+  anonymousId: 'anonymousId',
+  originalUserId: 'originalUserId',
+  anonymizedData: 'anonymizedData',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -368,6 +396,21 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   email: 'email',
   password: 'password'
 };
+
+exports.Prisma.UserConsentOrderByRelevanceFieldEnum = {
+  consentType: 'consentType',
+  purpose: 'purpose'
+};
+
+exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
+  action: 'action',
+  details: 'details'
+};
+
+exports.Prisma.AnonymizedDataOrderByRelevanceFieldEnum = {
+  anonymousId: 'anonymousId',
+  anonymizedData: 'anonymizedData'
+};
 exports.NotificationType = exports.$Enums.NotificationType = {
   STATUS_CHANGE: 'STATUS_CHANGE',
   NEW_APPLICATION: 'NEW_APPLICATION',
@@ -394,7 +437,10 @@ exports.Prisma.ModelName = {
   ChatMessage: 'ChatMessage',
   MarketTrend: 'MarketTrend',
   SkillDemand: 'SkillDemand',
-  User: 'User'
+  User: 'User',
+  UserConsent: 'UserConsent',
+  AuditLog: 'AuditLog',
+  AnonymizedData: 'AnonymizedData'
 };
 
 /**
