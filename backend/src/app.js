@@ -48,6 +48,9 @@ app.use('/api/jobs', require('./routes/jobs'));
 app.use('/api/applications', require('./routes/applications'));
 app.use('/api/categories', require('./routes/categories'));
 app.use('/api/pdf', require('./routes/pdf'));
+app.use('/api/market', require('./routes/marketAnalytics'));
+app.use('/api/skills', require('./routes/skillsAnalysis'));
+app.use('/api/privacy', require('./routes/privacy'));
 
 
 // Error Handling

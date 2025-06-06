@@ -217,4 +217,39 @@ model User {
   chatRooms     ChatRoom[]
   agentChats    ChatRoom[] @relation("ChatAgent")
   chatMessages  ChatMessage[]
+  consents      UserConsent[]
+  auditLogs     AuditLog[]
+}
+
+// Privacy and Ethics Models
+model UserConsent {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  consentType String   // 'profile_data', 'job_matching', 'analytics', etc.
+  granted     Boolean
+  grantedAt   DateTime?
+  revokedAt   DateTime?
+  purpose     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, consentType], name: "userId_consentType")
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String   // 'CONSENT_CHANGE', 'DATA_DELETION', 'DATA_EXPORT', etc.
+  details   String?  // JSON string with additional details
+  timestamp DateTime @default(now())
+}
+
+model AnonymizedData {
+  id             Int      @id @default(autoincrement())
+  anonymousId    String   @unique
+  originalUserId Int?
+  anonymizedData String   // JSON string with anonymized user data
+  createdAt      DateTime @default(now())
 }
