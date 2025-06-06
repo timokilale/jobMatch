@@ -1,16 +1,20 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const http = require('http');
 const prisma = require('./prisma');
 const routes = require('./routes');
 const cookieParser = require('cookie-parser');
 const qualificationRouter = require('./routes/qualifications');
+const ChatService = require('./services/chatService');
+
 const app = express();
+const server = http.createServer(app);
 
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:3001',
+  origin: 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
@@ -52,9 +56,13 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
+// Initialize Chat Service
+const chatService = new ChatService(server);
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log('Chat service initialized');
   prisma.$connect()
     .then(() => console.log('Connected to database'))
     .catch(err => console.error('Database connection error:', err));

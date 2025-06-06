@@ -212,9 +212,10 @@ const JobListings = ({ category }) => {
                     Applying...
                   </button>
                 ) : (
-                <button 
+                <button
                   onClick={() => handleApplyNow(job.id)}
-                  className="bg-green-700 hover:bg-green-800 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center"
+                  className="bg-green-700 hover:bg-green-800 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center touch-target"
+                  data-tutorial="apply-button"
                 >
                   <i className="fas fa-paper-plane mr-2"></i>
                   Apply Now

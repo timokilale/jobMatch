@@ -9,17 +9,40 @@ import JobListings from "./JobListings";
 import AppliedJobs from "./SidebarItems/AppliedJobs";
 import Notifications from "./Notifications";
 import CVPreview from "./SidebarItems/CVPreview";
+import TutorialSystem, { useTutorial } from "./TutorialSystem";
+import AccessibilitySettings from "./AccessibilitySettings";
 import { getApplicantApplications } from "../redux/slices/applications";
 
 const ApplicantDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 768); // Default open on desktop
   const [activeSection, setActiveSection] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [showAccessibilitySettings, setShowAccessibilitySettings] = useState(false);
   const { role, user } = useSelector((state) => state.auth);
   const [avatar, setAvatar] = useState(user?.avatar || null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const shouldShowTutorial = useTutorial();
+
+  // Handle window resize for mobile detection
+  useEffect(() => {
+    const handleResize = () => {
+      const newIsMobile = window.innerWidth < 768;
+      setIsMobile(newIsMobile);
+
+      // Adjust sidebar state based on screen size
+      if (newIsMobile) {
+        setSidebarOpen(false); // Close sidebar on mobile
+      } else {
+        setSidebarOpen(true); // Open sidebar on desktop by default
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
 
   useEffect(() => {
@@ -83,6 +106,13 @@ const ApplicantDashboard = () => {
       component: <CVPreview applicantId={user.id} />,
     },
     {
+      key: "accessibility",
+      title: "Accessibility",
+      icon: "universal-access",
+      isAction: true,
+      action: () => setShowAccessibilitySettings(true)
+    },
+    {
       key: "logout",
       title: "Logout",
       icon: "sign-out-alt",
@@ -94,21 +124,42 @@ const ApplicantDashboard = () => {
 
   const handleSectionClick = (section) => {
     if (section.isAction) {
-      setLoading(true);
-      setLoadingText('Logging out...');
-      setTimeout(() => {
-        setLoading(false);
-        navigate('/login');
-      }, 1500); 
+      if (section.action) {
+        section.action();
+      } else if (section.key === "logout") {
+        setLoading(true);
+        setLoadingText('Logging out...');
+        setTimeout(() => {
+          setLoading(false);
+          navigate('/login');
+        }, 1500);
+      }
     } else if (section.key === "home") {
       setActiveSection(null);
     } else {
       setActiveSection(section.key);
     }
+
+    // Close sidebar on mobile after selection
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
   };
 
   return (
-    <div className="flex h-screen relative overflow-hidden">
+    <div className="h-screen relative overflow-hidden dashboard-grid"
+         style={{
+           display: 'grid',
+           gridTemplateColumns: isMobile ? '1fr' : (sidebarOpen ? '256px 1fr' : '1fr'),
+           transition: 'grid-template-columns 0.3s ease-in-out'
+         }}>
+      {/* Mobile Overlay */}
+      {isMobile && sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
        <style>{`
         .sidebar-scroll::-webkit-scrollbar {
           width: 4px;
@@ -137,14 +188,27 @@ const ApplicantDashboard = () => {
             scrollbar-color: #9CA3AF transparent;
           }
         }
+
+        /* Smooth layout transitions */
+        .dashboard-layout {
+          transition: grid-template-columns 0.3s ease-in-out;
+        }
+
+        /* Ensure smooth grid transitions */
+        .dashboard-grid {
+          transition: grid-template-columns 0.3s ease-in-out;
+        }
       `}</style>
 
       {/* Sidebar */}
-      <div
-        className={`fixed top-0 left-0 h-full w-64 bg-gray-100 text-green-800 p-5 flex flex-col justify-between transform transition-transform duration-300 z-30 shadow-xl ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
+      {(isMobile || sidebarOpen) && (
+        <div
+          className={`${isMobile ? 'fixed' : 'relative'} top-0 left-0 h-full bg-gray-100 text-green-800 p-5 flex flex-col justify-between transform transition-transform duration-300 z-30 shadow-xl ${
+            isMobile ? 'w-80' : 'w-64'
+          } ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
         <div className="mt-12 ml-4 flex flex-col items-center">
           <div className="relative group">
             <label htmlFor="avatar-upload" className="cursor-pointer relative">
@@ -190,14 +254,14 @@ const ApplicantDashboard = () => {
 
         <hr className="my-6 border-t border-green-700" />
 
-        <div className="flex-1 overflow-y-auto sidebar-scroll">
+        <div className="flex-1 overflow-y-auto sidebar-scroll" data-tutorial="profile-sections">
           <ul className="space-y-4 px-4">
             {sections.map((section, index) => (
              <li key={index} className="border-b border-green-700 last:border-b-0">
                <button
-                 onClick={() => handleSectionClick(section)} 
-                 className="w-full text-left p-3 rounded-md hover:bg-green-100 transition-colors flex items-center gap-3 text-green-700">
-                 
+                 onClick={() => handleSectionClick(section)}
+                 className="w-full text-left p-3 rounded-md hover:bg-green-100 transition-colors flex items-center gap-3 text-green-700 touch-target">
+
                  {section.customIcon ? (
                   <img
                     src={section.customIcon.src}
@@ -213,47 +277,61 @@ const ApplicantDashboard = () => {
             ))}
           </ul>
         </div>
-      </div>
+        </div>
+      )}
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col transition-all duration-300">
+      <div className="flex flex-col transition-all duration-300 min-w-0">
         {/* Navbar */}
-        <div className={`h-16 bg-gray-100 flex items-center px-5 shadow-md z-20 ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        } transition-all duration-300 `}>
+        <div className={`h-16 bg-gray-100 flex items-center shadow-md z-20 transition-all duration-300 ${
+          isMobile ? 'px-4' : 'px-5'
+        }`}>
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-4 relative">
               <button
                 onClick={toggleSidebar}
-                className="text-green-700 hover:text-green-900 p-2 rounded-lg transition-colors absolute left-0"
+                className="text-green-700 hover:text-green-900 p-2 rounded-lg transition-colors touch-target relative group"
+                data-tutorial="menu-button"
+                title={isMobile ? (sidebarOpen ? "Close menu" : "Open menu") : (sidebarOpen ? "Hide sidebar" : "Show sidebar")}
               >
-                <i className={`fas ${sidebarOpen ? "fa-times" : "fa-bars"} text-2xl`}></i>
+                <i className={`fas ${
+                  isMobile
+                    ? (sidebarOpen ? "fa-times" : "fa-bars")
+                    : (sidebarOpen ? "fa-chevron-left" : "fa-bars")
+                } ${isMobile ? 'text-xl' : 'text-2xl'}`}></i>
+
+                {/* Tooltip */}
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                  {isMobile ? (sidebarOpen ? "Close menu" : "Open menu") : (sidebarOpen ? "Hide sidebar" : "Show sidebar")}
+                </div>
               </button>
-              <img 
-                src="assets/logo.png" 
-                alt="Logo" 
-                className="h-12 w-auto ml-12"
+              <img
+                src="assets/logo.png"
+                alt="Logo"
+                className={`h-12 w-auto ${isMobile ? 'ml-4' : 'ml-12'}`}
               />
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => handleSectionClick(sections.find(s => s.key === "applied-jobs"))}
-                className="flex items-center space-x-2 text-green-700 hover:text-green-500 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors"
+                className="flex items-center space-x-2 text-green-700 hover:text-green-500 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors touch-target"
               >
-                <i className="fas fa-briefcase text-xl"></i>
+                <i className={`fas fa-briefcase ${isMobile ? 'text-lg' : 'text-xl'}`}></i>
                 <span className="hidden md:inline"></span>
               </button>
-              
+
               {/* Replace the old notification button with the new Notifications component */}
-              <Notifications />
+              <div data-tutorial="notifications">
+                <Notifications />
+              </div>
              </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className={`flex-1 bg-gray-50 p-5 overflow-y-auto ${
-          sidebarOpen ? "ml-64" : "ml-0"
-        } transition-all duration-300 flex flex-col justify-center items-center min-h-[calc(100vh-4rem)]`}>
+        <div className={`flex-1 bg-gray-50 overflow-y-auto transition-all duration-300 flex flex-col justify-center items-center min-h-[calc(100vh-4rem)] w-full ${
+          isMobile ? 'p-4' : 'p-5'
+        }`}>
           {loading ? (
              <div className="flex flex-col items-center justify-center w-full h-full space-y-6">
                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-700"></div>
@@ -261,16 +339,25 @@ const ApplicantDashboard = () => {
              </div>
           ) : activeSection ? (
             <div className="w-full">
-              {sections.find(s => s.key === activeSection)?.component || 
+              {sections.find(s => s.key === activeSection)?.component ||
               <JobListings category={activeSection} />}
             </div>
           ) : (
-            <div className="w-full">
+            <div className="w-full" data-tutorial="job-listings">
               <JobListings category={null} />
             </div>
-          )} 
+          )}
         </div>
       </div>
+
+      {/* Tutorial System */}
+      <TutorialSystem isFirstTime={shouldShowTutorial} />
+
+      {/* Accessibility Settings */}
+      <AccessibilitySettings
+        isOpen={showAccessibilitySettings}
+        onClose={() => setShowAccessibilitySettings(false)}
+      />
     </div>
   );
 };

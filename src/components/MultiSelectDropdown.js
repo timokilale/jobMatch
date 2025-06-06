@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 const MultiSelectDropdown = ({ options, selected, setSelected }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
-  
+
   // Ensure options is always an array
   const safeOptions = Array.isArray(options) ? options : [];
   

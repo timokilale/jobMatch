@@ -23,4 +23,118 @@ code {
     font-family: 'Arial Rounded MT Bold', sans-serif;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
   }
+
+  /* Mobile-First Responsive Design */
+  .mobile-container {
+    @apply px-4 py-2;
+  }
+
+  .mobile-card {
+    @apply bg-white rounded-lg shadow-md p-4 mb-4;
+  }
+
+  .mobile-button {
+    @apply w-full py-3 px-4 text-center rounded-lg font-medium;
+  }
+
+  .mobile-input {
+    @apply w-full p-3 border border-gray-300 rounded-lg text-base;
+  }
+
+  /* Touch-friendly elements */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Dashboard responsive grid */
+  .dashboard-grid {
+    @apply grid gap-4;
+    grid-template-columns: 1fr;
+  }
+
+  @screen md {
+    .dashboard-grid {
+      grid-template-columns: 250px 1fr;
+    }
+  }
+
+  /* Job card mobile optimization */
+  .job-card-mobile {
+    @apply bg-white rounded-lg shadow-md p-4 mb-4 border-l-4 border-green-700;
+  }
+
+  .job-card-mobile .job-header {
+    @apply flex flex-col space-y-2;
+  }
+
+  @screen sm {
+    .job-card-mobile .job-header {
+      @apply flex-row justify-between items-start space-y-0;
+    }
+  }
+
+  /* Sidebar mobile behavior */
+  .sidebar-mobile {
+    @apply fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out;
+  }
+
+  .sidebar-mobile.open {
+    @apply translate-x-0;
+  }
+
+  @screen md {
+    .sidebar-mobile {
+      @apply relative translate-x-0 shadow-none;
+    }
+  }
+
+  /* Mobile navigation */
+  .mobile-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40;
+  }
+
+  @screen md {
+    .mobile-nav {
+      @apply hidden;
+    }
+  }
+
+  /* Form improvements for mobile */
+  .mobile-form {
+    @apply space-y-4;
+  }
+
+  .mobile-form input,
+  .mobile-form select,
+  .mobile-form textarea {
+    @apply w-full p-3 border border-gray-300 rounded-lg text-base;
+  }
+
+  .mobile-form button {
+    @apply w-full py-3 px-4 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700;
+  }
+
+  /* Chat widget mobile optimization */
+  .chat-widget-mobile {
+    @apply fixed bottom-4 right-4 z-50;
+  }
+
+  @screen sm {
+    .chat-widget-mobile .chat-window {
+      @apply w-80 h-96;
+    }
+  }
+
+  .chat-widget-mobile .chat-window {
+    @apply w-screen h-screen;
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100vh - 2rem);
+  }
+
+  @screen sm {
+    .chat-widget-mobile .chat-window {
+      @apply w-80 h-96;
+    }
+  }
 }

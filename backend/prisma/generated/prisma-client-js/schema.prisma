@@ -19,18 +19,6 @@ enum NotificationType {
   GENERAL
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  role      Role
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  applicant Applicant?
-  employer  Employer?
-}
-
 model JobCategory {
   id          Int         @id @default(autoincrement())
   name        String      @unique
@@ -160,4 +148,71 @@ model ComputerSkill {
   proficiency String
   applicantId Int
   applicant   Applicant @relation(fields: [applicantId], references: [id])
+}
+
+// Chat Support System Models
+model ChatRoom {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  agentId   Int?
+  agent     User?     @relation("ChatAgent", fields: [agentId], references: [id])
+  topic     String?
+  status    String    @default("WAITING") // WAITING, ACTIVE, CLOSED
+  createdAt DateTime  @default(now())
+  endedAt   DateTime?
+
+  messages ChatMessage[]
+}
+
+model ChatMessage {
+  id        Int       @id @default(autoincrement())
+  roomId    Int
+  room      ChatRoom  @relation(fields: [roomId], references: [id])
+  senderId  Int? // null for bot messages
+  sender    User?     @relation(fields: [senderId], references: [id])
+  message   String
+  type      String    @default("text") // text, image, file, bot
+  isRead    Boolean   @default(false)
+  readAt    DateTime?
+  timestamp DateTime  @default(now())
+}
+
+// Market Analytics Models
+model MarketTrend {
+  id        Int      @id @default(autoincrement())
+  industry  String
+  metric    String // employment_rate, job_postings, salary_avg
+  value     Float
+  period    String // monthly, quarterly, yearly
+  date      DateTime
+  source    String?
+  createdAt DateTime @default(now())
+}
+
+model SkillDemand {
+  id          Int      @id @default(autoincrement())
+  skillName   String
+  demandScore Float // 0-100 scale
+  growth      Float // percentage growth
+  industry    String?
+  region      String?
+  period      DateTime
+  createdAt   DateTime @default(now())
+}
+
+// Enhanced User Model for Chat Relations
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  applicant    Applicant?
+  employer     Employer?
+  chatRooms    ChatRoom[]
+  agentChats   ChatRoom[]    @relation("ChatAgent")
+  chatMessages ChatMessage[]
 }
