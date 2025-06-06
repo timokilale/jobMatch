@@ -1,5 +1,6 @@
 const SkillsAnalysisService = require('../services/skillsAnalysis');
 const PrivacyManager = require('../services/privacyManager');
+const prisma = require('../prisma');
 
 const skillsService = new SkillsAnalysisService();
 const privacyManager = new PrivacyManager();
@@ -15,22 +16,19 @@ exports.analyzeSkillGaps = async (req, res) => {
       return res.status(403).json({ error: 'Access denied' });
     }
 
-    // Check consent for analytics
-    const hasConsent = await privacyManager.checkConsent(userId, 'analytics');
-    if (!hasConsent) {
-      return res.status(403).json({ 
-        error: 'Analytics consent required',
-        consentRequired: 'analytics'
-      });
-    }
-
+    // Removed consent check - all users can access skill analysis
     const analysis = await skillsService.analyzeSkillGaps(parseInt(applicantId));
-    
-    // Detect potential bias in recommendations
-    const biasAnalysis = await privacyManager.detectBias(
-      analysis.trainingRecommendations,
-      { userId: userId }
-    );
+
+    // Optional: Detect potential bias in recommendations (without blocking access)
+    let biasAnalysis = null;
+    try {
+      biasAnalysis = await privacyManager.detectBias(
+        analysis.trainingRecommendations,
+        { userId: userId }
+      );
+    } catch (error) {
+      console.log('Bias analysis skipped:', error.message);
+    }
 
     res.json({
       ...analysis,
@@ -158,14 +156,7 @@ exports.getPersonalizedSkillRecommendations = async (req, res) => {
       return res.status(400).json({ error: 'Only applicants can get personalized recommendations' });
     }
 
-    // Check consent
-    const hasConsent = await privacyManager.checkConsent(userId, 'job_matching');
-    if (!hasConsent) {
-      return res.status(403).json({ 
-        error: 'Job matching consent required',
-        consentRequired: 'job_matching'
-      });
-    }
+    // Removed consent check - all users can access skill recommendations
 
     const analysis = await skillsService.analyzeSkillGaps(applicantId);
     

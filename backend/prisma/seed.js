@@ -277,7 +277,7 @@ const seedJobs = async (employersList, categoriesList) => {
     'Dallas, TX', 'San Jose, CA', 'Austin, TX', 'Jacksonville, FL'
   ];
 
-  const statuses = ['Active', 'DRAFT', 'CLOSED'];
+  const statuses = ['ACTIVE', 'DRAFT', 'CLOSED'];
   const createdJobs = [];
 
   for (let i = 0; i < 30; i++) { // Create 30 jobs
@@ -294,7 +294,7 @@ const seedJobs = async (employersList, categoriesList) => {
         description: randomDescription,
         location: randomLocation,
         status: randomStatus,
-        applicants: Math.floor(Math.random() * 20),
+        applicationCount: Math.floor(Math.random() * 20),
         employerId: randomEmployer.id,
         categories: {
           connect: [{ id: randomCategory.id }]
@@ -312,7 +312,7 @@ const seedJobs = async (employersList, categoriesList) => {
 
 const seedApplications = async (applicantsList, jobsList) => {
   console.log('Seeding applications...');
-  const statuses = ['APPLIED', 'INTERVIEW', 'REJECTED', 'ACCEPTED'];
+  const statuses = ['APPLIED', 'UNDER_REVIEW', 'INTERVIEWED', 'REJECTED', 'ACCEPTED'];
   const createdApplications = [];
 
   // Create 50 applications
@@ -359,8 +359,9 @@ const seedQualifications = async (applicantsList) => {
     'Education', 'Psychology', 'Economics', 'Biology', 'Chemistry', 'Physics',
     'Mathematics', 'English Literature', 'History', 'Political Science'
   ];
-  const countries = ['United States', 'Canada', 'United Kingdom', 'Australia', 'Germany', 'France'];
 
+  // Get countries from database
+  const countries = await prisma.country.findMany();
   const createdQualifications = [];
 
   // Create 2-3 qualifications per applicant
@@ -370,11 +371,12 @@ const seedQualifications = async (applicantsList) => {
     for (let i = 0; i < numQualifications; i++) {
       const startDate = randomDate(new Date('2010-01-01'), new Date('2020-01-01'));
       const endDate = new Date(startDate.getTime() + (2 + Math.random() * 4) * 365 * 24 * 60 * 60 * 1000);
+      const randomCountry = countries[Math.floor(Math.random() * countries.length)];
 
       const qualification = await prisma.academicQualification.create({
         data: {
           level: levels[Math.floor(Math.random() * levels.length)],
-          country: countries[Math.floor(Math.random() * countries.length)],
+          countryId: randomCountry.id, // Use countryId instead of country string
           institution: institutions[Math.floor(Math.random() * institutions.length)],
           fieldOfStudy: fields[Math.floor(Math.random() * fields.length)],
           startDate: startDate,
@@ -425,15 +427,14 @@ const seedWorkExperience = async (applicantsList) => {
 
       const experience = await prisma.workExperience.create({
         data: {
-          institution: companies[Math.floor(Math.random() * companies.length)],
-          institutionAddress: `${Math.floor(Math.random() * 9999) + 1} Business St, City, State`,
+          companyName: companies[Math.floor(Math.random() * companies.length)],
+          location: `${Math.floor(Math.random() * 9999) + 1} Business St, City, State`,
           jobTitle: jobTitles[Math.floor(Math.random() * jobTitles.length)],
           startDate: startDate,
           endDate: endDate,
-          duties: duties[Math.floor(Math.random() * duties.length)],
+          responsibilities: duties[Math.floor(Math.random() * duties.length)],
           supervisorName: `Supervisor ${Math.floor(Math.random() * 100)}`,
-          supervisorTel: `+1-555-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
-          supervisorAddress: `${Math.floor(Math.random() * 999) + 1} Manager Ave, City, State`,
+          supervisorContact: `+1-555-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
           applicantId: applicant.id
         }
       });
@@ -461,9 +462,9 @@ const seedLanguages = async (applicantsList) => {
       const languageProf = await prisma.languageProficiency.create({
         data: {
           language: language,
-          speak: proficiencyLevels[Math.floor(Math.random() * proficiencyLevels.length)],
-          read: proficiencyLevels[Math.floor(Math.random() * proficiencyLevels.length)],
-          write: proficiencyLevels[Math.floor(Math.random() * proficiencyLevels.length)],
+          speakLevel: proficiencyLevels[Math.floor(Math.random() * proficiencyLevels.length)],
+          readLevel: proficiencyLevels[Math.floor(Math.random() * proficiencyLevels.length)],
+          writeLevel: proficiencyLevels[Math.floor(Math.random() * proficiencyLevels.length)],
           applicantId: applicant.id
         }
       });
@@ -505,6 +506,246 @@ const seedComputerSkills = async (applicantsList) => {
 
   console.log(`Created ${createdSkills.length} computer skills`);
   return createdSkills;
+};
+
+// NEW: Seed normalized skills master data
+const seedSkillsMaster = async () => {
+  console.log('🌱 Seeding Skills Master (3NF normalized)...');
+
+  const skills = [
+    // Technical Skills
+    { name: 'JavaScript', category: 'Technical', description: 'Programming language for web development' },
+    { name: 'Python', category: 'Technical', description: 'Programming language for data science and web development' },
+    { name: 'Java', category: 'Technical', description: 'Object-oriented programming language' },
+    { name: 'React', category: 'Technical', description: 'JavaScript library for building user interfaces' },
+    { name: 'Node.js', category: 'Technical', description: 'JavaScript runtime for server-side development' },
+    { name: 'SQL', category: 'Technical', description: 'Database query language' },
+    { name: 'HTML', category: 'Technical', description: 'Markup language for web pages' },
+    { name: 'CSS', category: 'Technical', description: 'Styling language for web pages' },
+    { name: 'Git', category: 'Technical', description: 'Version control system' },
+    { name: 'Docker', category: 'Technical', description: 'Containerization platform' },
+    { name: 'AWS', category: 'Technical', description: 'Amazon Web Services cloud platform' },
+    { name: 'Linux', category: 'Technical', description: 'Operating system' },
+    { name: 'MongoDB', category: 'Technical', description: 'NoSQL database' },
+    { name: 'PostgreSQL', category: 'Technical', description: 'Relational database' },
+    { name: 'TypeScript', category: 'Technical', description: 'Typed superset of JavaScript' },
+
+    // Soft Skills
+    { name: 'Communication', category: 'Soft', description: 'Ability to convey information effectively' },
+    { name: 'Leadership', category: 'Soft', description: 'Ability to guide and motivate teams' },
+    { name: 'Project Management', category: 'Soft', description: 'Planning and executing projects' },
+    { name: 'Problem Solving', category: 'Soft', description: 'Analytical thinking and solution finding' },
+    { name: 'Teamwork', category: 'Soft', description: 'Collaborative working skills' },
+    { name: 'Time Management', category: 'Soft', description: 'Efficient use of time and prioritization' },
+    { name: 'Critical Thinking', category: 'Soft', description: 'Objective analysis and evaluation' },
+    { name: 'Adaptability', category: 'Soft', description: 'Flexibility in changing environments' },
+    { name: 'Creativity', category: 'Soft', description: 'Innovative thinking and idea generation' },
+    { name: 'Negotiation', category: 'Soft', description: 'Reaching mutually beneficial agreements' },
+
+    // Business Skills
+    { name: 'Microsoft Office', category: 'Business', description: 'Office productivity suite' },
+    { name: 'Excel', category: 'Business', description: 'Spreadsheet application' },
+    { name: 'PowerPoint', category: 'Business', description: 'Presentation software' },
+    { name: 'Customer Service', category: 'Business', description: 'Supporting and assisting customers' },
+    { name: 'Sales', category: 'Business', description: 'Selling products or services' },
+    { name: 'Marketing', category: 'Business', description: 'Promoting products or services' },
+    { name: 'Accounting', category: 'Business', description: 'Financial record keeping and analysis' },
+    { name: 'Finance', category: 'Business', description: 'Managing money and investments' },
+    { name: 'Data Analysis', category: 'Business', description: 'Interpreting and analyzing data' },
+    { name: 'Digital Marketing', category: 'Business', description: 'Online marketing strategies' },
+
+    // Industry-Specific Skills
+    { name: 'Teaching', category: 'Education', description: 'Instructing and educating students' },
+    { name: 'Curriculum Development', category: 'Education', description: 'Creating educational programs' },
+    { name: 'Research', category: 'Education', description: 'Systematic investigation and study' },
+    { name: 'Construction Management', category: 'Construction', description: 'Overseeing construction projects' },
+    { name: 'Engineering', category: 'Engineering', description: 'Applying scientific principles to design and build' },
+    { name: 'Manufacturing', category: 'Manufacturing', description: 'Production and assembly processes' },
+    { name: 'Quality Control', category: 'Manufacturing', description: 'Ensuring product quality standards' },
+    { name: 'Healthcare', category: 'Healthcare', description: 'Medical care and treatment' },
+    { name: 'Nursing', category: 'Healthcare', description: 'Patient care and medical assistance' },
+    { name: 'Agriculture', category: 'Agriculture', description: 'Farming and crop production' },
+  ];
+
+  const createdSkills = [];
+  for (const skill of skills) {
+    const existing = await prisma.skillMaster.findFirst({
+      where: { name: skill.name }
+    });
+
+    if (!existing) {
+      const created = await prisma.skillMaster.create({
+        data: skill
+      });
+      createdSkills.push(created);
+      console.log(`Created skill: ${skill.name}`);
+    } else {
+      createdSkills.push(existing);
+    }
+  }
+
+  console.log(`✅ Created ${createdSkills.length} skills in master table`);
+  return createdSkills;
+};
+
+// NEW: Seed countries for normalized qualifications
+const seedCountries = async () => {
+  console.log('🌱 Seeding Countries (3NF normalized)...');
+
+  const countries = [
+    { name: 'Tanzania', code: 'TZ' },
+    { name: 'Kenya', code: 'KE' },
+    { name: 'Uganda', code: 'UG' },
+    { name: 'Rwanda', code: 'RW' },
+    { name: 'United States', code: 'US' },
+    { name: 'United Kingdom', code: 'GB' },
+    { name: 'Canada', code: 'CA' },
+    { name: 'Australia', code: 'AU' },
+    { name: 'Germany', code: 'DE' },
+    { name: 'France', code: 'FR' },
+  ];
+
+  const createdCountries = [];
+  for (const country of countries) {
+    const existing = await prisma.country.findFirst({
+      where: { code: country.code }
+    });
+
+    if (!existing) {
+      const created = await prisma.country.create({
+        data: country
+      });
+      createdCountries.push(created);
+      console.log(`Created country: ${country.name}`);
+    } else {
+      createdCountries.push(existing);
+    }
+  }
+
+  console.log(`✅ Created ${createdCountries.length} countries`);
+  return createdCountries;
+};
+
+// NEW: Seed job requirements using normalized structure
+const seedJobRequirements = async (jobsList) => {
+  console.log('🎯 Seeding Job Requirements (3NF normalized)...');
+
+  // Get all skills from master table
+  const skillsMaster = await prisma.skillMaster.findMany();
+  const createdRequirements = [];
+
+  for (const job of jobsList) {
+    // Each job gets 3-8 skill requirements
+    const numRequirements = Math.floor(Math.random() * 6) + 3;
+    const selectedSkills = skillsMaster.sort(() => 0.5 - Math.random()).slice(0, numRequirements);
+
+    for (const skill of selectedSkills) {
+      const importance = ['REQUIRED', 'PREFERRED', 'NICE_TO_HAVE'][Math.floor(Math.random() * 3)];
+      const proficiency = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'][Math.floor(Math.random() * 4)];
+      const yearsRequired = importance === 'REQUIRED' ? Math.floor(Math.random() * 5) + 1 : null;
+
+      try {
+        const requirement = await prisma.jobRequirement.create({
+          data: {
+            jobId: job.id,
+            skillMasterId: skill.id,
+            importance: importance,
+            proficiencyLevel: proficiency,
+            yearsRequired: yearsRequired,
+            description: `${importance.toLowerCase()} skill for ${job.title}`
+          }
+        });
+        createdRequirements.push(requirement);
+      } catch (error) {
+        // Skip if duplicate (unique constraint)
+        if (!error.message.includes('Unique constraint')) {
+          console.error(`Error creating requirement for job ${job.id}, skill ${skill.id}:`, error.message);
+        }
+      }
+    }
+  }
+
+  console.log(`✅ Created ${createdRequirements.length} job requirements`);
+  return createdRequirements;
+};
+
+// NEW: Seed applicant skills using normalized structure
+const seedApplicantSkills = async (applicantsList) => {
+  console.log('🎯 Seeding Applicant Skills (3NF normalized)...');
+
+  // Get all skills from master table
+  const skillsMaster = await prisma.skillMaster.findMany();
+  const createdSkills = [];
+
+  for (const applicant of applicantsList) {
+    // Each applicant gets 5-15 skills
+    const numSkills = Math.floor(Math.random() * 11) + 5;
+    const selectedSkills = skillsMaster.sort(() => 0.5 - Math.random()).slice(0, numSkills);
+
+    for (const skill of selectedSkills) {
+      const proficiency = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'][Math.floor(Math.random() * 4)];
+      const yearsExperience = Math.floor(Math.random() * 10) + 1;
+      const isCertified = Math.random() > 0.7; // 30% chance of certification
+
+      try {
+        const applicantSkill = await prisma.applicantSkill.create({
+          data: {
+            applicantId: applicant.id,
+            skillMasterId: skill.id,
+            proficiency: proficiency,
+            yearsExperience: yearsExperience,
+            isCertified: isCertified,
+            certificationName: isCertified ? `${skill.name} Certification` : null,
+            lastUsed: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000) // Random date within last year
+          }
+        });
+        createdSkills.push(applicantSkill);
+      } catch (error) {
+        // Skip if duplicate (unique constraint)
+        if (!error.message.includes('Unique constraint')) {
+          console.error(`Error creating skill for applicant ${applicant.id}, skill ${skill.id}:`, error.message);
+        }
+      }
+    }
+  }
+
+  console.log(`✅ Created ${createdSkills.length} applicant skills`);
+  return createdSkills;
+};
+
+// NEW: Seed skill demand data using normalized structure
+const seedSkillDemandData = async () => {
+  console.log('📊 Seeding Skill Demand Data (3NF normalized)...');
+
+  const skillsMaster = await prisma.skillMaster.findMany();
+  const createdDemandData = [];
+  const currentDate = new Date();
+
+  for (const skill of skillsMaster) {
+    // Create demand data for each skill
+    const demandScore = Math.random() * 100; // 0-100
+    const growth = (Math.random() - 0.5) * 20; // -10% to +10%
+
+    try {
+      const demandData = await prisma.skillDemand.create({
+        data: {
+          skillMasterId: skill.id,
+          demandScore: demandScore,
+          growth: growth,
+          industry: skill.category,
+          region: 'Tanzania',
+          period: currentDate,
+          source: 'Market Analysis 2024'
+        }
+      });
+      createdDemandData.push(demandData);
+    } catch (error) {
+      console.error(`Error creating demand data for skill ${skill.id}:`, error.message);
+    }
+  }
+
+  console.log(`✅ Created ${createdDemandData.length} skill demand records`);
+  return createdDemandData;
 };
 
 const seedNotifications = async (applicantsList, employersList, applicationsList) => {
@@ -593,27 +834,9 @@ const seedMarketData = async () => {
     createdTrends.push(trend);
   }
 
-  // Create skill demand data
-  const skills = ['JavaScript', 'Python', 'Java', 'React', 'Node.js', 'SQL', 'AWS', 'Docker', 'Machine Learning', 'Data Analysis'];
-  const regions = ['North America', 'Europe', 'Asia Pacific', 'Latin America'];
-  const createdSkillDemands = [];
-
-  for (let i = 0; i < 30; i++) {
-    const skillDemand = await prisma.skillDemand.create({
-      data: {
-        skillName: skills[Math.floor(Math.random() * skills.length)],
-        demandScore: Math.random() * 100, // 0-100 scale
-        growth: (Math.random() - 0.5) * 50, // -25% to +25% growth
-        industry: industries[Math.floor(Math.random() * industries.length)],
-        region: regions[Math.floor(Math.random() * regions.length)],
-        period: randomPastDate(90) // Within last 90 days
-      }
-    });
-    createdSkillDemands.push(skillDemand);
-  }
-
-  console.log(`Created ${createdTrends.length} market trends and ${createdSkillDemands.length} skill demands`);
-  return { trends: createdTrends, skillDemands: createdSkillDemands };
+  // Note: Skill demand data is now handled by seedSkillDemandData() function using normalized structure
+  console.log(`Created ${createdTrends.length} market trends`);
+  return { trends: createdTrends };
 };
 
 const seedInterviews = async (applicationsList) => {
@@ -654,23 +877,40 @@ const seedAll = async () => {
   try {
     // Clear existing data (optional - comment out if you want to keep existing data)
     console.log('🧹 Cleaning existing data...');
+
+    // Delete in reverse dependency order to respect foreign keys
     await prisma.notification.deleteMany();
     await prisma.interview.deleteMany();
     await prisma.emailLog.deleteMany();
     await prisma.application.deleteMany();
+    await prisma.jobRequirement.deleteMany();
+    await prisma.job.deleteMany();
+    await prisma.applicantSkill.deleteMany();
     await prisma.computerSkill.deleteMany();
     await prisma.languageProficiency.deleteMany();
     await prisma.workExperience.deleteMany();
     await prisma.academicQualification.deleteMany();
-    await prisma.job.deleteMany();
     await prisma.applicant.deleteMany();
     await prisma.employer.deleteMany();
+    // Delete user-related tables before users
+    await prisma.chatMessage.deleteMany();
+    await prisma.chatRoom.deleteMany();
+    await prisma.userConsent.deleteMany();
+    await prisma.auditLog.deleteMany();
     await prisma.user.deleteMany();
     await prisma.skillDemand.deleteMany();
     await prisma.marketTrend.deleteMany();
+    await prisma.skillMaster.deleteMany();
     await prisma.jobCategory.deleteMany();
+    await prisma.country.deleteMany();
 
-    // Seed in order of dependencies
+    // Seed in order of dependencies (3NF normalized)
+    console.log('🌍 Seeding countries...');
+    const countriesList = await seedCountries();
+
+    console.log('🎯 Seeding skills master...');
+    const skillsMasterList = await seedSkillsMaster();
+
     console.log('📊 Seeding categories...');
     const categoriesList = await seedCategories();
 
@@ -700,6 +940,16 @@ const seedAll = async () => {
 
     console.log('💻 Seeding computer skills...');
     await seedComputerSkills(applicantsList);
+
+    // NEW: Seed normalized requirements and skills
+    console.log('🎯 Seeding job requirements (normalized)...');
+    await seedJobRequirements(jobsList);
+
+    console.log('🎯 Seeding applicant skills (normalized)...');
+    await seedApplicantSkills(applicantsList);
+
+    console.log('📊 Seeding skill demand data (normalized)...');
+    await seedSkillDemandData();
 
     console.log('🔔 Seeding notifications...');
     await seedNotifications(applicantsList, employersList, applicationsList);

@@ -11,6 +11,7 @@ datasource db {
 enum Role {
   APPLICANT
   EMPLOYER
+  ADMIN
 }
 
 enum NotificationType {
@@ -21,73 +22,290 @@ enum NotificationType {
   GENERAL
 }
 
-model JobCategory {
-  id          Int         @id @default(autoincrement())
-  name        String      @unique
-  description String?
-  applicants  Applicant[] @relation("ApplicantCategories")
-  jobs        Job[]       @relation("JobCategories")
+enum ApplicationStatus {
+  APPLIED
+  UNDER_REVIEW
+  INTERVIEW_SCHEDULED
+  INTERVIEWED
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
 }
 
-model Applicant {
+enum JobStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  CLOSED
+  EXPIRED
+}
+
+enum ImportanceLevel {
+  REQUIRED
+  PREFERRED
+  NICE_TO_HAVE
+}
+
+enum ProficiencyLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+// =============================================================================
+// MASTER DATA TABLES (3NF Normalized)
+// =============================================================================
+
+// Job Categories Master Table
+model JobCategory {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  applicants Applicant[] @relation("ApplicantCategories")
+  jobs       Job[]       @relation("JobCategories")
+
+  @@index([name])
+  @@index([isActive])
+}
+
+// Skills Master Table (3NF - eliminates skill name duplication)
+model SkillMaster {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  category    String // Technical, Soft, Language, Industry-Specific
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  jobRequirements JobRequirement[]
+  applicantSkills ApplicantSkill[]
+  skillDemands    SkillDemand[]
+
+  @@index([category])
+  @@index([name])
+  @@index([isActive])
+}
+
+// Countries Master Table (3NF - eliminates country duplication)
+model Country {
   id        Int      @id @default(autoincrement())
-  fullName  String
-  nida      String   @unique
-  userId    Int      @unique
-  user      User     @relation(fields: [userId], references: [id])
+  name      String   @unique
+  code      String   @unique // ISO country code
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
 
+  // Relations
+  qualifications AcademicQualification[]
+
+  @@index([code])
+  @@index([name])
+}
+
+// =============================================================================
+// CORE ENTITY TABLES (3NF Normalized)
+// =============================================================================
+
+// Enhanced User Model
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  role      Role
+  isActive  Boolean   @default(true)
+  lastLogin DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  applicant    Applicant?
+  employer     Employer?
+  chatRooms    ChatRoom[]
+  agentChats   ChatRoom[]    @relation("ChatAgent")
+  chatMessages ChatMessage[]
+  consents     UserConsent[]
+  auditLogs    AuditLog[]
+
+  @@index([email])
+  @@index([role])
+  @@index([isActive])
+}
+
+// Normalized Applicant Table
+model Applicant {
+  id               Int       @id @default(autoincrement())
+  fullName         String
+  nida             String    @unique
+  phone            String?
+  address          String?
+  dateOfBirth      DateTime?
+  gender           String?
+  userId           Int       @unique
+  profileCompleted Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  // Relations
+  user           User                    @relation(fields: [userId], references: [id])
   applications   Application[]
   qualifications AcademicQualification[]
   experiences    WorkExperience[]
   languages      LanguageProficiency[]
-  skills         ComputerSkill[]
-  generalSkills  Skill[] // New flexible skills
+  computerSkills ComputerSkill[]
+  skills         ApplicantSkill[]
+  generalSkills  GeneralSkill[]
   notifications  Notification[]
+  categories     JobCategory[]           @relation("ApplicantCategories")
 
-  categories JobCategory[] @relation("ApplicantCategories")
+  @@index([nida])
+  @@index([userId])
+  @@index([profileCompleted])
 }
 
+// Normalized Employer Table
 model Employer {
   id          Int      @id @default(autoincrement())
   companyName String
+  industry    String?
+  companySize String? // Small, Medium, Large, Enterprise
+  website     String?
   address     String
+  phone       String?
+  description String?
   userId      Int      @unique
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
-
-  jobs          Job[]
-  notifications Notification[]
-}
-
-model Job {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String
-  location    String?
-  status      String   @default("DRAFT")
-  applicants  Int      @default(0)
-  employerId  Int
-  employer    Employer @relation(fields: [employerId], references: [id])
+  isVerified  Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  applications Application[]
-  categories   JobCategory[] @relation("JobCategories")
+  // Relations
+  user          User           @relation(fields: [userId], references: [id])
+  jobs          Job[]
+  notifications Notification[]
+
+  @@index([userId])
+  @@index([industry])
+  @@index([isVerified])
 }
 
-model Application {
-  id          Int       @id @default(autoincrement())
-  status      String    @default("APPLIED")
-  jobId       Int
-  job         Job       @relation(fields: [jobId], references: [id])
-  applicantId Int
-  applicant   Applicant @relation(fields: [applicantId], references: [id])
-  createdAt   DateTime  @default(now())
+// Normalized Job Table
+model Job {
+  id               Int       @id @default(autoincrement())
+  title            String
+  description      String    @db.Text
+  location         String?
+  salaryMin        Decimal?  @db.Decimal(10, 2)
+  salaryMax        Decimal?  @db.Decimal(10, 2)
+  currency         String?   @default("USD")
+  employmentType   String? // Full-time, Part-time, Contract, Internship
+  experienceLevel  String? // Entry, Mid, Senior, Executive
+  status           JobStatus @default(DRAFT)
+  applicationCount Int       @default(0)
+  viewCount        Int       @default(0)
+  employerId       Int
+  expiresAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
+  // Relations
+  employer     Employer         @relation(fields: [employerId], references: [id])
+  applications Application[]
+  categories   JobCategory[]    @relation("JobCategories")
+  requirements JobRequirement[]
+  interviews   Interview[]
+
+  @@index([status])
+  @@index([employerId])
+  @@index([createdAt])
+  @@index([status, createdAt])
+  @@index([experienceLevel])
+  @@index([employmentType])
+}
+
+// =============================================================================
+// RELATIONSHIP TABLES (3NF Normalized)
+// =============================================================================
+
+// Job Requirements (3NF compliant - references SkillMaster)
+model JobRequirement {
+  id               Int              @id @default(autoincrement())
+  jobId            Int
+  skillMasterId    Int
+  importance       ImportanceLevel  @default(PREFERRED)
+  proficiencyLevel ProficiencyLevel @default(INTERMEDIATE)
+  yearsRequired    Int? // Years of experience required
+  description      String? // Specific context for this job
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  // Relations
+  job         Job         @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  skillMaster SkillMaster @relation(fields: [skillMasterId], references: [id])
+
+  @@unique([jobId, skillMasterId]) // Prevent duplicate skills per job
+  @@index([jobId])
+  @@index([skillMasterId])
+  @@index([importance])
+  @@index([proficiencyLevel])
+}
+
+// Applicant Skills (3NF compliant - references SkillMaster)
+model ApplicantSkill {
+  id                Int              @id @default(autoincrement())
+  applicantId       Int
+  skillMasterId     Int
+  proficiency       ProficiencyLevel @default(INTERMEDIATE)
+  yearsExperience   Int? // Years of experience with this skill
+  lastUsed          DateTime? // When this skill was last used
+  isCertified       Boolean          @default(false)
+  certificationName String? // Name of certification if any
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  // Relations
+  applicant   Applicant   @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  skillMaster SkillMaster @relation(fields: [skillMasterId], references: [id])
+
+  @@unique([applicantId, skillMasterId]) // Prevent duplicate skills per applicant
+  @@index([applicantId])
+  @@index([skillMasterId])
+  @@index([proficiency])
+}
+
+// Normalized Application Table
+model Application {
+  id              Int               @id @default(autoincrement())
+  status          ApplicationStatus @default(APPLIED)
+  jobId           Int
+  applicantId     Int
+  coverLetter     String?           @db.Text
+  appliedAt       DateTime          @default(now())
+  reviewedAt      DateTime?
+  reviewedBy      Int? // Employer user ID who reviewed
+  rejectionReason String?
+  notes           String?           @db.Text
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  // Relations
+  job           Job            @relation(fields: [jobId], references: [id])
+  applicant     Applicant      @relation(fields: [applicantId], references: [id])
   notifications Notification[]
   interviews    Interview[]
   emailLogs     EmailLog[]
+
+  @@unique([applicantId, jobId])
+  @@index([applicantId])
+  @@index([jobId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([appliedAt])
 }
 
 model Notification {
@@ -109,62 +327,138 @@ model Notification {
   application   Application? @relation(fields: [applicationId], references: [id])
 }
 
+// =============================================================================
+// PROFILE DATA TABLES (3NF Normalized)
+// =============================================================================
+
+// Normalized Academic Qualification Table
 model AcademicQualification {
   id             Int       @id @default(autoincrement())
-  level          String // already stores 'Bachelor', 'Master', etc.
-  country        String
+  level          String // Bachelor, Master, PhD, Diploma, Certificate
+  countryId      Int
   institution    String
   fieldOfStudy   String
+  grade          String? // GPA, Class, Percentage
   startDate      DateTime
   endDate        DateTime?
+  isCompleted    Boolean   @default(true)
   certificateUrl String?
   applicantId    Int
-  applicant      Applicant @relation(fields: [applicantId], references: [id])
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relations
+  applicant Applicant @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  country   Country   @relation(fields: [countryId], references: [id])
+
+  @@index([applicantId])
+  @@index([countryId])
+  @@index([level])
+  @@index([fieldOfStudy])
 }
 
+// Normalized Work Experience Table
 model WorkExperience {
-  id                 Int       @id @default(autoincrement())
-  institution        String
-  institutionAddress String?
-  jobTitle           String
-  startDate          DateTime
-  endDate            DateTime?
-  duties             String?
-  supervisorName     String?
-  supervisorTel      String?
-  supervisorAddress  String?
-  applicantId        Int
-  applicant          Applicant @relation(fields: [applicantId], references: [id])
+  id                Int       @id @default(autoincrement())
+  companyName       String
+  jobTitle          String
+  industry          String?
+  location          String?
+  employmentType    String? // Full-time, Part-time, Contract, Internship
+  startDate         DateTime
+  endDate           DateTime?
+  isCurrent         Boolean   @default(false)
+  responsibilities  String?   @db.Text
+  achievements      String?   @db.Text
+  supervisorName    String?
+  supervisorContact String?
+  applicantId       Int
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  applicant Applicant @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  @@index([applicantId])
+  @@index([industry])
+  @@index([isCurrent])
 }
 
+// Normalized Language Proficiency Table
 model LanguageProficiency {
-  id          Int       @id @default(autoincrement())
-  language    String
-  speak       String
-  read        String
-  write       String
-  applicantId Int
-  applicant   Applicant @relation(fields: [applicantId], references: [id])
+  id                Int      @id @default(autoincrement())
+  language          String
+  speakLevel        String // Native, Fluent, Conversational, Basic
+  readLevel         String // Native, Fluent, Conversational, Basic
+  writeLevel        String // Native, Fluent, Conversational, Basic
+  isCertified       Boolean  @default(false)
+  certificationName String?
+  applicantId       Int
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  applicant Applicant @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  @@index([applicantId])
+  @@index([language])
 }
 
+// Legacy Computer Skills Table (to be migrated to ApplicantSkill)
 model ComputerSkill {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   skill       String
   proficiency String
   applicantId Int
-  applicant   Applicant @relation(fields: [applicantId], references: [id])
+  createdAt   DateTime @default(now())
+
+  // Relations
+  applicant Applicant @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  @@index([applicantId])
+  @@index([skill])
 }
 
-// New flexible skills system
-model Skill {
-  id          Int       @id @default(autoincrement())
-  name        String
-  proficiency String // Beginner, Intermediate, Advanced, Expert
-  category    String? // Technical, Soft Skills, Language, etc.
+// General Skills Table (for soft skills, personal attributes, etc.)
+model GeneralSkill {
+  id          Int      @id @default(autoincrement())
+  skill       String
+  description String?
+  proficiency String // Basic, Intermediate, Advanced, Expert
   applicantId Int
-  applicant   Applicant @relation(fields: [applicantId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  applicant Applicant @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  @@index([applicantId])
+  @@index([skill])
+}
+
+// =============================================================================
+// ANALYTICS AND MARKET DATA TABLES (3NF Normalized)
+// =============================================================================
+
+// Normalized Skill Demand Table
+model SkillDemand {
+  id            Int      @id @default(autoincrement())
+  skillMasterId Int
+  demandScore   Float // 0-100 scale
+  growth        Float // percentage growth
+  industry      String?
+  region        String? // Geographic region
+  period        DateTime // Time period for this data
+  source        String? // Data source
+  createdAt     DateTime @default(now())
+
+  // Relations
+  skillMaster SkillMaster @relation(fields: [skillMasterId], references: [id])
+
+  @@index([skillMasterId])
+  @@index([industry])
+  @@index([region])
+  @@index([period])
 }
 
 // Chat Support System Models
@@ -188,7 +482,7 @@ model ChatMessage {
   room      ChatRoom  @relation(fields: [roomId], references: [id])
   senderId  Int? // null for bot messages
   sender    User?     @relation(fields: [senderId], references: [id])
-  message   String
+  message   String    @db.Text // Changed to TEXT to allow longer messages
   type      String    @default("text") // text, image, file, bot
   isRead    Boolean   @default(false)
   readAt    DateTime?
@@ -205,36 +499,15 @@ model MarketTrend {
   date      DateTime
   source    String?
   createdAt DateTime @default(now())
+
+  @@index([industry])
+  @@index([metric])
+  @@index([date])
 }
 
-model SkillDemand {
-  id          Int      @id @default(autoincrement())
-  skillName   String
-  demandScore Float // 0-100 scale
-  growth      Float // percentage growth
-  industry    String?
-  region      String?
-  period      DateTime
-  createdAt   DateTime @default(now())
-}
-
-// Enhanced User Model for Chat Relations
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  role      Role
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  applicant    Applicant?
-  employer     Employer?
-  chatRooms    ChatRoom[]
-  agentChats   ChatRoom[]    @relation("ChatAgent")
-  chatMessages ChatMessage[]
-  consents     UserConsent[]
-  auditLogs    AuditLog[]
-}
+// =============================================================================
+// COMMUNICATION AND SYSTEM TABLES
+// =============================================================================
 
 // Privacy and Ethics Models
 model UserConsent {
@@ -271,18 +544,27 @@ model AnonymizedData {
 
 // Interview Management Models
 model Interview {
-  id            Int         @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   applicationId Int
-  application   Application @relation(fields: [applicationId], references: [id])
+  jobId         Int? // Optional direct reference to job
   scheduledAt   DateTime
-  duration      Int         @default(60) // minutes
+  duration      Int      @default(60) // minutes
   location      String?
-  type          String      @default("in-person") // in-person, video-call, phone, online
-  notes         String?
+  type          String   @default("in-person") // in-person, video-call, phone, online
+  notes         String?  @db.Text
   interviewers  String?
-  status        String      @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED, RESCHEDULED
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  status        String   @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED, RESCHEDULED
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  application Application @relation(fields: [applicationId], references: [id])
+  job         Job?        @relation(fields: [jobId], references: [id])
+
+  @@index([applicationId])
+  @@index([jobId])
+  @@index([status])
+  @@index([scheduledAt])
 }
 
 // Email Communication Models

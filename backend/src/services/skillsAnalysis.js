@@ -34,8 +34,12 @@ class SkillsAnalysisService {
         where: { id: applicantId },
         include: {
           categories: true,
-          skills: true,
-          generalSkills: true, // Include new general skills
+          skills: {
+            include: {
+              skillMaster: true
+            }
+          },
+          generalSkills: true,
           languages: true,
           qualifications: true,
           experiences: true
@@ -87,20 +91,49 @@ class SkillsAnalysisService {
       categories: []
     };
 
-    // Technical skills from computer skills
-    skills.technical = applicant.skills.map(skill => ({
-      name: skill.skill,
-      proficiency: skill.proficiency,
-      type: 'technical'
-    }));
+    // Technical skills from normalized ApplicantSkill table
+    skills.technical = applicant.skills.map(skill => {
+      let skillName = 'Unknown Skill';
+
+      // Try to get skill name from skillMaster relation first
+      if (skill.skillMaster && skill.skillMaster.name) {
+        skillName = skill.skillMaster.name;
+      }
+      // Fallback to direct skill field if available
+      else if (skill.skill) {
+        skillName = skill.skill;
+      }
+      // Last resort: use skill ID as identifier
+      else if (skill.skillMasterId) {
+        skillName = `Skill ID: ${skill.skillMasterId}`;
+      }
+
+      return {
+        name: skillName,
+        proficiency: skill.proficiency || 'Not specified',
+        type: 'technical'
+      };
+    });
+
+    // Add general skills if available
+    if (applicant.generalSkills) {
+      skills.general = applicant.generalSkills.map(skill => ({
+        name: skill.skill,
+        proficiency: skill.proficiency,
+        description: skill.description,
+        type: 'general'
+      }));
+    } else {
+      skills.general = [];
+    }
 
     // Language skills
     skills.languages = applicant.languages.map(lang => ({
       name: lang.language,
       proficiency: {
-        speak: lang.speak,
-        read: lang.read,
-        write: lang.write
+        speak: lang.speakLevel || lang.speak,
+        read: lang.readLevel || lang.read,
+        write: lang.writeLevel || lang.write
       },
       type: 'language'
     }));
@@ -135,7 +168,7 @@ class SkillsAnalysisService {
     const categoryNames = categories.map(cat => cat.name);
     console.log('Getting job-based market demand for categories:', categoryNames);
 
-    // Get active jobs in the user's categories
+    // Get active jobs in the user's categories with their requirements (3NF normalized)
     const jobs = await prisma.job.findMany({
       where: {
         status: 'ACTIVE',
@@ -146,8 +179,13 @@ class SkillsAnalysisService {
         }
       },
       include: {
-        requirements: true,
-        categories: true
+        categories: true,
+        employer: true,
+        requirements: {
+          include: {
+            skillMaster: true
+          }
+        }
       }
     });
 
@@ -157,73 +195,146 @@ class SkillsAnalysisService {
       const allJobs = await prisma.job.findMany({
         where: { status: 'ACTIVE' },
         include: {
-          requirements: true,
-          categories: true
+          categories: true,
+          employer: true,
+          requirements: {
+            include: {
+              skillMaster: true
+            }
+          }
         },
         take: 50 // Limit to recent 50 jobs
       });
       jobs.push(...allJobs);
     }
 
-    // Extract skill requirements from jobs
+    // Extract skill requirements from jobs using normalized structure
     const skillRequirements = [];
+
     jobs.forEach(job => {
+      // Use actual job requirements from normalized table
       job.requirements.forEach(req => {
         skillRequirements.push({
-          skillName: req.skillName,
-          importance: req.importance,
+          skillName: req.skillMaster.name,
+          skillCategory: req.skillMaster.category,
+          importance: req.importance.toLowerCase(),
           proficiencyLevel: req.proficiencyLevel,
+          yearsRequired: req.yearsRequired,
           jobTitle: job.title,
-          jobId: job.id
+          jobId: job.id,
+          requirementId: req.id
         });
       });
     });
 
+    // Get existing skill demand data from normalized database
+    const existingSkillDemand = await prisma.skillDemand.findMany({
+      include: {
+        skillMaster: true
+      },
+      orderBy: { demandScore: 'desc' },
+      take: 50
+    });
+
     // Calculate demand scores based on frequency and importance
     const skillDemandMap = {};
+
+    // Add skills from job analysis
     skillRequirements.forEach(req => {
       const skill = req.skillName.toLowerCase();
       if (!skillDemandMap[skill]) {
         skillDemandMap[skill] = {
           skillName: req.skillName,
+          skillCategory: req.skillCategory,
           demandScore: 0,
           jobCount: 0,
-          importance: { required: 0, preferred: 0, nice_to_have: 0 }
+          importance: { required: 0, preferred: 0, nice_to_have: 0 },
+          avgYearsRequired: 0,
+          totalYearsRequired: 0,
+          requirementCount: 0
         };
       }
 
       skillDemandMap[skill].jobCount++;
       skillDemandMap[skill].importance[req.importance.toLowerCase()]++;
+      skillDemandMap[skill].requirementCount++;
+
+      // Track years of experience required
+      if (req.yearsRequired) {
+        skillDemandMap[skill].totalYearsRequired += req.yearsRequired;
+        skillDemandMap[skill].avgYearsRequired =
+          skillDemandMap[skill].totalYearsRequired / skillDemandMap[skill].requirementCount;
+      }
 
       // Calculate demand score based on frequency and importance
       let importanceWeight = 1;
-      if (req.importance === 'REQUIRED') importanceWeight = 3;
-      else if (req.importance === 'PREFERRED') importanceWeight = 2;
+      if (req.importance === 'required') importanceWeight = 3;
+      else if (req.importance === 'preferred') importanceWeight = 2;
       else importanceWeight = 1;
 
       skillDemandMap[skill].demandScore += importanceWeight;
     });
 
+    // Add existing skill demand data as fallback
+    existingSkillDemand.forEach(skillData => {
+      const skill = skillData.skillMaster.name.toLowerCase();
+      if (!skillDemandMap[skill]) {
+        skillDemandMap[skill] = {
+          skillName: skillData.skillMaster.name,
+          skillCategory: skillData.skillMaster.category,
+          demandScore: skillData.demandScore,
+          jobCount: Math.round(skillData.demandScore / 10), // Estimate job count
+          importance: { required: 1, preferred: 2, nice_to_have: 1 },
+          avgYearsRequired: 2, // Default estimate
+          growth: skillData.growth || 0
+        };
+      } else {
+        // Enhance existing data with market demand info
+        skillDemandMap[skill].marketDemandScore = skillData.demandScore;
+        skillDemandMap[skill].growth = skillData.growth;
+      }
+    });
+
     // Convert to array and normalize scores
     const highDemandSkills = Object.values(skillDemandMap)
-      .map(skill => ({
-        ...skill,
-        demandScore: Math.min((skill.demandScore / jobs.length) * 100, 100) // Normalize to 0-100
-      }))
-      .filter(skill => skill.demandScore > 10) // Only include skills with meaningful demand
+      .map(skill => {
+        // Calculate normalized demand score
+        const jobBasedScore = jobs.length > 0 ?
+          Math.min((skill.demandScore / jobs.length) * 100, 100) : 0;
+
+        // Combine job-based score with market demand score if available
+        const finalScore = skill.marketDemandScore ?
+          (jobBasedScore * 0.7 + skill.marketDemandScore * 0.3) :
+          jobBasedScore || skill.demandScore;
+
+        return {
+          ...skill,
+          demandScore: finalScore,
+          jobBasedScore: jobBasedScore,
+          marketDemandScore: skill.marketDemandScore || 0,
+          demandLevel: finalScore > 70 ? 'High' : finalScore > 40 ? 'Medium' : 'Low'
+        };
+      })
+      .filter(skill => skill.demandScore > 5) // Lower threshold to include more skills
       .sort((a, b) => b.demandScore - a.demandScore);
 
     const result = {
       totalJobs: jobs.length,
+      totalRequirements: skillRequirements.length,
       skillRequirements,
-      highDemandSkills,
-      categories: categoryNames
+      highDemandSkills: highDemandSkills.slice(0, 20), // Top 20 skills
+      categories: categoryNames,
+      skillCategories: [...new Set(highDemandSkills.map(s => s.skillCategory))],
+      lastUpdated: new Date(),
+      dataSource: 'Normalized 3NF Database'
     };
 
-    console.log('Job-based market demand result:', {
+    console.log('Job-based market demand result (3NF normalized):', {
       totalJobs: result.totalJobs,
+      totalRequirements: result.totalRequirements,
       skillRequirementsCount: result.skillRequirements.length,
-      highDemandSkillsCount: result.highDemandSkills.length
+      highDemandSkillsCount: result.highDemandSkills.length,
+      skillCategories: result.skillCategories.length
     });
 
     return result;
@@ -596,11 +707,23 @@ class SkillsAnalysisService {
   }
 
   getMarketOutlook(categoryName, marketDemand) {
-    const trend = marketDemand.growingIndustries.find(t => 
-      t.industry.toLowerCase().includes(categoryName.toLowerCase())
-    );
-    
-    return trend ? 'Growing' : 'Stable';
+    // Check if growingIndustries exists and has data
+    if (marketDemand.growingIndustries && marketDemand.growingIndustries.length > 0) {
+      const trend = marketDemand.growingIndustries.find(t =>
+        t.industry.toLowerCase().includes(categoryName.toLowerCase())
+      );
+      return trend ? 'Growing' : 'Stable';
+    }
+
+    // Fallback: check if there are high demand skills in this category
+    if (marketDemand.highDemandSkills && marketDemand.highDemandSkills.length > 0) {
+      const categorySkills = marketDemand.highDemandSkills.filter(skill =>
+        skill.skillCategory && skill.skillCategory.toLowerCase().includes(categoryName.toLowerCase())
+      );
+      return categorySkills.length > 3 ? 'Growing' : 'Stable';
+    }
+
+    return 'Stable';
   }
 }
 

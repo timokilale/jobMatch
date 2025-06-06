@@ -60,15 +60,12 @@ exports.getApplicantJobs = async (req, res) => {
       return res.status(404).json({ error: 'Applicant not found'});
     }
 
+    // Show ALL jobs to all applicants - let them decide what to apply for
+    // Include all job statuses except DRAFT (which are not ready for applications)
     const jobs = await prisma.job.findMany({
       where: {
-        status: 'Active', // Only fetch active jobs
-        categories: {
-          some: {
-            id: {
-              in: applicant.categories.map(cat => cat.id)
-            }
-          }
+        status: {
+          in: ['ACTIVE', 'PAUSED'] // Show active and paused jobs, exclude drafts, closed, and expired
         }
       },
       include: {
@@ -86,24 +83,23 @@ exports.getApplicantJobs = async (req, res) => {
       take: limit
     });
 
+    console.log(`Found ${jobs.length} jobs for applicant ${applicantId}`);
+
     const jobsWithCompany = jobs.map(job => ({
       ...job,
       company: job.employer.companyName
     }));
 
-    // Get total count for pagination
+    // Get total count of all available jobs
     const totalJobs = await prisma.job.count({
       where: {
-        status: 'Active',
-        categories: {
-          some: {
-            id: {
-              in: applicant.categories.map(cat => cat.id)
-            }
-          }
+        status: {
+          in: ['ACTIVE', 'PAUSED']
         }
       }
     });
+
+    console.log(`Returning ${jobsWithCompany.length} jobs out of ${totalJobs} total available jobs`);
 
     res.json({
       jobs: jobsWithCompany,
@@ -115,7 +111,7 @@ exports.getApplicantJobs = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error feching jobs for applicant:', error);
+    console.error('Error fetching jobs for applicant:', error);
     res.status(500).json({ error: 'Internal server error'});
   }
 };

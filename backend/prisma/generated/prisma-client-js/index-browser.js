@@ -123,23 +123,68 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.JobCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  description: 'description'
+  description: 'description',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SkillMasterScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  description: 'description',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CountryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  isActive: 'isActive',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  password: 'password',
+  role: 'role',
+  isActive: 'isActive',
+  lastLogin: 'lastLogin',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ApplicantScalarFieldEnum = {
   id: 'id',
   fullName: 'fullName',
   nida: 'nida',
+  phone: 'phone',
+  address: 'address',
+  dateOfBirth: 'dateOfBirth',
+  gender: 'gender',
   userId: 'userId',
-  createdAt: 'createdAt'
+  profileCompleted: 'profileCompleted',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.EmployerScalarFieldEnum = {
   id: 'id',
   companyName: 'companyName',
+  industry: 'industry',
+  companySize: 'companySize',
+  website: 'website',
   address: 'address',
+  phone: 'phone',
+  description: 'description',
   userId: 'userId',
-  createdAt: 'createdAt'
+  isVerified: 'isVerified',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.JobScalarFieldEnum = {
@@ -147,9 +192,41 @@ exports.Prisma.JobScalarFieldEnum = {
   title: 'title',
   description: 'description',
   location: 'location',
+  salaryMin: 'salaryMin',
+  salaryMax: 'salaryMax',
+  currency: 'currency',
+  employmentType: 'employmentType',
+  experienceLevel: 'experienceLevel',
   status: 'status',
-  applicants: 'applicants',
+  applicationCount: 'applicationCount',
+  viewCount: 'viewCount',
   employerId: 'employerId',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.JobRequirementScalarFieldEnum = {
+  id: 'id',
+  jobId: 'jobId',
+  skillMasterId: 'skillMasterId',
+  importance: 'importance',
+  proficiencyLevel: 'proficiencyLevel',
+  yearsRequired: 'yearsRequired',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ApplicantSkillScalarFieldEnum = {
+  id: 'id',
+  applicantId: 'applicantId',
+  skillMasterId: 'skillMasterId',
+  proficiency: 'proficiency',
+  yearsExperience: 'yearsExperience',
+  lastUsed: 'lastUsed',
+  isCertified: 'isCertified',
+  certificationName: 'certificationName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -159,7 +236,14 @@ exports.Prisma.ApplicationScalarFieldEnum = {
   status: 'status',
   jobId: 'jobId',
   applicantId: 'applicantId',
-  createdAt: 'createdAt'
+  coverLetter: 'coverLetter',
+  appliedAt: 'appliedAt',
+  reviewedAt: 'reviewedAt',
+  reviewedBy: 'reviewedBy',
+  rejectionReason: 'rejectionReason',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.NotificationScalarFieldEnum = {
@@ -179,53 +263,79 @@ exports.Prisma.NotificationScalarFieldEnum = {
 exports.Prisma.AcademicQualificationScalarFieldEnum = {
   id: 'id',
   level: 'level',
-  country: 'country',
+  countryId: 'countryId',
   institution: 'institution',
   fieldOfStudy: 'fieldOfStudy',
+  grade: 'grade',
   startDate: 'startDate',
   endDate: 'endDate',
+  isCompleted: 'isCompleted',
   certificateUrl: 'certificateUrl',
-  applicantId: 'applicantId'
+  applicantId: 'applicantId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.WorkExperienceScalarFieldEnum = {
   id: 'id',
-  institution: 'institution',
-  institutionAddress: 'institutionAddress',
+  companyName: 'companyName',
   jobTitle: 'jobTitle',
+  industry: 'industry',
+  location: 'location',
+  employmentType: 'employmentType',
   startDate: 'startDate',
   endDate: 'endDate',
-  duties: 'duties',
+  isCurrent: 'isCurrent',
+  responsibilities: 'responsibilities',
+  achievements: 'achievements',
   supervisorName: 'supervisorName',
-  supervisorTel: 'supervisorTel',
-  supervisorAddress: 'supervisorAddress',
-  applicantId: 'applicantId'
+  supervisorContact: 'supervisorContact',
+  applicantId: 'applicantId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.LanguageProficiencyScalarFieldEnum = {
   id: 'id',
   language: 'language',
-  speak: 'speak',
-  read: 'read',
-  write: 'write',
-  applicantId: 'applicantId'
+  speakLevel: 'speakLevel',
+  readLevel: 'readLevel',
+  writeLevel: 'writeLevel',
+  isCertified: 'isCertified',
+  certificationName: 'certificationName',
+  applicantId: 'applicantId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ComputerSkillScalarFieldEnum = {
   id: 'id',
   skill: 'skill',
   proficiency: 'proficiency',
-  applicantId: 'applicantId'
+  applicantId: 'applicantId',
+  createdAt: 'createdAt'
 };
 
-exports.Prisma.SkillScalarFieldEnum = {
+exports.Prisma.GeneralSkillScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  skill: 'skill',
+  description: 'description',
   proficiency: 'proficiency',
-  category: 'category',
   applicantId: 'applicantId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SkillDemandScalarFieldEnum = {
+  id: 'id',
+  skillMasterId: 'skillMasterId',
+  demandScore: 'demandScore',
+  growth: 'growth',
+  industry: 'industry',
+  region: 'region',
+  period: 'period',
+  source: 'source',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ChatRoomScalarFieldEnum = {
@@ -260,26 +370,6 @@ exports.Prisma.MarketTrendScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.SkillDemandScalarFieldEnum = {
-  id: 'id',
-  skillName: 'skillName',
-  demandScore: 'demandScore',
-  growth: 'growth',
-  industry: 'industry',
-  region: 'region',
-  period: 'period',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.UserScalarFieldEnum = {
-  id: 'id',
-  email: 'email',
-  password: 'password',
-  role: 'role',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.UserConsentScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -311,6 +401,7 @@ exports.Prisma.AnonymizedDataScalarFieldEnum = {
 exports.Prisma.InterviewScalarFieldEnum = {
   id: 'id',
   applicationId: 'applicationId',
+  jobId: 'jobId',
   scheduledAt: 'scheduledAt',
   duration: 'duration',
   location: 'location',
@@ -351,25 +442,61 @@ exports.Prisma.JobCategoryOrderByRelevanceFieldEnum = {
   description: 'description'
 };
 
+exports.Prisma.SkillMasterOrderByRelevanceFieldEnum = {
+  name: 'name',
+  category: 'category',
+  description: 'description'
+};
+
+exports.Prisma.CountryOrderByRelevanceFieldEnum = {
+  name: 'name',
+  code: 'code'
+};
+
+exports.Prisma.UserOrderByRelevanceFieldEnum = {
+  email: 'email',
+  password: 'password'
+};
+
 exports.Prisma.ApplicantOrderByRelevanceFieldEnum = {
   fullName: 'fullName',
-  nida: 'nida'
+  nida: 'nida',
+  phone: 'phone',
+  address: 'address',
+  gender: 'gender'
 };
 
 exports.Prisma.EmployerOrderByRelevanceFieldEnum = {
   companyName: 'companyName',
-  address: 'address'
+  industry: 'industry',
+  companySize: 'companySize',
+  website: 'website',
+  address: 'address',
+  phone: 'phone',
+  description: 'description'
 };
 
 exports.Prisma.JobOrderByRelevanceFieldEnum = {
   title: 'title',
   description: 'description',
   location: 'location',
-  status: 'status'
+  currency: 'currency',
+  employmentType: 'employmentType',
+  experienceLevel: 'experienceLevel'
+};
+
+exports.Prisma.JobRequirementOrderByRelevanceFieldEnum = {
+  description: 'description'
+};
+
+exports.Prisma.ApplicantSkillOrderByRelevanceFieldEnum = {
+  certificationName: 'certificationName'
 };
 
 exports.Prisma.ApplicationOrderByRelevanceFieldEnum = {
-  status: 'status'
+  coverLetter: 'coverLetter',
+  rejectionReason: 'rejectionReason',
+  notes: 'notes'
 };
 
 exports.Prisma.NotificationOrderByRelevanceFieldEnum = {
@@ -379,27 +506,30 @@ exports.Prisma.NotificationOrderByRelevanceFieldEnum = {
 
 exports.Prisma.AcademicQualificationOrderByRelevanceFieldEnum = {
   level: 'level',
-  country: 'country',
   institution: 'institution',
   fieldOfStudy: 'fieldOfStudy',
+  grade: 'grade',
   certificateUrl: 'certificateUrl'
 };
 
 exports.Prisma.WorkExperienceOrderByRelevanceFieldEnum = {
-  institution: 'institution',
-  institutionAddress: 'institutionAddress',
+  companyName: 'companyName',
   jobTitle: 'jobTitle',
-  duties: 'duties',
+  industry: 'industry',
+  location: 'location',
+  employmentType: 'employmentType',
+  responsibilities: 'responsibilities',
+  achievements: 'achievements',
   supervisorName: 'supervisorName',
-  supervisorTel: 'supervisorTel',
-  supervisorAddress: 'supervisorAddress'
+  supervisorContact: 'supervisorContact'
 };
 
 exports.Prisma.LanguageProficiencyOrderByRelevanceFieldEnum = {
   language: 'language',
-  speak: 'speak',
-  read: 'read',
-  write: 'write'
+  speakLevel: 'speakLevel',
+  readLevel: 'readLevel',
+  writeLevel: 'writeLevel',
+  certificationName: 'certificationName'
 };
 
 exports.Prisma.ComputerSkillOrderByRelevanceFieldEnum = {
@@ -407,10 +537,16 @@ exports.Prisma.ComputerSkillOrderByRelevanceFieldEnum = {
   proficiency: 'proficiency'
 };
 
-exports.Prisma.SkillOrderByRelevanceFieldEnum = {
-  name: 'name',
-  proficiency: 'proficiency',
-  category: 'category'
+exports.Prisma.GeneralSkillOrderByRelevanceFieldEnum = {
+  skill: 'skill',
+  description: 'description',
+  proficiency: 'proficiency'
+};
+
+exports.Prisma.SkillDemandOrderByRelevanceFieldEnum = {
+  industry: 'industry',
+  region: 'region',
+  source: 'source'
 };
 
 exports.Prisma.ChatRoomOrderByRelevanceFieldEnum = {
@@ -428,17 +564,6 @@ exports.Prisma.MarketTrendOrderByRelevanceFieldEnum = {
   metric: 'metric',
   period: 'period',
   source: 'source'
-};
-
-exports.Prisma.SkillDemandOrderByRelevanceFieldEnum = {
-  skillName: 'skillName',
-  industry: 'industry',
-  region: 'region'
-};
-
-exports.Prisma.UserOrderByRelevanceFieldEnum = {
-  email: 'email',
-  password: 'password'
 };
 
 exports.Prisma.UserConsentOrderByRelevanceFieldEnum = {
@@ -471,6 +596,43 @@ exports.Prisma.EmailLogOrderByRelevanceFieldEnum = {
   status: 'status',
   error: 'error'
 };
+exports.Role = exports.$Enums.Role = {
+  APPLICANT: 'APPLICANT',
+  EMPLOYER: 'EMPLOYER',
+  ADMIN: 'ADMIN'
+};
+
+exports.JobStatus = exports.$Enums.JobStatus = {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  PAUSED: 'PAUSED',
+  CLOSED: 'CLOSED',
+  EXPIRED: 'EXPIRED'
+};
+
+exports.ImportanceLevel = exports.$Enums.ImportanceLevel = {
+  REQUIRED: 'REQUIRED',
+  PREFERRED: 'PREFERRED',
+  NICE_TO_HAVE: 'NICE_TO_HAVE'
+};
+
+exports.ProficiencyLevel = exports.$Enums.ProficiencyLevel = {
+  BEGINNER: 'BEGINNER',
+  INTERMEDIATE: 'INTERMEDIATE',
+  ADVANCED: 'ADVANCED',
+  EXPERT: 'EXPERT'
+};
+
+exports.ApplicationStatus = exports.$Enums.ApplicationStatus = {
+  APPLIED: 'APPLIED',
+  UNDER_REVIEW: 'UNDER_REVIEW',
+  INTERVIEW_SCHEDULED: 'INTERVIEW_SCHEDULED',
+  INTERVIEWED: 'INTERVIEWED',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  WITHDRAWN: 'WITHDRAWN'
+};
+
 exports.NotificationType = exports.$Enums.NotificationType = {
   STATUS_CHANGE: 'STATUS_CHANGE',
   NEW_APPLICATION: 'NEW_APPLICATION',
@@ -479,28 +641,27 @@ exports.NotificationType = exports.$Enums.NotificationType = {
   GENERAL: 'GENERAL'
 };
 
-exports.Role = exports.$Enums.Role = {
-  APPLICANT: 'APPLICANT',
-  EMPLOYER: 'EMPLOYER'
-};
-
 exports.Prisma.ModelName = {
   JobCategory: 'JobCategory',
+  SkillMaster: 'SkillMaster',
+  Country: 'Country',
+  User: 'User',
   Applicant: 'Applicant',
   Employer: 'Employer',
   Job: 'Job',
+  JobRequirement: 'JobRequirement',
+  ApplicantSkill: 'ApplicantSkill',
   Application: 'Application',
   Notification: 'Notification',
   AcademicQualification: 'AcademicQualification',
   WorkExperience: 'WorkExperience',
   LanguageProficiency: 'LanguageProficiency',
   ComputerSkill: 'ComputerSkill',
-  Skill: 'Skill',
+  GeneralSkill: 'GeneralSkill',
+  SkillDemand: 'SkillDemand',
   ChatRoom: 'ChatRoom',
   ChatMessage: 'ChatMessage',
   MarketTrend: 'MarketTrend',
-  SkillDemand: 'SkillDemand',
-  User: 'User',
   UserConsent: 'UserConsent',
   AuditLog: 'AuditLog',
   AnonymizedData: 'AnonymizedData',
