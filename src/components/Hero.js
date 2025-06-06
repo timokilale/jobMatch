@@ -14,10 +14,28 @@ const Hero = () => {
           <span className="absolute bottom-[-5px] left-0  w-16 h-1 bg-green-500"></span>
         </h2>
         <p className="text-gray-600 text-lg md:text-xl max-w-2xl leading-relaxed">
-          This platform helps you connect with employers looking for your skills. 
+          This platform helps you connect with employers looking for your skills.
           Whether you're a student, graduate, or professional
         </p>
-         <span className="text-green-700 text-lg font-bold md:text-xl max-w-2xl leading-relaxed">get started today!</span> 
+         <span className="text-green-700 text-lg font-bold md:text-xl max-w-2xl leading-relaxed">get started today!</span>
+
+         {/* Call to Action Buttons */}
+         <div className="flex flex-col sm:flex-row gap-4 mt-8">
+           <a
+             href="/register"
+             className="bg-green-700 text-white px-8 py-3 rounded-lg hover:bg-green-800 transition-colors duration-300 text-center font-medium"
+           >
+             <i className="fas fa-user mr-2"></i>
+             Find Jobs
+           </a>
+           <a
+             href="/employer_register"
+             className="bg-white text-green-700 border-2 border-green-700 px-8 py-3 rounded-lg hover:bg-green-50 transition-colors duration-300 text-center font-medium"
+           >
+             <i className="fas fa-briefcase mr-2"></i>
+             Post Jobs
+           </a>
+         </div>
       </div>
 
       <div className="flex-1 animate-slideInRight">

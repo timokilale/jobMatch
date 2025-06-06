@@ -25,7 +25,7 @@ const ApplicantDashboard = () => {
   const [showAccessibilitySettings, setShowAccessibilitySettings] = useState(false);
   const [showPrivacySettings, setShowPrivacySettings] = useState(false);
   const { role, user } = useSelector((state) => state.auth);
-  const [avatar, setAvatar] = useState(user?.avatar || null);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const shouldShowTutorial = useTutorial();
@@ -262,7 +262,8 @@ const ApplicantDashboard = () => {
                 if (file) {
                   const reader = new FileReader();
                   reader.onload = (event) => {
-                    setAvatar(prev => ({ ...prev, avatar: event.target.result }));
+                    // TODO: Implement avatar upload functionality
+                    console.log('Avatar selected:', event.target.result);
                   };
                   reader.readAsDataURL(file);
                 }
@@ -349,6 +350,16 @@ const ApplicantDashboard = () => {
               <div data-tutorial="notifications">
                 <Notifications />
               </div>
+
+              {/* Logout Button */}
+              <button
+                onClick={() => handleSectionClick(sections.find(s => s.key === "logout"))}
+                className="flex items-center space-x-2 text-green-700 hover:text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors touch-target"
+                title="Logout"
+              >
+                <i className={`fas fa-sign-out-alt ${isMobile ? 'text-lg' : 'text-xl'}`}></i>
+                <span className="hidden md:inline text-sm font-medium">Logout</span>
+              </button>
              </div>
           </div>
         </div>

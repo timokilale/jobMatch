@@ -83,9 +83,19 @@ const EmployerDashboard = () => {
             <img src="/assets/logo.png" alt="Logo" className="w-36 h-auto" />
           </div>
           <div className="flex items-center space-x-4">
-            <button className="p-2fas fa-Briefcase text-green-600 hover:bg-gray-100 rounded-full">
+            <button className="p-2 text-green-600 hover:bg-gray-100 rounded-full">
               <span className="sr-only">Notifications</span>
               <i className="fas fa-bell text-xl text-green-700"></i>
+            </button>
+
+            {/* Logout Button */}
+            <button
+              onClick={() => dispatch(logout())}
+              className="flex items-center space-x-2 text-green-700 hover:text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors"
+              title="Logout"
+            >
+              <i className="fas fa-sign-out-alt text-xl"></i>
+              <span className="hidden md:inline text-sm font-medium">Logout</span>
             </button>
           </div>
         </div>

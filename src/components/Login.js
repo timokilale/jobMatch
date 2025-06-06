@@ -8,6 +8,7 @@ const LoginPage = () => {
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(true);
+  const [selectedRole, setSelectedRole] = useState('applicant'); // Default to applicant
   
   // Set focused state if fields already have values
   useEffect(() => {
@@ -53,7 +54,53 @@ const LoginPage = () => {
                 Welcome back! <br />
                 <span className="text-sm font-light text-gray-600">Please enter your details</span>
               </p>
+
+              {/* Role Selector */}
+              <div className="w-full mb-4">
+                <p className="text-sm font-medium text-gray-700 mb-3">I am logging in as:</p>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedRole('applicant')}
+                    className={`flex-1 p-3 rounded-lg border-2 transition-all duration-200 ${
+                      selectedRole === 'applicant'
+                        ? 'border-green-700 bg-green-50 text-green-700'
+                        : 'border-gray-300 bg-white text-gray-600 hover:border-green-300'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <i className="fas fa-user text-xl mb-1"></i>
+                      <span className="text-sm font-medium">Job Seeker</span>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedRole('employer')}
+                    className={`flex-1 p-3 rounded-lg border-2 transition-all duration-200 ${
+                      selectedRole === 'employer'
+                        ? 'border-green-700 bg-green-50 text-green-700'
+                        : 'border-gray-300 bg-white text-gray-600 hover:border-green-300'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <i className="fas fa-briefcase text-xl mb-1"></i>
+                      <span className="text-sm font-medium">Employer</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
               <form onSubmit={handleLogin} className="w-full" autoComplete="off">
+                {/* Error Display */}
+                {error && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-red-700 text-sm flex items-center">
+                      <i className="fas fa-exclamation-circle mr-2"></i>
+                      {error}
+                    </p>
+                  </div>
+                )}
+
                 <div className="relative mb-3">
                   <input
                     type="email"
@@ -126,8 +173,11 @@ const LoginPage = () => {
             </div>
             <p className="text-center text-sm text-gray-600 mt-6">
               Don't have an account?{' '}
-              <Link to="/register" className="text-green-700 font-bold hover:underline">
-                Register
+              <Link
+                to={selectedRole === 'employer' ? '/employer_register' : '/register'}
+                className="text-green-700 font-bold hover:underline"
+              >
+                Register as {selectedRole === 'employer' ? 'Employer' : 'Job Seeker'}
               </Link>
             </p>
           </div>
