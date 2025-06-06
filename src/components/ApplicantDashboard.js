@@ -5,6 +5,7 @@ import AcademicQualifications from "./SidebarItems/AcademicQualifications"
 import WorkExperience from "./SidebarItems/WorkExperience";
 import LanguageProficiency from "./SidebarItems/LanguageProficiency";
 import ComputerSkills from "./SidebarItems/ComputerSkills";
+import Skills from "./SidebarItems/Skills";
 import JobListings from "./JobListings";
 import AppliedJobs from "./SidebarItems/AppliedJobs";
 import Notifications from "./Notifications";
@@ -110,6 +111,12 @@ const ApplicantDashboard = () => {
       component: <LanguageProficiency />,
     },
     {
+      key: "skills",
+      title: "My Skills",
+      icon: "star",
+      component: <Skills />,
+    },
+    {
       key: "computer",
       title: "Computer Skills",
       icon: "laptop-code",
@@ -170,7 +177,7 @@ const ApplicantDashboard = () => {
   };
 
   return (
-    <div className="h-screen relative overflow-hidden dashboard-grid"
+    <div className="min-h-screen relative page-container dashboard-grid"
          style={{
            display: 'grid',
            gridTemplateColumns: isMobile ? '1fr' : (sidebarOpen ? '256px 1fr' : '1fr'),
@@ -365,7 +372,7 @@ const ApplicantDashboard = () => {
         </div>
 
         {/* Main Content */}
-        <div className={`flex-1 bg-gray-50 overflow-y-auto transition-all duration-300 flex flex-col justify-center items-center min-h-[calc(100vh-4rem)] w-full ${
+        <div className={`flex-1 bg-gray-50 overflow-y-auto transition-all duration-300 flex flex-col min-h-screen w-full ${
           isMobile ? 'p-4' : 'p-5'
         }`}>
           {loading ? (

@@ -21,7 +21,7 @@ const LoginPage = () => {
   }, [email, password]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 pt-16 overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 pt-16 page-container">
       <nav className="fixed top-0 left-0 right-0 flex items-center justify-start gap-5 px-10 py-4 bg-transparent ">
         <div className="logo-container mr-10">
           <img src="assets/logo.png" alt="Logo" className="h-12 w-auto" />

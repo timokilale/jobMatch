@@ -43,14 +43,18 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api/qualifications', qualificationRouter);
 app.use('/api/experiences', require('./routes/workExperience'));
 app.use('/api/languages', require('./routes/languageProficiency'));
-app.use('/api/skills', require('./routes/computerSkill'));
+app.use('/api/computer-skills', require('./routes/computerSkill'));
+app.use('/api/skills', require('./routes/skills')); // New general skills
 app.use('/api/jobs', require('./routes/jobs'));
 app.use('/api/applications', require('./routes/applications'));
 app.use('/api/categories', require('./routes/categories'));
 app.use('/api/pdf', require('./routes/pdf'));
 app.use('/api/market', require('./routes/marketAnalytics'));
-app.use('/api/skills', require('./routes/skillsAnalysis'));
+app.use('/api/skills-analysis', require('./routes/skillsAnalysis'));
 app.use('/api/privacy', require('./routes/privacy'));
+app.use('/api/interviews', require('./routes/interviews'));
+app.use('/api/emails', require('./routes/emails'));
+app.use('/api/notifications', require('./routes/notifications'));
 
 
 // Error Handling

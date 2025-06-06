@@ -27,7 +27,7 @@ const AcademicQualifications = () => {
   }, [qualifications]);
 
   return (
-    <div className="p-8 min-h-screen flex flex-col">
+    <div className="p-8 min-h-screen flex flex-col overflow-y-auto">
       {showForm ? (
         <>
         <h1 className="text-xl font-bold text-green-800 mt-12">Add New Academic Qualification</h1>
@@ -113,21 +113,25 @@ const AcademicQualifications = () => {
               name="startDate"
               value={formData.startDate}
               onChange={handleChange}
+              max={new Date().toISOString().split('T')[0]}
               className="w-full p-2 border border-green-300 rounded-md   focus:border-green-500 focus:outline-none"
               required
             />
+            <p className="text-xs text-gray-500">Start date cannot be in the future</p>
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-green-800">End date *</label>
+            <label className="block text-sm font-medium text-green-800">End date</label>
             <input
               type="date"
               name="endDate"
               value={formData.endDate}
               onChange={handleChange}
+              min={formData.startDate}
+              max={new Date().toISOString().split('T')[0]}
               className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
-              required
             />
+            <p className="text-xs text-gray-500">End date cannot be in the future or before start date</p>
           </div>
         </div>
 

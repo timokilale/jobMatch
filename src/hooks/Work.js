@@ -6,6 +6,7 @@ import {
     updateWorkExperience,
     deleteWorkExperience,
 } from '../redux/slices/workSlice';
+import { validateHistoricalDateRange } from '../utils/dateValidation';
 
 
 const useWork = () => {
@@ -41,6 +42,20 @@ const useWork = () => {
 
       const handleSave = (e) => {
         e.preventDefault();
+
+        // Validate required fields
+        if (!formData.institution || !formData.jobTitle || !formData.startDate) {
+          alert("Please fill all required fields");
+          return;
+        }
+
+        // Validate dates using utility function
+        const dateValidation = validateHistoricalDateRange(formData.startDate, formData.endDate);
+        if (!dateValidation.isValid) {
+          alert(dateValidation.error);
+          return;
+        }
+
         const data = { ...formData, applicantId};
 
         if (editingId) {
@@ -51,10 +66,10 @@ const useWork = () => {
                 setShowForm(false);
             });
         } else {
-          dispatch(addWorkExperience(data)).then(() => {  
+          dispatch(addWorkExperience(data)).then(() => {
             setShowForm(false);
           });
-        } 
+        }
         setFormData({
             institution: '',
             jobTitle: '',

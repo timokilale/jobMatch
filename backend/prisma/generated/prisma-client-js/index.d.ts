@@ -64,6 +64,11 @@ export type LanguageProficiency = $Result.DefaultSelection<Prisma.$LanguageProfi
  */
 export type ComputerSkill = $Result.DefaultSelection<Prisma.$ComputerSkillPayload>
 /**
+ * Model Skill
+ * 
+ */
+export type Skill = $Result.DefaultSelection<Prisma.$SkillPayload>
+/**
  * Model ChatRoom
  * 
  */
@@ -103,6 +108,16 @@ export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
  * 
  */
 export type AnonymizedData = $Result.DefaultSelection<Prisma.$AnonymizedDataPayload>
+/**
+ * Model Interview
+ * 
+ */
+export type Interview = $Result.DefaultSelection<Prisma.$InterviewPayload>
+/**
+ * Model EmailLog
+ * 
+ */
+export type EmailLog = $Result.DefaultSelection<Prisma.$EmailLogPayload>
 
 /**
  * Enums
@@ -119,6 +134,8 @@ export type Role = (typeof Role)[keyof typeof Role]
 export const NotificationType: {
   STATUS_CHANGE: 'STATUS_CHANGE',
   NEW_APPLICATION: 'NEW_APPLICATION',
+  INTERVIEW_SCHEDULED: 'INTERVIEW_SCHEDULED',
+  MESSAGE: 'MESSAGE',
   GENERAL: 'GENERAL'
 };
 
@@ -360,6 +377,16 @@ export class PrismaClient<
   get computerSkill(): Prisma.ComputerSkillDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.skill`: Exposes CRUD operations for the **Skill** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Skills
+    * const skills = await prisma.skill.findMany()
+    * ```
+    */
+  get skill(): Prisma.SkillDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.chatRoom`: Exposes CRUD operations for the **ChatRoom** model.
     * Example usage:
     * ```ts
@@ -438,6 +465,26 @@ export class PrismaClient<
     * ```
     */
   get anonymizedData(): Prisma.AnonymizedDataDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.interview`: Exposes CRUD operations for the **Interview** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Interviews
+    * const interviews = await prisma.interview.findMany()
+    * ```
+    */
+  get interview(): Prisma.InterviewDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.emailLog`: Exposes CRUD operations for the **EmailLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EmailLogs
+    * const emailLogs = await prisma.emailLog.findMany()
+    * ```
+    */
+  get emailLog(): Prisma.EmailLogDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -888,6 +935,7 @@ export namespace Prisma {
     WorkExperience: 'WorkExperience',
     LanguageProficiency: 'LanguageProficiency',
     ComputerSkill: 'ComputerSkill',
+    Skill: 'Skill',
     ChatRoom: 'ChatRoom',
     ChatMessage: 'ChatMessage',
     MarketTrend: 'MarketTrend',
@@ -895,7 +943,9 @@ export namespace Prisma {
     User: 'User',
     UserConsent: 'UserConsent',
     AuditLog: 'AuditLog',
-    AnonymizedData: 'AnonymizedData'
+    AnonymizedData: 'AnonymizedData',
+    Interview: 'Interview',
+    EmailLog: 'EmailLog'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -914,7 +964,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "jobCategory" | "applicant" | "employer" | "job" | "application" | "notification" | "academicQualification" | "workExperience" | "languageProficiency" | "computerSkill" | "chatRoom" | "chatMessage" | "marketTrend" | "skillDemand" | "user" | "userConsent" | "auditLog" | "anonymizedData"
+      modelProps: "jobCategory" | "applicant" | "employer" | "job" | "application" | "notification" | "academicQualification" | "workExperience" | "languageProficiency" | "computerSkill" | "skill" | "chatRoom" | "chatMessage" | "marketTrend" | "skillDemand" | "user" | "userConsent" | "auditLog" | "anonymizedData" | "interview" | "emailLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1578,6 +1628,72 @@ export namespace Prisma {
           }
         }
       }
+      Skill: {
+        payload: Prisma.$SkillPayload<ExtArgs>
+        fields: Prisma.SkillFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SkillFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SkillFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>
+          }
+          findFirst: {
+            args: Prisma.SkillFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SkillFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>
+          }
+          findMany: {
+            args: Prisma.SkillFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>[]
+          }
+          create: {
+            args: Prisma.SkillCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>
+          }
+          createMany: {
+            args: Prisma.SkillCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.SkillDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>
+          }
+          update: {
+            args: Prisma.SkillUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>
+          }
+          deleteMany: {
+            args: Prisma.SkillDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SkillUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SkillUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>
+          }
+          aggregate: {
+            args: Prisma.SkillAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSkill>
+          }
+          groupBy: {
+            args: Prisma.SkillGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SkillGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SkillCountArgs<ExtArgs>
+            result: $Utils.Optional<SkillCountAggregateOutputType> | number
+          }
+        }
+      }
       ChatRoom: {
         payload: Prisma.$ChatRoomPayload<ExtArgs>
         fields: Prisma.ChatRoomFieldRefs
@@ -2106,6 +2222,138 @@ export namespace Prisma {
           }
         }
       }
+      Interview: {
+        payload: Prisma.$InterviewPayload<ExtArgs>
+        fields: Prisma.InterviewFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InterviewFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InterviewPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InterviewFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InterviewPayload>
+          }
+          findFirst: {
+            args: Prisma.InterviewFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InterviewPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InterviewFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InterviewPayload>
+          }
+          findMany: {
+            args: Prisma.InterviewFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InterviewPayload>[]
+          }
+          create: {
+            args: Prisma.InterviewCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InterviewPayload>
+          }
+          createMany: {
+            args: Prisma.InterviewCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.InterviewDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InterviewPayload>
+          }
+          update: {
+            args: Prisma.InterviewUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InterviewPayload>
+          }
+          deleteMany: {
+            args: Prisma.InterviewDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InterviewUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.InterviewUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InterviewPayload>
+          }
+          aggregate: {
+            args: Prisma.InterviewAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInterview>
+          }
+          groupBy: {
+            args: Prisma.InterviewGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InterviewGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InterviewCountArgs<ExtArgs>
+            result: $Utils.Optional<InterviewCountAggregateOutputType> | number
+          }
+        }
+      }
+      EmailLog: {
+        payload: Prisma.$EmailLogPayload<ExtArgs>
+        fields: Prisma.EmailLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EmailLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EmailLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailLogPayload>
+          }
+          findFirst: {
+            args: Prisma.EmailLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EmailLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailLogPayload>
+          }
+          findMany: {
+            args: Prisma.EmailLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailLogPayload>[]
+          }
+          create: {
+            args: Prisma.EmailLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailLogPayload>
+          }
+          createMany: {
+            args: Prisma.EmailLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.EmailLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailLogPayload>
+          }
+          update: {
+            args: Prisma.EmailLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.EmailLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EmailLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.EmailLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailLogPayload>
+          }
+          aggregate: {
+            args: Prisma.EmailLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEmailLog>
+          }
+          groupBy: {
+            args: Prisma.EmailLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EmailLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EmailLogCountArgs<ExtArgs>
+            result: $Utils.Optional<EmailLogCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2200,6 +2448,7 @@ export namespace Prisma {
     workExperience?: WorkExperienceOmit
     languageProficiency?: LanguageProficiencyOmit
     computerSkill?: ComputerSkillOmit
+    skill?: SkillOmit
     chatRoom?: ChatRoomOmit
     chatMessage?: ChatMessageOmit
     marketTrend?: MarketTrendOmit
@@ -2208,6 +2457,8 @@ export namespace Prisma {
     userConsent?: UserConsentOmit
     auditLog?: AuditLogOmit
     anonymizedData?: AnonymizedDataOmit
+    interview?: InterviewOmit
+    emailLog?: EmailLogOmit
   }
 
   /* Types for Logging */
@@ -2347,6 +2598,7 @@ export namespace Prisma {
     experiences: number
     languages: number
     skills: number
+    generalSkills: number
     notifications: number
     categories: number
   }
@@ -2357,6 +2609,7 @@ export namespace Prisma {
     experiences?: boolean | ApplicantCountOutputTypeCountExperiencesArgs
     languages?: boolean | ApplicantCountOutputTypeCountLanguagesArgs
     skills?: boolean | ApplicantCountOutputTypeCountSkillsArgs
+    generalSkills?: boolean | ApplicantCountOutputTypeCountGeneralSkillsArgs
     notifications?: boolean | ApplicantCountOutputTypeCountNotificationsArgs
     categories?: boolean | ApplicantCountOutputTypeCountCategoriesArgs
   }
@@ -2405,6 +2658,13 @@ export namespace Prisma {
    */
   export type ApplicantCountOutputTypeCountSkillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ComputerSkillWhereInput
+  }
+
+  /**
+   * ApplicantCountOutputType without action
+   */
+  export type ApplicantCountOutputTypeCountGeneralSkillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SkillWhereInput
   }
 
   /**
@@ -2508,10 +2768,14 @@ export namespace Prisma {
 
   export type ApplicationCountOutputType = {
     notifications: number
+    interviews: number
+    emailLogs: number
   }
 
   export type ApplicationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     notifications?: boolean | ApplicationCountOutputTypeCountNotificationsArgs
+    interviews?: boolean | ApplicationCountOutputTypeCountInterviewsArgs
+    emailLogs?: boolean | ApplicationCountOutputTypeCountEmailLogsArgs
   }
 
   // Custom InputTypes
@@ -2530,6 +2794,20 @@ export namespace Prisma {
    */
   export type ApplicationCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NotificationWhereInput
+  }
+
+  /**
+   * ApplicationCountOutputType without action
+   */
+  export type ApplicationCountOutputTypeCountInterviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InterviewWhereInput
+  }
+
+  /**
+   * ApplicationCountOutputType without action
+   */
+  export type ApplicationCountOutputTypeCountEmailLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmailLogWhereInput
   }
 
 
@@ -3838,6 +4116,7 @@ export namespace Prisma {
     experiences?: boolean | Applicant$experiencesArgs<ExtArgs>
     languages?: boolean | Applicant$languagesArgs<ExtArgs>
     skills?: boolean | Applicant$skillsArgs<ExtArgs>
+    generalSkills?: boolean | Applicant$generalSkillsArgs<ExtArgs>
     notifications?: boolean | Applicant$notificationsArgs<ExtArgs>
     categories?: boolean | Applicant$categoriesArgs<ExtArgs>
     _count?: boolean | ApplicantCountOutputTypeDefaultArgs<ExtArgs>
@@ -3861,6 +4140,7 @@ export namespace Prisma {
     experiences?: boolean | Applicant$experiencesArgs<ExtArgs>
     languages?: boolean | Applicant$languagesArgs<ExtArgs>
     skills?: boolean | Applicant$skillsArgs<ExtArgs>
+    generalSkills?: boolean | Applicant$generalSkillsArgs<ExtArgs>
     notifications?: boolean | Applicant$notificationsArgs<ExtArgs>
     categories?: boolean | Applicant$categoriesArgs<ExtArgs>
     _count?: boolean | ApplicantCountOutputTypeDefaultArgs<ExtArgs>
@@ -3875,6 +4155,7 @@ export namespace Prisma {
       experiences: Prisma.$WorkExperiencePayload<ExtArgs>[]
       languages: Prisma.$LanguageProficiencyPayload<ExtArgs>[]
       skills: Prisma.$ComputerSkillPayload<ExtArgs>[]
+      generalSkills: Prisma.$SkillPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       categories: Prisma.$JobCategoryPayload<ExtArgs>[]
     }
@@ -4230,6 +4511,7 @@ export namespace Prisma {
     experiences<T extends Applicant$experiencesArgs<ExtArgs> = {}>(args?: Subset<T, Applicant$experiencesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkExperiencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     languages<T extends Applicant$languagesArgs<ExtArgs> = {}>(args?: Subset<T, Applicant$languagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LanguageProficiencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     skills<T extends Applicant$skillsArgs<ExtArgs> = {}>(args?: Subset<T, Applicant$skillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComputerSkillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    generalSkills<T extends Applicant$generalSkillsArgs<ExtArgs> = {}>(args?: Subset<T, Applicant$generalSkillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends Applicant$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Applicant$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     categories<T extends Applicant$categoriesArgs<ExtArgs> = {}>(args?: Subset<T, Applicant$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -4726,6 +5008,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ComputerSkillScalarFieldEnum | ComputerSkillScalarFieldEnum[]
+  }
+
+  /**
+   * Applicant.generalSkills
+   */
+  export type Applicant$generalSkillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Skill
+     */
+    omit?: SkillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    where?: SkillWhereInput
+    orderBy?: SkillOrderByWithRelationInput | SkillOrderByWithRelationInput[]
+    cursor?: SkillWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SkillScalarFieldEnum | SkillScalarFieldEnum[]
   }
 
   /**
@@ -7102,6 +7408,8 @@ export namespace Prisma {
     job?: boolean | JobDefaultArgs<ExtArgs>
     applicant?: boolean | ApplicantDefaultArgs<ExtArgs>
     notifications?: boolean | Application$notificationsArgs<ExtArgs>
+    interviews?: boolean | Application$interviewsArgs<ExtArgs>
+    emailLogs?: boolean | Application$emailLogsArgs<ExtArgs>
     _count?: boolean | ApplicationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
@@ -7120,6 +7428,8 @@ export namespace Prisma {
     job?: boolean | JobDefaultArgs<ExtArgs>
     applicant?: boolean | ApplicantDefaultArgs<ExtArgs>
     notifications?: boolean | Application$notificationsArgs<ExtArgs>
+    interviews?: boolean | Application$interviewsArgs<ExtArgs>
+    emailLogs?: boolean | Application$emailLogsArgs<ExtArgs>
     _count?: boolean | ApplicationCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -7129,6 +7439,8 @@ export namespace Prisma {
       job: Prisma.$JobPayload<ExtArgs>
       applicant: Prisma.$ApplicantPayload<ExtArgs>
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
+      interviews: Prisma.$InterviewPayload<ExtArgs>[]
+      emailLogs: Prisma.$EmailLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -7479,6 +7791,8 @@ export namespace Prisma {
     job<T extends JobDefaultArgs<ExtArgs> = {}>(args?: Subset<T, JobDefaultArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     applicant<T extends ApplicantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantDefaultArgs<ExtArgs>>): Prisma__ApplicantClient<$Result.GetResult<Prisma.$ApplicantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     notifications<T extends Application$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Application$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    interviews<T extends Application$interviewsArgs<ExtArgs> = {}>(args?: Subset<T, Application$interviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InterviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    emailLogs<T extends Application$emailLogsArgs<ExtArgs> = {}>(args?: Subset<T, Application$emailLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7877,6 +8191,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Application.interviews
+   */
+  export type Application$interviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Interview
+     */
+    select?: InterviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Interview
+     */
+    omit?: InterviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InterviewInclude<ExtArgs> | null
+    where?: InterviewWhereInput
+    orderBy?: InterviewOrderByWithRelationInput | InterviewOrderByWithRelationInput[]
+    cursor?: InterviewWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InterviewScalarFieldEnum | InterviewScalarFieldEnum[]
+  }
+
+  /**
+   * Application.emailLogs
+   */
+  export type Application$emailLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailLog
+     */
+    select?: EmailLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailLog
+     */
+    omit?: EmailLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailLogInclude<ExtArgs> | null
+    where?: EmailLogWhereInput
+    orderBy?: EmailLogOrderByWithRelationInput | EmailLogOrderByWithRelationInput[]
+    cursor?: EmailLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EmailLogScalarFieldEnum | EmailLogScalarFieldEnum[]
   }
 
   /**
@@ -12979,6 +13341,995 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ComputerSkillInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Skill
+   */
+
+  export type AggregateSkill = {
+    _count: SkillCountAggregateOutputType | null
+    _avg: SkillAvgAggregateOutputType | null
+    _sum: SkillSumAggregateOutputType | null
+    _min: SkillMinAggregateOutputType | null
+    _max: SkillMaxAggregateOutputType | null
+  }
+
+  export type SkillAvgAggregateOutputType = {
+    id: number | null
+    applicantId: number | null
+  }
+
+  export type SkillSumAggregateOutputType = {
+    id: number | null
+    applicantId: number | null
+  }
+
+  export type SkillMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    proficiency: string | null
+    category: string | null
+    applicantId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SkillMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    proficiency: string | null
+    category: string | null
+    applicantId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SkillCountAggregateOutputType = {
+    id: number
+    name: number
+    proficiency: number
+    category: number
+    applicantId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SkillAvgAggregateInputType = {
+    id?: true
+    applicantId?: true
+  }
+
+  export type SkillSumAggregateInputType = {
+    id?: true
+    applicantId?: true
+  }
+
+  export type SkillMinAggregateInputType = {
+    id?: true
+    name?: true
+    proficiency?: true
+    category?: true
+    applicantId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SkillMaxAggregateInputType = {
+    id?: true
+    name?: true
+    proficiency?: true
+    category?: true
+    applicantId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SkillCountAggregateInputType = {
+    id?: true
+    name?: true
+    proficiency?: true
+    category?: true
+    applicantId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SkillAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Skill to aggregate.
+     */
+    where?: SkillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Skills to fetch.
+     */
+    orderBy?: SkillOrderByWithRelationInput | SkillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SkillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Skills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Skills.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Skills
+    **/
+    _count?: true | SkillCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SkillAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SkillSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SkillMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SkillMaxAggregateInputType
+  }
+
+  export type GetSkillAggregateType<T extends SkillAggregateArgs> = {
+        [P in keyof T & keyof AggregateSkill]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSkill[P]>
+      : GetScalarType<T[P], AggregateSkill[P]>
+  }
+
+
+
+
+  export type SkillGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SkillWhereInput
+    orderBy?: SkillOrderByWithAggregationInput | SkillOrderByWithAggregationInput[]
+    by: SkillScalarFieldEnum[] | SkillScalarFieldEnum
+    having?: SkillScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SkillCountAggregateInputType | true
+    _avg?: SkillAvgAggregateInputType
+    _sum?: SkillSumAggregateInputType
+    _min?: SkillMinAggregateInputType
+    _max?: SkillMaxAggregateInputType
+  }
+
+  export type SkillGroupByOutputType = {
+    id: number
+    name: string
+    proficiency: string
+    category: string | null
+    applicantId: number
+    createdAt: Date
+    updatedAt: Date
+    _count: SkillCountAggregateOutputType | null
+    _avg: SkillAvgAggregateOutputType | null
+    _sum: SkillSumAggregateOutputType | null
+    _min: SkillMinAggregateOutputType | null
+    _max: SkillMaxAggregateOutputType | null
+  }
+
+  type GetSkillGroupByPayload<T extends SkillGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SkillGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SkillGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SkillGroupByOutputType[P]>
+            : GetScalarType<T[P], SkillGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SkillSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    proficiency?: boolean
+    category?: boolean
+    applicantId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    applicant?: boolean | ApplicantDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["skill"]>
+
+
+
+  export type SkillSelectScalar = {
+    id?: boolean
+    name?: boolean
+    proficiency?: boolean
+    category?: boolean
+    applicantId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SkillOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "proficiency" | "category" | "applicantId" | "createdAt" | "updatedAt", ExtArgs["result"]["skill"]>
+  export type SkillInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    applicant?: boolean | ApplicantDefaultArgs<ExtArgs>
+  }
+
+  export type $SkillPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Skill"
+    objects: {
+      applicant: Prisma.$ApplicantPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+      proficiency: string
+      category: string | null
+      applicantId: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["skill"]>
+    composites: {}
+  }
+
+  type SkillGetPayload<S extends boolean | null | undefined | SkillDefaultArgs> = $Result.GetResult<Prisma.$SkillPayload, S>
+
+  type SkillCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SkillFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SkillCountAggregateInputType | true
+    }
+
+  export interface SkillDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Skill'], meta: { name: 'Skill' } }
+    /**
+     * Find zero or one Skill that matches the filter.
+     * @param {SkillFindUniqueArgs} args - Arguments to find a Skill
+     * @example
+     * // Get one Skill
+     * const skill = await prisma.skill.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SkillFindUniqueArgs>(args: SelectSubset<T, SkillFindUniqueArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Skill that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SkillFindUniqueOrThrowArgs} args - Arguments to find a Skill
+     * @example
+     * // Get one Skill
+     * const skill = await prisma.skill.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SkillFindUniqueOrThrowArgs>(args: SelectSubset<T, SkillFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Skill that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillFindFirstArgs} args - Arguments to find a Skill
+     * @example
+     * // Get one Skill
+     * const skill = await prisma.skill.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SkillFindFirstArgs>(args?: SelectSubset<T, SkillFindFirstArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Skill that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillFindFirstOrThrowArgs} args - Arguments to find a Skill
+     * @example
+     * // Get one Skill
+     * const skill = await prisma.skill.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SkillFindFirstOrThrowArgs>(args?: SelectSubset<T, SkillFindFirstOrThrowArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Skills that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Skills
+     * const skills = await prisma.skill.findMany()
+     * 
+     * // Get first 10 Skills
+     * const skills = await prisma.skill.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const skillWithIdOnly = await prisma.skill.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SkillFindManyArgs>(args?: SelectSubset<T, SkillFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Skill.
+     * @param {SkillCreateArgs} args - Arguments to create a Skill.
+     * @example
+     * // Create one Skill
+     * const Skill = await prisma.skill.create({
+     *   data: {
+     *     // ... data to create a Skill
+     *   }
+     * })
+     * 
+     */
+    create<T extends SkillCreateArgs>(args: SelectSubset<T, SkillCreateArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Skills.
+     * @param {SkillCreateManyArgs} args - Arguments to create many Skills.
+     * @example
+     * // Create many Skills
+     * const skill = await prisma.skill.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SkillCreateManyArgs>(args?: SelectSubset<T, SkillCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Skill.
+     * @param {SkillDeleteArgs} args - Arguments to delete one Skill.
+     * @example
+     * // Delete one Skill
+     * const Skill = await prisma.skill.delete({
+     *   where: {
+     *     // ... filter to delete one Skill
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SkillDeleteArgs>(args: SelectSubset<T, SkillDeleteArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Skill.
+     * @param {SkillUpdateArgs} args - Arguments to update one Skill.
+     * @example
+     * // Update one Skill
+     * const skill = await prisma.skill.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SkillUpdateArgs>(args: SelectSubset<T, SkillUpdateArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Skills.
+     * @param {SkillDeleteManyArgs} args - Arguments to filter Skills to delete.
+     * @example
+     * // Delete a few Skills
+     * const { count } = await prisma.skill.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SkillDeleteManyArgs>(args?: SelectSubset<T, SkillDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Skills.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Skills
+     * const skill = await prisma.skill.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SkillUpdateManyArgs>(args: SelectSubset<T, SkillUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Skill.
+     * @param {SkillUpsertArgs} args - Arguments to update or create a Skill.
+     * @example
+     * // Update or create a Skill
+     * const skill = await prisma.skill.upsert({
+     *   create: {
+     *     // ... data to create a Skill
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Skill we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SkillUpsertArgs>(args: SelectSubset<T, SkillUpsertArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Skills.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillCountArgs} args - Arguments to filter Skills to count.
+     * @example
+     * // Count the number of Skills
+     * const count = await prisma.skill.count({
+     *   where: {
+     *     // ... the filter for the Skills we want to count
+     *   }
+     * })
+    **/
+    count<T extends SkillCountArgs>(
+      args?: Subset<T, SkillCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SkillCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Skill.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SkillAggregateArgs>(args: Subset<T, SkillAggregateArgs>): Prisma.PrismaPromise<GetSkillAggregateType<T>>
+
+    /**
+     * Group by Skill.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SkillGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SkillGroupByArgs['orderBy'] }
+        : { orderBy?: SkillGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SkillGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSkillGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Skill model
+   */
+  readonly fields: SkillFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Skill.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SkillClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    applicant<T extends ApplicantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantDefaultArgs<ExtArgs>>): Prisma__ApplicantClient<$Result.GetResult<Prisma.$ApplicantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Skill model
+   */
+  interface SkillFieldRefs {
+    readonly id: FieldRef<"Skill", 'Int'>
+    readonly name: FieldRef<"Skill", 'String'>
+    readonly proficiency: FieldRef<"Skill", 'String'>
+    readonly category: FieldRef<"Skill", 'String'>
+    readonly applicantId: FieldRef<"Skill", 'Int'>
+    readonly createdAt: FieldRef<"Skill", 'DateTime'>
+    readonly updatedAt: FieldRef<"Skill", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Skill findUnique
+   */
+  export type SkillFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Skill
+     */
+    omit?: SkillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * Filter, which Skill to fetch.
+     */
+    where: SkillWhereUniqueInput
+  }
+
+  /**
+   * Skill findUniqueOrThrow
+   */
+  export type SkillFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Skill
+     */
+    omit?: SkillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * Filter, which Skill to fetch.
+     */
+    where: SkillWhereUniqueInput
+  }
+
+  /**
+   * Skill findFirst
+   */
+  export type SkillFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Skill
+     */
+    omit?: SkillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * Filter, which Skill to fetch.
+     */
+    where?: SkillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Skills to fetch.
+     */
+    orderBy?: SkillOrderByWithRelationInput | SkillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Skills.
+     */
+    cursor?: SkillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Skills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Skills.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Skills.
+     */
+    distinct?: SkillScalarFieldEnum | SkillScalarFieldEnum[]
+  }
+
+  /**
+   * Skill findFirstOrThrow
+   */
+  export type SkillFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Skill
+     */
+    omit?: SkillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * Filter, which Skill to fetch.
+     */
+    where?: SkillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Skills to fetch.
+     */
+    orderBy?: SkillOrderByWithRelationInput | SkillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Skills.
+     */
+    cursor?: SkillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Skills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Skills.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Skills.
+     */
+    distinct?: SkillScalarFieldEnum | SkillScalarFieldEnum[]
+  }
+
+  /**
+   * Skill findMany
+   */
+  export type SkillFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Skill
+     */
+    omit?: SkillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * Filter, which Skills to fetch.
+     */
+    where?: SkillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Skills to fetch.
+     */
+    orderBy?: SkillOrderByWithRelationInput | SkillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Skills.
+     */
+    cursor?: SkillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Skills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Skills.
+     */
+    skip?: number
+    distinct?: SkillScalarFieldEnum | SkillScalarFieldEnum[]
+  }
+
+  /**
+   * Skill create
+   */
+  export type SkillCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Skill
+     */
+    omit?: SkillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Skill.
+     */
+    data: XOR<SkillCreateInput, SkillUncheckedCreateInput>
+  }
+
+  /**
+   * Skill createMany
+   */
+  export type SkillCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Skills.
+     */
+    data: SkillCreateManyInput | SkillCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Skill update
+   */
+  export type SkillUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Skill
+     */
+    omit?: SkillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Skill.
+     */
+    data: XOR<SkillUpdateInput, SkillUncheckedUpdateInput>
+    /**
+     * Choose, which Skill to update.
+     */
+    where: SkillWhereUniqueInput
+  }
+
+  /**
+   * Skill updateMany
+   */
+  export type SkillUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Skills.
+     */
+    data: XOR<SkillUpdateManyMutationInput, SkillUncheckedUpdateManyInput>
+    /**
+     * Filter which Skills to update
+     */
+    where?: SkillWhereInput
+    /**
+     * Limit how many Skills to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Skill upsert
+   */
+  export type SkillUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Skill
+     */
+    omit?: SkillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Skill to update in case it exists.
+     */
+    where: SkillWhereUniqueInput
+    /**
+     * In case the Skill found by the `where` argument doesn't exist, create a new Skill with this data.
+     */
+    create: XOR<SkillCreateInput, SkillUncheckedCreateInput>
+    /**
+     * In case the Skill was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SkillUpdateInput, SkillUncheckedUpdateInput>
+  }
+
+  /**
+   * Skill delete
+   */
+  export type SkillDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Skill
+     */
+    omit?: SkillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * Filter which Skill to delete.
+     */
+    where: SkillWhereUniqueInput
+  }
+
+  /**
+   * Skill deleteMany
+   */
+  export type SkillDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Skills to delete
+     */
+    where?: SkillWhereInput
+    /**
+     * Limit how many Skills to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Skill without action
+   */
+  export type SkillDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Skill
+     */
+    omit?: SkillOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
   }
 
 
@@ -21041,6 +22392,2103 @@ export namespace Prisma {
 
 
   /**
+   * Model Interview
+   */
+
+  export type AggregateInterview = {
+    _count: InterviewCountAggregateOutputType | null
+    _avg: InterviewAvgAggregateOutputType | null
+    _sum: InterviewSumAggregateOutputType | null
+    _min: InterviewMinAggregateOutputType | null
+    _max: InterviewMaxAggregateOutputType | null
+  }
+
+  export type InterviewAvgAggregateOutputType = {
+    id: number | null
+    applicationId: number | null
+    duration: number | null
+  }
+
+  export type InterviewSumAggregateOutputType = {
+    id: number | null
+    applicationId: number | null
+    duration: number | null
+  }
+
+  export type InterviewMinAggregateOutputType = {
+    id: number | null
+    applicationId: number | null
+    scheduledAt: Date | null
+    duration: number | null
+    location: string | null
+    type: string | null
+    notes: string | null
+    interviewers: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InterviewMaxAggregateOutputType = {
+    id: number | null
+    applicationId: number | null
+    scheduledAt: Date | null
+    duration: number | null
+    location: string | null
+    type: string | null
+    notes: string | null
+    interviewers: string | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InterviewCountAggregateOutputType = {
+    id: number
+    applicationId: number
+    scheduledAt: number
+    duration: number
+    location: number
+    type: number
+    notes: number
+    interviewers: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type InterviewAvgAggregateInputType = {
+    id?: true
+    applicationId?: true
+    duration?: true
+  }
+
+  export type InterviewSumAggregateInputType = {
+    id?: true
+    applicationId?: true
+    duration?: true
+  }
+
+  export type InterviewMinAggregateInputType = {
+    id?: true
+    applicationId?: true
+    scheduledAt?: true
+    duration?: true
+    location?: true
+    type?: true
+    notes?: true
+    interviewers?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InterviewMaxAggregateInputType = {
+    id?: true
+    applicationId?: true
+    scheduledAt?: true
+    duration?: true
+    location?: true
+    type?: true
+    notes?: true
+    interviewers?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InterviewCountAggregateInputType = {
+    id?: true
+    applicationId?: true
+    scheduledAt?: true
+    duration?: true
+    location?: true
+    type?: true
+    notes?: true
+    interviewers?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type InterviewAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Interview to aggregate.
+     */
+    where?: InterviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Interviews to fetch.
+     */
+    orderBy?: InterviewOrderByWithRelationInput | InterviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InterviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Interviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Interviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Interviews
+    **/
+    _count?: true | InterviewCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InterviewAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InterviewSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InterviewMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InterviewMaxAggregateInputType
+  }
+
+  export type GetInterviewAggregateType<T extends InterviewAggregateArgs> = {
+        [P in keyof T & keyof AggregateInterview]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInterview[P]>
+      : GetScalarType<T[P], AggregateInterview[P]>
+  }
+
+
+
+
+  export type InterviewGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InterviewWhereInput
+    orderBy?: InterviewOrderByWithAggregationInput | InterviewOrderByWithAggregationInput[]
+    by: InterviewScalarFieldEnum[] | InterviewScalarFieldEnum
+    having?: InterviewScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InterviewCountAggregateInputType | true
+    _avg?: InterviewAvgAggregateInputType
+    _sum?: InterviewSumAggregateInputType
+    _min?: InterviewMinAggregateInputType
+    _max?: InterviewMaxAggregateInputType
+  }
+
+  export type InterviewGroupByOutputType = {
+    id: number
+    applicationId: number
+    scheduledAt: Date
+    duration: number
+    location: string | null
+    type: string
+    notes: string | null
+    interviewers: string | null
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: InterviewCountAggregateOutputType | null
+    _avg: InterviewAvgAggregateOutputType | null
+    _sum: InterviewSumAggregateOutputType | null
+    _min: InterviewMinAggregateOutputType | null
+    _max: InterviewMaxAggregateOutputType | null
+  }
+
+  type GetInterviewGroupByPayload<T extends InterviewGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InterviewGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InterviewGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InterviewGroupByOutputType[P]>
+            : GetScalarType<T[P], InterviewGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InterviewSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    applicationId?: boolean
+    scheduledAt?: boolean
+    duration?: boolean
+    location?: boolean
+    type?: boolean
+    notes?: boolean
+    interviewers?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["interview"]>
+
+
+
+  export type InterviewSelectScalar = {
+    id?: boolean
+    applicationId?: boolean
+    scheduledAt?: boolean
+    duration?: boolean
+    location?: boolean
+    type?: boolean
+    notes?: boolean
+    interviewers?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type InterviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicationId" | "scheduledAt" | "duration" | "location" | "type" | "notes" | "interviewers" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["interview"]>
+  export type InterviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+  }
+
+  export type $InterviewPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Interview"
+    objects: {
+      application: Prisma.$ApplicationPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      applicationId: number
+      scheduledAt: Date
+      duration: number
+      location: string | null
+      type: string
+      notes: string | null
+      interviewers: string | null
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["interview"]>
+    composites: {}
+  }
+
+  type InterviewGetPayload<S extends boolean | null | undefined | InterviewDefaultArgs> = $Result.GetResult<Prisma.$InterviewPayload, S>
+
+  type InterviewCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InterviewFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InterviewCountAggregateInputType | true
+    }
+
+  export interface InterviewDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Interview'], meta: { name: 'Interview' } }
+    /**
+     * Find zero or one Interview that matches the filter.
+     * @param {InterviewFindUniqueArgs} args - Arguments to find a Interview
+     * @example
+     * // Get one Interview
+     * const interview = await prisma.interview.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InterviewFindUniqueArgs>(args: SelectSubset<T, InterviewFindUniqueArgs<ExtArgs>>): Prisma__InterviewClient<$Result.GetResult<Prisma.$InterviewPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Interview that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InterviewFindUniqueOrThrowArgs} args - Arguments to find a Interview
+     * @example
+     * // Get one Interview
+     * const interview = await prisma.interview.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InterviewFindUniqueOrThrowArgs>(args: SelectSubset<T, InterviewFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InterviewClient<$Result.GetResult<Prisma.$InterviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Interview that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InterviewFindFirstArgs} args - Arguments to find a Interview
+     * @example
+     * // Get one Interview
+     * const interview = await prisma.interview.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InterviewFindFirstArgs>(args?: SelectSubset<T, InterviewFindFirstArgs<ExtArgs>>): Prisma__InterviewClient<$Result.GetResult<Prisma.$InterviewPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Interview that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InterviewFindFirstOrThrowArgs} args - Arguments to find a Interview
+     * @example
+     * // Get one Interview
+     * const interview = await prisma.interview.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InterviewFindFirstOrThrowArgs>(args?: SelectSubset<T, InterviewFindFirstOrThrowArgs<ExtArgs>>): Prisma__InterviewClient<$Result.GetResult<Prisma.$InterviewPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Interviews that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InterviewFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Interviews
+     * const interviews = await prisma.interview.findMany()
+     * 
+     * // Get first 10 Interviews
+     * const interviews = await prisma.interview.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const interviewWithIdOnly = await prisma.interview.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InterviewFindManyArgs>(args?: SelectSubset<T, InterviewFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InterviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Interview.
+     * @param {InterviewCreateArgs} args - Arguments to create a Interview.
+     * @example
+     * // Create one Interview
+     * const Interview = await prisma.interview.create({
+     *   data: {
+     *     // ... data to create a Interview
+     *   }
+     * })
+     * 
+     */
+    create<T extends InterviewCreateArgs>(args: SelectSubset<T, InterviewCreateArgs<ExtArgs>>): Prisma__InterviewClient<$Result.GetResult<Prisma.$InterviewPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Interviews.
+     * @param {InterviewCreateManyArgs} args - Arguments to create many Interviews.
+     * @example
+     * // Create many Interviews
+     * const interview = await prisma.interview.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InterviewCreateManyArgs>(args?: SelectSubset<T, InterviewCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Interview.
+     * @param {InterviewDeleteArgs} args - Arguments to delete one Interview.
+     * @example
+     * // Delete one Interview
+     * const Interview = await prisma.interview.delete({
+     *   where: {
+     *     // ... filter to delete one Interview
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InterviewDeleteArgs>(args: SelectSubset<T, InterviewDeleteArgs<ExtArgs>>): Prisma__InterviewClient<$Result.GetResult<Prisma.$InterviewPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Interview.
+     * @param {InterviewUpdateArgs} args - Arguments to update one Interview.
+     * @example
+     * // Update one Interview
+     * const interview = await prisma.interview.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InterviewUpdateArgs>(args: SelectSubset<T, InterviewUpdateArgs<ExtArgs>>): Prisma__InterviewClient<$Result.GetResult<Prisma.$InterviewPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Interviews.
+     * @param {InterviewDeleteManyArgs} args - Arguments to filter Interviews to delete.
+     * @example
+     * // Delete a few Interviews
+     * const { count } = await prisma.interview.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InterviewDeleteManyArgs>(args?: SelectSubset<T, InterviewDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Interviews.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InterviewUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Interviews
+     * const interview = await prisma.interview.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InterviewUpdateManyArgs>(args: SelectSubset<T, InterviewUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Interview.
+     * @param {InterviewUpsertArgs} args - Arguments to update or create a Interview.
+     * @example
+     * // Update or create a Interview
+     * const interview = await prisma.interview.upsert({
+     *   create: {
+     *     // ... data to create a Interview
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Interview we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InterviewUpsertArgs>(args: SelectSubset<T, InterviewUpsertArgs<ExtArgs>>): Prisma__InterviewClient<$Result.GetResult<Prisma.$InterviewPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Interviews.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InterviewCountArgs} args - Arguments to filter Interviews to count.
+     * @example
+     * // Count the number of Interviews
+     * const count = await prisma.interview.count({
+     *   where: {
+     *     // ... the filter for the Interviews we want to count
+     *   }
+     * })
+    **/
+    count<T extends InterviewCountArgs>(
+      args?: Subset<T, InterviewCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InterviewCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Interview.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InterviewAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InterviewAggregateArgs>(args: Subset<T, InterviewAggregateArgs>): Prisma.PrismaPromise<GetInterviewAggregateType<T>>
+
+    /**
+     * Group by Interview.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InterviewGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InterviewGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InterviewGroupByArgs['orderBy'] }
+        : { orderBy?: InterviewGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InterviewGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInterviewGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Interview model
+   */
+  readonly fields: InterviewFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Interview.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InterviewClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    application<T extends ApplicationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApplicationDefaultArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Interview model
+   */
+  interface InterviewFieldRefs {
+    readonly id: FieldRef<"Interview", 'Int'>
+    readonly applicationId: FieldRef<"Interview", 'Int'>
+    readonly scheduledAt: FieldRef<"Interview", 'DateTime'>
+    readonly duration: FieldRef<"Interview", 'Int'>
+    readonly location: FieldRef<"Interview", 'String'>
+    readonly type: FieldRef<"Interview", 'String'>
+    readonly notes: FieldRef<"Interview", 'String'>
+    readonly interviewers: FieldRef<"Interview", 'String'>
+    readonly status: FieldRef<"Interview", 'String'>
+    readonly createdAt: FieldRef<"Interview", 'DateTime'>
+    readonly updatedAt: FieldRef<"Interview", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Interview findUnique
+   */
+  export type InterviewFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Interview
+     */
+    select?: InterviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Interview
+     */
+    omit?: InterviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InterviewInclude<ExtArgs> | null
+    /**
+     * Filter, which Interview to fetch.
+     */
+    where: InterviewWhereUniqueInput
+  }
+
+  /**
+   * Interview findUniqueOrThrow
+   */
+  export type InterviewFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Interview
+     */
+    select?: InterviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Interview
+     */
+    omit?: InterviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InterviewInclude<ExtArgs> | null
+    /**
+     * Filter, which Interview to fetch.
+     */
+    where: InterviewWhereUniqueInput
+  }
+
+  /**
+   * Interview findFirst
+   */
+  export type InterviewFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Interview
+     */
+    select?: InterviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Interview
+     */
+    omit?: InterviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InterviewInclude<ExtArgs> | null
+    /**
+     * Filter, which Interview to fetch.
+     */
+    where?: InterviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Interviews to fetch.
+     */
+    orderBy?: InterviewOrderByWithRelationInput | InterviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Interviews.
+     */
+    cursor?: InterviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Interviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Interviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Interviews.
+     */
+    distinct?: InterviewScalarFieldEnum | InterviewScalarFieldEnum[]
+  }
+
+  /**
+   * Interview findFirstOrThrow
+   */
+  export type InterviewFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Interview
+     */
+    select?: InterviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Interview
+     */
+    omit?: InterviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InterviewInclude<ExtArgs> | null
+    /**
+     * Filter, which Interview to fetch.
+     */
+    where?: InterviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Interviews to fetch.
+     */
+    orderBy?: InterviewOrderByWithRelationInput | InterviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Interviews.
+     */
+    cursor?: InterviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Interviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Interviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Interviews.
+     */
+    distinct?: InterviewScalarFieldEnum | InterviewScalarFieldEnum[]
+  }
+
+  /**
+   * Interview findMany
+   */
+  export type InterviewFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Interview
+     */
+    select?: InterviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Interview
+     */
+    omit?: InterviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InterviewInclude<ExtArgs> | null
+    /**
+     * Filter, which Interviews to fetch.
+     */
+    where?: InterviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Interviews to fetch.
+     */
+    orderBy?: InterviewOrderByWithRelationInput | InterviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Interviews.
+     */
+    cursor?: InterviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Interviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Interviews.
+     */
+    skip?: number
+    distinct?: InterviewScalarFieldEnum | InterviewScalarFieldEnum[]
+  }
+
+  /**
+   * Interview create
+   */
+  export type InterviewCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Interview
+     */
+    select?: InterviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Interview
+     */
+    omit?: InterviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InterviewInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Interview.
+     */
+    data: XOR<InterviewCreateInput, InterviewUncheckedCreateInput>
+  }
+
+  /**
+   * Interview createMany
+   */
+  export type InterviewCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Interviews.
+     */
+    data: InterviewCreateManyInput | InterviewCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Interview update
+   */
+  export type InterviewUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Interview
+     */
+    select?: InterviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Interview
+     */
+    omit?: InterviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InterviewInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Interview.
+     */
+    data: XOR<InterviewUpdateInput, InterviewUncheckedUpdateInput>
+    /**
+     * Choose, which Interview to update.
+     */
+    where: InterviewWhereUniqueInput
+  }
+
+  /**
+   * Interview updateMany
+   */
+  export type InterviewUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Interviews.
+     */
+    data: XOR<InterviewUpdateManyMutationInput, InterviewUncheckedUpdateManyInput>
+    /**
+     * Filter which Interviews to update
+     */
+    where?: InterviewWhereInput
+    /**
+     * Limit how many Interviews to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Interview upsert
+   */
+  export type InterviewUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Interview
+     */
+    select?: InterviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Interview
+     */
+    omit?: InterviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InterviewInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Interview to update in case it exists.
+     */
+    where: InterviewWhereUniqueInput
+    /**
+     * In case the Interview found by the `where` argument doesn't exist, create a new Interview with this data.
+     */
+    create: XOR<InterviewCreateInput, InterviewUncheckedCreateInput>
+    /**
+     * In case the Interview was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InterviewUpdateInput, InterviewUncheckedUpdateInput>
+  }
+
+  /**
+   * Interview delete
+   */
+  export type InterviewDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Interview
+     */
+    select?: InterviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Interview
+     */
+    omit?: InterviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InterviewInclude<ExtArgs> | null
+    /**
+     * Filter which Interview to delete.
+     */
+    where: InterviewWhereUniqueInput
+  }
+
+  /**
+   * Interview deleteMany
+   */
+  export type InterviewDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Interviews to delete
+     */
+    where?: InterviewWhereInput
+    /**
+     * Limit how many Interviews to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Interview without action
+   */
+  export type InterviewDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Interview
+     */
+    select?: InterviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Interview
+     */
+    omit?: InterviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InterviewInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model EmailLog
+   */
+
+  export type AggregateEmailLog = {
+    _count: EmailLogCountAggregateOutputType | null
+    _avg: EmailLogAvgAggregateOutputType | null
+    _sum: EmailLogSumAggregateOutputType | null
+    _min: EmailLogMinAggregateOutputType | null
+    _max: EmailLogMaxAggregateOutputType | null
+  }
+
+  export type EmailLogAvgAggregateOutputType = {
+    id: number | null
+    applicationId: number | null
+    employerId: number | null
+    applicantId: number | null
+  }
+
+  export type EmailLogSumAggregateOutputType = {
+    id: number | null
+    applicationId: number | null
+    employerId: number | null
+    applicantId: number | null
+  }
+
+  export type EmailLogMinAggregateOutputType = {
+    id: number | null
+    to: string | null
+    subject: string | null
+    message: string | null
+    applicationId: number | null
+    employerId: number | null
+    applicantId: number | null
+    status: string | null
+    sentAt: Date | null
+    error: string | null
+    createdAt: Date | null
+  }
+
+  export type EmailLogMaxAggregateOutputType = {
+    id: number | null
+    to: string | null
+    subject: string | null
+    message: string | null
+    applicationId: number | null
+    employerId: number | null
+    applicantId: number | null
+    status: string | null
+    sentAt: Date | null
+    error: string | null
+    createdAt: Date | null
+  }
+
+  export type EmailLogCountAggregateOutputType = {
+    id: number
+    to: number
+    subject: number
+    message: number
+    applicationId: number
+    employerId: number
+    applicantId: number
+    status: number
+    sentAt: number
+    error: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type EmailLogAvgAggregateInputType = {
+    id?: true
+    applicationId?: true
+    employerId?: true
+    applicantId?: true
+  }
+
+  export type EmailLogSumAggregateInputType = {
+    id?: true
+    applicationId?: true
+    employerId?: true
+    applicantId?: true
+  }
+
+  export type EmailLogMinAggregateInputType = {
+    id?: true
+    to?: true
+    subject?: true
+    message?: true
+    applicationId?: true
+    employerId?: true
+    applicantId?: true
+    status?: true
+    sentAt?: true
+    error?: true
+    createdAt?: true
+  }
+
+  export type EmailLogMaxAggregateInputType = {
+    id?: true
+    to?: true
+    subject?: true
+    message?: true
+    applicationId?: true
+    employerId?: true
+    applicantId?: true
+    status?: true
+    sentAt?: true
+    error?: true
+    createdAt?: true
+  }
+
+  export type EmailLogCountAggregateInputType = {
+    id?: true
+    to?: true
+    subject?: true
+    message?: true
+    applicationId?: true
+    employerId?: true
+    applicantId?: true
+    status?: true
+    sentAt?: true
+    error?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type EmailLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmailLog to aggregate.
+     */
+    where?: EmailLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailLogs to fetch.
+     */
+    orderBy?: EmailLogOrderByWithRelationInput | EmailLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EmailLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EmailLogs
+    **/
+    _count?: true | EmailLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: EmailLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: EmailLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EmailLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EmailLogMaxAggregateInputType
+  }
+
+  export type GetEmailLogAggregateType<T extends EmailLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateEmailLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEmailLog[P]>
+      : GetScalarType<T[P], AggregateEmailLog[P]>
+  }
+
+
+
+
+  export type EmailLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmailLogWhereInput
+    orderBy?: EmailLogOrderByWithAggregationInput | EmailLogOrderByWithAggregationInput[]
+    by: EmailLogScalarFieldEnum[] | EmailLogScalarFieldEnum
+    having?: EmailLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EmailLogCountAggregateInputType | true
+    _avg?: EmailLogAvgAggregateInputType
+    _sum?: EmailLogSumAggregateInputType
+    _min?: EmailLogMinAggregateInputType
+    _max?: EmailLogMaxAggregateInputType
+  }
+
+  export type EmailLogGroupByOutputType = {
+    id: number
+    to: string
+    subject: string
+    message: string
+    applicationId: number | null
+    employerId: number | null
+    applicantId: number | null
+    status: string
+    sentAt: Date | null
+    error: string | null
+    createdAt: Date
+    _count: EmailLogCountAggregateOutputType | null
+    _avg: EmailLogAvgAggregateOutputType | null
+    _sum: EmailLogSumAggregateOutputType | null
+    _min: EmailLogMinAggregateOutputType | null
+    _max: EmailLogMaxAggregateOutputType | null
+  }
+
+  type GetEmailLogGroupByPayload<T extends EmailLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EmailLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EmailLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EmailLogGroupByOutputType[P]>
+            : GetScalarType<T[P], EmailLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EmailLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    to?: boolean
+    subject?: boolean
+    message?: boolean
+    applicationId?: boolean
+    employerId?: boolean
+    applicantId?: boolean
+    status?: boolean
+    sentAt?: boolean
+    error?: boolean
+    createdAt?: boolean
+    application?: boolean | EmailLog$applicationArgs<ExtArgs>
+  }, ExtArgs["result"]["emailLog"]>
+
+
+
+  export type EmailLogSelectScalar = {
+    id?: boolean
+    to?: boolean
+    subject?: boolean
+    message?: boolean
+    applicationId?: boolean
+    employerId?: boolean
+    applicantId?: boolean
+    status?: boolean
+    sentAt?: boolean
+    error?: boolean
+    createdAt?: boolean
+  }
+
+  export type EmailLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "to" | "subject" | "message" | "applicationId" | "employerId" | "applicantId" | "status" | "sentAt" | "error" | "createdAt", ExtArgs["result"]["emailLog"]>
+  export type EmailLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    application?: boolean | EmailLog$applicationArgs<ExtArgs>
+  }
+
+  export type $EmailLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EmailLog"
+    objects: {
+      application: Prisma.$ApplicationPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      to: string
+      subject: string
+      message: string
+      applicationId: number | null
+      employerId: number | null
+      applicantId: number | null
+      status: string
+      sentAt: Date | null
+      error: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["emailLog"]>
+    composites: {}
+  }
+
+  type EmailLogGetPayload<S extends boolean | null | undefined | EmailLogDefaultArgs> = $Result.GetResult<Prisma.$EmailLogPayload, S>
+
+  type EmailLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<EmailLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: EmailLogCountAggregateInputType | true
+    }
+
+  export interface EmailLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EmailLog'], meta: { name: 'EmailLog' } }
+    /**
+     * Find zero or one EmailLog that matches the filter.
+     * @param {EmailLogFindUniqueArgs} args - Arguments to find a EmailLog
+     * @example
+     * // Get one EmailLog
+     * const emailLog = await prisma.emailLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends EmailLogFindUniqueArgs>(args: SelectSubset<T, EmailLogFindUniqueArgs<ExtArgs>>): Prisma__EmailLogClient<$Result.GetResult<Prisma.$EmailLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one EmailLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {EmailLogFindUniqueOrThrowArgs} args - Arguments to find a EmailLog
+     * @example
+     * // Get one EmailLog
+     * const emailLog = await prisma.emailLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends EmailLogFindUniqueOrThrowArgs>(args: SelectSubset<T, EmailLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EmailLogClient<$Result.GetResult<Prisma.$EmailLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EmailLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailLogFindFirstArgs} args - Arguments to find a EmailLog
+     * @example
+     * // Get one EmailLog
+     * const emailLog = await prisma.emailLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends EmailLogFindFirstArgs>(args?: SelectSubset<T, EmailLogFindFirstArgs<ExtArgs>>): Prisma__EmailLogClient<$Result.GetResult<Prisma.$EmailLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EmailLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailLogFindFirstOrThrowArgs} args - Arguments to find a EmailLog
+     * @example
+     * // Get one EmailLog
+     * const emailLog = await prisma.emailLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends EmailLogFindFirstOrThrowArgs>(args?: SelectSubset<T, EmailLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__EmailLogClient<$Result.GetResult<Prisma.$EmailLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more EmailLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EmailLogs
+     * const emailLogs = await prisma.emailLog.findMany()
+     * 
+     * // Get first 10 EmailLogs
+     * const emailLogs = await prisma.emailLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const emailLogWithIdOnly = await prisma.emailLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends EmailLogFindManyArgs>(args?: SelectSubset<T, EmailLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a EmailLog.
+     * @param {EmailLogCreateArgs} args - Arguments to create a EmailLog.
+     * @example
+     * // Create one EmailLog
+     * const EmailLog = await prisma.emailLog.create({
+     *   data: {
+     *     // ... data to create a EmailLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends EmailLogCreateArgs>(args: SelectSubset<T, EmailLogCreateArgs<ExtArgs>>): Prisma__EmailLogClient<$Result.GetResult<Prisma.$EmailLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many EmailLogs.
+     * @param {EmailLogCreateManyArgs} args - Arguments to create many EmailLogs.
+     * @example
+     * // Create many EmailLogs
+     * const emailLog = await prisma.emailLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends EmailLogCreateManyArgs>(args?: SelectSubset<T, EmailLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a EmailLog.
+     * @param {EmailLogDeleteArgs} args - Arguments to delete one EmailLog.
+     * @example
+     * // Delete one EmailLog
+     * const EmailLog = await prisma.emailLog.delete({
+     *   where: {
+     *     // ... filter to delete one EmailLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends EmailLogDeleteArgs>(args: SelectSubset<T, EmailLogDeleteArgs<ExtArgs>>): Prisma__EmailLogClient<$Result.GetResult<Prisma.$EmailLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one EmailLog.
+     * @param {EmailLogUpdateArgs} args - Arguments to update one EmailLog.
+     * @example
+     * // Update one EmailLog
+     * const emailLog = await prisma.emailLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends EmailLogUpdateArgs>(args: SelectSubset<T, EmailLogUpdateArgs<ExtArgs>>): Prisma__EmailLogClient<$Result.GetResult<Prisma.$EmailLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more EmailLogs.
+     * @param {EmailLogDeleteManyArgs} args - Arguments to filter EmailLogs to delete.
+     * @example
+     * // Delete a few EmailLogs
+     * const { count } = await prisma.emailLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends EmailLogDeleteManyArgs>(args?: SelectSubset<T, EmailLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EmailLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EmailLogs
+     * const emailLog = await prisma.emailLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends EmailLogUpdateManyArgs>(args: SelectSubset<T, EmailLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one EmailLog.
+     * @param {EmailLogUpsertArgs} args - Arguments to update or create a EmailLog.
+     * @example
+     * // Update or create a EmailLog
+     * const emailLog = await prisma.emailLog.upsert({
+     *   create: {
+     *     // ... data to create a EmailLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EmailLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends EmailLogUpsertArgs>(args: SelectSubset<T, EmailLogUpsertArgs<ExtArgs>>): Prisma__EmailLogClient<$Result.GetResult<Prisma.$EmailLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of EmailLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailLogCountArgs} args - Arguments to filter EmailLogs to count.
+     * @example
+     * // Count the number of EmailLogs
+     * const count = await prisma.emailLog.count({
+     *   where: {
+     *     // ... the filter for the EmailLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends EmailLogCountArgs>(
+      args?: Subset<T, EmailLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EmailLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EmailLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EmailLogAggregateArgs>(args: Subset<T, EmailLogAggregateArgs>): Prisma.PrismaPromise<GetEmailLogAggregateType<T>>
+
+    /**
+     * Group by EmailLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EmailLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EmailLogGroupByArgs['orderBy'] }
+        : { orderBy?: EmailLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EmailLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEmailLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EmailLog model
+   */
+  readonly fields: EmailLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EmailLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EmailLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    application<T extends EmailLog$applicationArgs<ExtArgs> = {}>(args?: Subset<T, EmailLog$applicationArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the EmailLog model
+   */
+  interface EmailLogFieldRefs {
+    readonly id: FieldRef<"EmailLog", 'Int'>
+    readonly to: FieldRef<"EmailLog", 'String'>
+    readonly subject: FieldRef<"EmailLog", 'String'>
+    readonly message: FieldRef<"EmailLog", 'String'>
+    readonly applicationId: FieldRef<"EmailLog", 'Int'>
+    readonly employerId: FieldRef<"EmailLog", 'Int'>
+    readonly applicantId: FieldRef<"EmailLog", 'Int'>
+    readonly status: FieldRef<"EmailLog", 'String'>
+    readonly sentAt: FieldRef<"EmailLog", 'DateTime'>
+    readonly error: FieldRef<"EmailLog", 'String'>
+    readonly createdAt: FieldRef<"EmailLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * EmailLog findUnique
+   */
+  export type EmailLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailLog
+     */
+    select?: EmailLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailLog
+     */
+    omit?: EmailLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailLogInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailLog to fetch.
+     */
+    where: EmailLogWhereUniqueInput
+  }
+
+  /**
+   * EmailLog findUniqueOrThrow
+   */
+  export type EmailLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailLog
+     */
+    select?: EmailLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailLog
+     */
+    omit?: EmailLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailLogInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailLog to fetch.
+     */
+    where: EmailLogWhereUniqueInput
+  }
+
+  /**
+   * EmailLog findFirst
+   */
+  export type EmailLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailLog
+     */
+    select?: EmailLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailLog
+     */
+    omit?: EmailLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailLogInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailLog to fetch.
+     */
+    where?: EmailLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailLogs to fetch.
+     */
+    orderBy?: EmailLogOrderByWithRelationInput | EmailLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmailLogs.
+     */
+    cursor?: EmailLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmailLogs.
+     */
+    distinct?: EmailLogScalarFieldEnum | EmailLogScalarFieldEnum[]
+  }
+
+  /**
+   * EmailLog findFirstOrThrow
+   */
+  export type EmailLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailLog
+     */
+    select?: EmailLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailLog
+     */
+    omit?: EmailLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailLogInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailLog to fetch.
+     */
+    where?: EmailLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailLogs to fetch.
+     */
+    orderBy?: EmailLogOrderByWithRelationInput | EmailLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmailLogs.
+     */
+    cursor?: EmailLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmailLogs.
+     */
+    distinct?: EmailLogScalarFieldEnum | EmailLogScalarFieldEnum[]
+  }
+
+  /**
+   * EmailLog findMany
+   */
+  export type EmailLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailLog
+     */
+    select?: EmailLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailLog
+     */
+    omit?: EmailLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailLogInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailLogs to fetch.
+     */
+    where?: EmailLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailLogs to fetch.
+     */
+    orderBy?: EmailLogOrderByWithRelationInput | EmailLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EmailLogs.
+     */
+    cursor?: EmailLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailLogs.
+     */
+    skip?: number
+    distinct?: EmailLogScalarFieldEnum | EmailLogScalarFieldEnum[]
+  }
+
+  /**
+   * EmailLog create
+   */
+  export type EmailLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailLog
+     */
+    select?: EmailLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailLog
+     */
+    omit?: EmailLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a EmailLog.
+     */
+    data: XOR<EmailLogCreateInput, EmailLogUncheckedCreateInput>
+  }
+
+  /**
+   * EmailLog createMany
+   */
+  export type EmailLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EmailLogs.
+     */
+    data: EmailLogCreateManyInput | EmailLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * EmailLog update
+   */
+  export type EmailLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailLog
+     */
+    select?: EmailLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailLog
+     */
+    omit?: EmailLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a EmailLog.
+     */
+    data: XOR<EmailLogUpdateInput, EmailLogUncheckedUpdateInput>
+    /**
+     * Choose, which EmailLog to update.
+     */
+    where: EmailLogWhereUniqueInput
+  }
+
+  /**
+   * EmailLog updateMany
+   */
+  export type EmailLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EmailLogs.
+     */
+    data: XOR<EmailLogUpdateManyMutationInput, EmailLogUncheckedUpdateManyInput>
+    /**
+     * Filter which EmailLogs to update
+     */
+    where?: EmailLogWhereInput
+    /**
+     * Limit how many EmailLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * EmailLog upsert
+   */
+  export type EmailLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailLog
+     */
+    select?: EmailLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailLog
+     */
+    omit?: EmailLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the EmailLog to update in case it exists.
+     */
+    where: EmailLogWhereUniqueInput
+    /**
+     * In case the EmailLog found by the `where` argument doesn't exist, create a new EmailLog with this data.
+     */
+    create: XOR<EmailLogCreateInput, EmailLogUncheckedCreateInput>
+    /**
+     * In case the EmailLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EmailLogUpdateInput, EmailLogUncheckedUpdateInput>
+  }
+
+  /**
+   * EmailLog delete
+   */
+  export type EmailLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailLog
+     */
+    select?: EmailLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailLog
+     */
+    omit?: EmailLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailLogInclude<ExtArgs> | null
+    /**
+     * Filter which EmailLog to delete.
+     */
+    where: EmailLogWhereUniqueInput
+  }
+
+  /**
+   * EmailLog deleteMany
+   */
+  export type EmailLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmailLogs to delete
+     */
+    where?: EmailLogWhereInput
+    /**
+     * Limit how many EmailLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * EmailLog.application
+   */
+  export type EmailLog$applicationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Application
+     */
+    omit?: ApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+    where?: ApplicationWhereInput
+  }
+
+  /**
+   * EmailLog without action
+   */
+  export type EmailLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailLog
+     */
+    select?: EmailLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailLog
+     */
+    omit?: EmailLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailLogInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -21182,6 +24630,19 @@ export namespace Prisma {
   export type ComputerSkillScalarFieldEnum = (typeof ComputerSkillScalarFieldEnum)[keyof typeof ComputerSkillScalarFieldEnum]
 
 
+  export const SkillScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    proficiency: 'proficiency',
+    category: 'category',
+    applicantId: 'applicantId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SkillScalarFieldEnum = (typeof SkillScalarFieldEnum)[keyof typeof SkillScalarFieldEnum]
+
+
   export const ChatRoomScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -21284,6 +24745,40 @@ export namespace Prisma {
   };
 
   export type AnonymizedDataScalarFieldEnum = (typeof AnonymizedDataScalarFieldEnum)[keyof typeof AnonymizedDataScalarFieldEnum]
+
+
+  export const InterviewScalarFieldEnum: {
+    id: 'id',
+    applicationId: 'applicationId',
+    scheduledAt: 'scheduledAt',
+    duration: 'duration',
+    location: 'location',
+    type: 'type',
+    notes: 'notes',
+    interviewers: 'interviewers',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type InterviewScalarFieldEnum = (typeof InterviewScalarFieldEnum)[keyof typeof InterviewScalarFieldEnum]
+
+
+  export const EmailLogScalarFieldEnum: {
+    id: 'id',
+    to: 'to',
+    subject: 'subject',
+    message: 'message',
+    applicationId: 'applicationId',
+    employerId: 'employerId',
+    applicantId: 'applicantId',
+    status: 'status',
+    sentAt: 'sentAt',
+    error: 'error',
+    createdAt: 'createdAt'
+  };
+
+  export type EmailLogScalarFieldEnum = (typeof EmailLogScalarFieldEnum)[keyof typeof EmailLogScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -21393,6 +24888,15 @@ export namespace Prisma {
   export type ComputerSkillOrderByRelevanceFieldEnum = (typeof ComputerSkillOrderByRelevanceFieldEnum)[keyof typeof ComputerSkillOrderByRelevanceFieldEnum]
 
 
+  export const SkillOrderByRelevanceFieldEnum: {
+    name: 'name',
+    proficiency: 'proficiency',
+    category: 'category'
+  };
+
+  export type SkillOrderByRelevanceFieldEnum = (typeof SkillOrderByRelevanceFieldEnum)[keyof typeof SkillOrderByRelevanceFieldEnum]
+
+
   export const ChatRoomOrderByRelevanceFieldEnum: {
     topic: 'topic',
     status: 'status'
@@ -21458,6 +24962,28 @@ export namespace Prisma {
   };
 
   export type AnonymizedDataOrderByRelevanceFieldEnum = (typeof AnonymizedDataOrderByRelevanceFieldEnum)[keyof typeof AnonymizedDataOrderByRelevanceFieldEnum]
+
+
+  export const InterviewOrderByRelevanceFieldEnum: {
+    location: 'location',
+    type: 'type',
+    notes: 'notes',
+    interviewers: 'interviewers',
+    status: 'status'
+  };
+
+  export type InterviewOrderByRelevanceFieldEnum = (typeof InterviewOrderByRelevanceFieldEnum)[keyof typeof InterviewOrderByRelevanceFieldEnum]
+
+
+  export const EmailLogOrderByRelevanceFieldEnum: {
+    to: 'to',
+    subject: 'subject',
+    message: 'message',
+    status: 'status',
+    error: 'error'
+  };
+
+  export type EmailLogOrderByRelevanceFieldEnum = (typeof EmailLogOrderByRelevanceFieldEnum)[keyof typeof EmailLogOrderByRelevanceFieldEnum]
 
 
   /**
@@ -21583,6 +25109,7 @@ export namespace Prisma {
     experiences?: WorkExperienceListRelationFilter
     languages?: LanguageProficiencyListRelationFilter
     skills?: ComputerSkillListRelationFilter
+    generalSkills?: SkillListRelationFilter
     notifications?: NotificationListRelationFilter
     categories?: JobCategoryListRelationFilter
   }
@@ -21599,6 +25126,7 @@ export namespace Prisma {
     experiences?: WorkExperienceOrderByRelationAggregateInput
     languages?: LanguageProficiencyOrderByRelationAggregateInput
     skills?: ComputerSkillOrderByRelationAggregateInput
+    generalSkills?: SkillOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
     categories?: JobCategoryOrderByRelationAggregateInput
     _relevance?: ApplicantOrderByRelevanceInput
@@ -21619,6 +25147,7 @@ export namespace Prisma {
     experiences?: WorkExperienceListRelationFilter
     languages?: LanguageProficiencyListRelationFilter
     skills?: ComputerSkillListRelationFilter
+    generalSkills?: SkillListRelationFilter
     notifications?: NotificationListRelationFilter
     categories?: JobCategoryListRelationFilter
   }, "id" | "nida" | "userId">
@@ -21807,6 +25336,8 @@ export namespace Prisma {
     job?: XOR<JobScalarRelationFilter, JobWhereInput>
     applicant?: XOR<ApplicantScalarRelationFilter, ApplicantWhereInput>
     notifications?: NotificationListRelationFilter
+    interviews?: InterviewListRelationFilter
+    emailLogs?: EmailLogListRelationFilter
   }
 
   export type ApplicationOrderByWithRelationInput = {
@@ -21818,6 +25349,8 @@ export namespace Prisma {
     job?: JobOrderByWithRelationInput
     applicant?: ApplicantOrderByWithRelationInput
     notifications?: NotificationOrderByRelationAggregateInput
+    interviews?: InterviewOrderByRelationAggregateInput
+    emailLogs?: EmailLogOrderByRelationAggregateInput
     _relevance?: ApplicationOrderByRelevanceInput
   }
 
@@ -21833,6 +25366,8 @@ export namespace Prisma {
     job?: XOR<JobScalarRelationFilter, JobWhereInput>
     applicant?: XOR<ApplicantScalarRelationFilter, ApplicantWhereInput>
     notifications?: NotificationListRelationFilter
+    interviews?: InterviewListRelationFilter
+    emailLogs?: EmailLogListRelationFilter
   }, "id">
 
   export type ApplicationOrderByWithAggregationInput = {
@@ -22233,6 +25768,74 @@ export namespace Prisma {
     skill?: StringWithAggregatesFilter<"ComputerSkill"> | string
     proficiency?: StringWithAggregatesFilter<"ComputerSkill"> | string
     applicantId?: IntWithAggregatesFilter<"ComputerSkill"> | number
+  }
+
+  export type SkillWhereInput = {
+    AND?: SkillWhereInput | SkillWhereInput[]
+    OR?: SkillWhereInput[]
+    NOT?: SkillWhereInput | SkillWhereInput[]
+    id?: IntFilter<"Skill"> | number
+    name?: StringFilter<"Skill"> | string
+    proficiency?: StringFilter<"Skill"> | string
+    category?: StringNullableFilter<"Skill"> | string | null
+    applicantId?: IntFilter<"Skill"> | number
+    createdAt?: DateTimeFilter<"Skill"> | Date | string
+    updatedAt?: DateTimeFilter<"Skill"> | Date | string
+    applicant?: XOR<ApplicantScalarRelationFilter, ApplicantWhereInput>
+  }
+
+  export type SkillOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    proficiency?: SortOrder
+    category?: SortOrderInput | SortOrder
+    applicantId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    applicant?: ApplicantOrderByWithRelationInput
+    _relevance?: SkillOrderByRelevanceInput
+  }
+
+  export type SkillWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: SkillWhereInput | SkillWhereInput[]
+    OR?: SkillWhereInput[]
+    NOT?: SkillWhereInput | SkillWhereInput[]
+    name?: StringFilter<"Skill"> | string
+    proficiency?: StringFilter<"Skill"> | string
+    category?: StringNullableFilter<"Skill"> | string | null
+    applicantId?: IntFilter<"Skill"> | number
+    createdAt?: DateTimeFilter<"Skill"> | Date | string
+    updatedAt?: DateTimeFilter<"Skill"> | Date | string
+    applicant?: XOR<ApplicantScalarRelationFilter, ApplicantWhereInput>
+  }, "id">
+
+  export type SkillOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    proficiency?: SortOrder
+    category?: SortOrderInput | SortOrder
+    applicantId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SkillCountOrderByAggregateInput
+    _avg?: SkillAvgOrderByAggregateInput
+    _max?: SkillMaxOrderByAggregateInput
+    _min?: SkillMinOrderByAggregateInput
+    _sum?: SkillSumOrderByAggregateInput
+  }
+
+  export type SkillScalarWhereWithAggregatesInput = {
+    AND?: SkillScalarWhereWithAggregatesInput | SkillScalarWhereWithAggregatesInput[]
+    OR?: SkillScalarWhereWithAggregatesInput[]
+    NOT?: SkillScalarWhereWithAggregatesInput | SkillScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Skill"> | number
+    name?: StringWithAggregatesFilter<"Skill"> | string
+    proficiency?: StringWithAggregatesFilter<"Skill"> | string
+    category?: StringNullableWithAggregatesFilter<"Skill"> | string | null
+    applicantId?: IntWithAggregatesFilter<"Skill"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Skill"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Skill"> | Date | string
   }
 
   export type ChatRoomWhereInput = {
@@ -22798,6 +26401,182 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"AnonymizedData"> | Date | string
   }
 
+  export type InterviewWhereInput = {
+    AND?: InterviewWhereInput | InterviewWhereInput[]
+    OR?: InterviewWhereInput[]
+    NOT?: InterviewWhereInput | InterviewWhereInput[]
+    id?: IntFilter<"Interview"> | number
+    applicationId?: IntFilter<"Interview"> | number
+    scheduledAt?: DateTimeFilter<"Interview"> | Date | string
+    duration?: IntFilter<"Interview"> | number
+    location?: StringNullableFilter<"Interview"> | string | null
+    type?: StringFilter<"Interview"> | string
+    notes?: StringNullableFilter<"Interview"> | string | null
+    interviewers?: StringNullableFilter<"Interview"> | string | null
+    status?: StringFilter<"Interview"> | string
+    createdAt?: DateTimeFilter<"Interview"> | Date | string
+    updatedAt?: DateTimeFilter<"Interview"> | Date | string
+    application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
+  }
+
+  export type InterviewOrderByWithRelationInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    scheduledAt?: SortOrder
+    duration?: SortOrder
+    location?: SortOrderInput | SortOrder
+    type?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    interviewers?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    application?: ApplicationOrderByWithRelationInput
+    _relevance?: InterviewOrderByRelevanceInput
+  }
+
+  export type InterviewWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: InterviewWhereInput | InterviewWhereInput[]
+    OR?: InterviewWhereInput[]
+    NOT?: InterviewWhereInput | InterviewWhereInput[]
+    applicationId?: IntFilter<"Interview"> | number
+    scheduledAt?: DateTimeFilter<"Interview"> | Date | string
+    duration?: IntFilter<"Interview"> | number
+    location?: StringNullableFilter<"Interview"> | string | null
+    type?: StringFilter<"Interview"> | string
+    notes?: StringNullableFilter<"Interview"> | string | null
+    interviewers?: StringNullableFilter<"Interview"> | string | null
+    status?: StringFilter<"Interview"> | string
+    createdAt?: DateTimeFilter<"Interview"> | Date | string
+    updatedAt?: DateTimeFilter<"Interview"> | Date | string
+    application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
+  }, "id">
+
+  export type InterviewOrderByWithAggregationInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    scheduledAt?: SortOrder
+    duration?: SortOrder
+    location?: SortOrderInput | SortOrder
+    type?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    interviewers?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: InterviewCountOrderByAggregateInput
+    _avg?: InterviewAvgOrderByAggregateInput
+    _max?: InterviewMaxOrderByAggregateInput
+    _min?: InterviewMinOrderByAggregateInput
+    _sum?: InterviewSumOrderByAggregateInput
+  }
+
+  export type InterviewScalarWhereWithAggregatesInput = {
+    AND?: InterviewScalarWhereWithAggregatesInput | InterviewScalarWhereWithAggregatesInput[]
+    OR?: InterviewScalarWhereWithAggregatesInput[]
+    NOT?: InterviewScalarWhereWithAggregatesInput | InterviewScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Interview"> | number
+    applicationId?: IntWithAggregatesFilter<"Interview"> | number
+    scheduledAt?: DateTimeWithAggregatesFilter<"Interview"> | Date | string
+    duration?: IntWithAggregatesFilter<"Interview"> | number
+    location?: StringNullableWithAggregatesFilter<"Interview"> | string | null
+    type?: StringWithAggregatesFilter<"Interview"> | string
+    notes?: StringNullableWithAggregatesFilter<"Interview"> | string | null
+    interviewers?: StringNullableWithAggregatesFilter<"Interview"> | string | null
+    status?: StringWithAggregatesFilter<"Interview"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Interview"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Interview"> | Date | string
+  }
+
+  export type EmailLogWhereInput = {
+    AND?: EmailLogWhereInput | EmailLogWhereInput[]
+    OR?: EmailLogWhereInput[]
+    NOT?: EmailLogWhereInput | EmailLogWhereInput[]
+    id?: IntFilter<"EmailLog"> | number
+    to?: StringFilter<"EmailLog"> | string
+    subject?: StringFilter<"EmailLog"> | string
+    message?: StringFilter<"EmailLog"> | string
+    applicationId?: IntNullableFilter<"EmailLog"> | number | null
+    employerId?: IntNullableFilter<"EmailLog"> | number | null
+    applicantId?: IntNullableFilter<"EmailLog"> | number | null
+    status?: StringFilter<"EmailLog"> | string
+    sentAt?: DateTimeNullableFilter<"EmailLog"> | Date | string | null
+    error?: StringNullableFilter<"EmailLog"> | string | null
+    createdAt?: DateTimeFilter<"EmailLog"> | Date | string
+    application?: XOR<ApplicationNullableScalarRelationFilter, ApplicationWhereInput> | null
+  }
+
+  export type EmailLogOrderByWithRelationInput = {
+    id?: SortOrder
+    to?: SortOrder
+    subject?: SortOrder
+    message?: SortOrder
+    applicationId?: SortOrderInput | SortOrder
+    employerId?: SortOrderInput | SortOrder
+    applicantId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    sentAt?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    application?: ApplicationOrderByWithRelationInput
+    _relevance?: EmailLogOrderByRelevanceInput
+  }
+
+  export type EmailLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: EmailLogWhereInput | EmailLogWhereInput[]
+    OR?: EmailLogWhereInput[]
+    NOT?: EmailLogWhereInput | EmailLogWhereInput[]
+    to?: StringFilter<"EmailLog"> | string
+    subject?: StringFilter<"EmailLog"> | string
+    message?: StringFilter<"EmailLog"> | string
+    applicationId?: IntNullableFilter<"EmailLog"> | number | null
+    employerId?: IntNullableFilter<"EmailLog"> | number | null
+    applicantId?: IntNullableFilter<"EmailLog"> | number | null
+    status?: StringFilter<"EmailLog"> | string
+    sentAt?: DateTimeNullableFilter<"EmailLog"> | Date | string | null
+    error?: StringNullableFilter<"EmailLog"> | string | null
+    createdAt?: DateTimeFilter<"EmailLog"> | Date | string
+    application?: XOR<ApplicationNullableScalarRelationFilter, ApplicationWhereInput> | null
+  }, "id">
+
+  export type EmailLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    to?: SortOrder
+    subject?: SortOrder
+    message?: SortOrder
+    applicationId?: SortOrderInput | SortOrder
+    employerId?: SortOrderInput | SortOrder
+    applicantId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    sentAt?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: EmailLogCountOrderByAggregateInput
+    _avg?: EmailLogAvgOrderByAggregateInput
+    _max?: EmailLogMaxOrderByAggregateInput
+    _min?: EmailLogMinOrderByAggregateInput
+    _sum?: EmailLogSumOrderByAggregateInput
+  }
+
+  export type EmailLogScalarWhereWithAggregatesInput = {
+    AND?: EmailLogScalarWhereWithAggregatesInput | EmailLogScalarWhereWithAggregatesInput[]
+    OR?: EmailLogScalarWhereWithAggregatesInput[]
+    NOT?: EmailLogScalarWhereWithAggregatesInput | EmailLogScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"EmailLog"> | number
+    to?: StringWithAggregatesFilter<"EmailLog"> | string
+    subject?: StringWithAggregatesFilter<"EmailLog"> | string
+    message?: StringWithAggregatesFilter<"EmailLog"> | string
+    applicationId?: IntNullableWithAggregatesFilter<"EmailLog"> | number | null
+    employerId?: IntNullableWithAggregatesFilter<"EmailLog"> | number | null
+    applicantId?: IntNullableWithAggregatesFilter<"EmailLog"> | number | null
+    status?: StringWithAggregatesFilter<"EmailLog"> | string
+    sentAt?: DateTimeNullableWithAggregatesFilter<"EmailLog"> | Date | string | null
+    error?: StringNullableWithAggregatesFilter<"EmailLog"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"EmailLog"> | Date | string
+  }
+
   export type JobCategoryCreateInput = {
     name: string
     description?: string | null
@@ -22855,6 +26634,7 @@ export namespace Prisma {
     experiences?: WorkExperienceCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
   }
@@ -22870,6 +26650,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUncheckedCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyUncheckedCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillUncheckedCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
   }
@@ -22884,6 +26665,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
   }
@@ -22899,6 +26681,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUncheckedUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUncheckedUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUncheckedUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
   }
@@ -23079,6 +26862,8 @@ export namespace Prisma {
     job: JobCreateNestedOneWithoutApplicationsInput
     applicant: ApplicantCreateNestedOneWithoutApplicationsInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    interviews?: InterviewCreateNestedManyWithoutApplicationInput
+    emailLogs?: EmailLogCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateInput = {
@@ -23088,6 +26873,8 @@ export namespace Prisma {
     applicantId: number
     createdAt?: Date | string
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    interviews?: InterviewUncheckedCreateNestedManyWithoutApplicationInput
+    emailLogs?: EmailLogUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUpdateInput = {
@@ -23096,6 +26883,8 @@ export namespace Prisma {
     job?: JobUpdateOneRequiredWithoutApplicationsNestedInput
     applicant?: ApplicantUpdateOneRequiredWithoutApplicationsNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    interviews?: InterviewUpdateManyWithoutApplicationNestedInput
+    emailLogs?: EmailLogUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateInput = {
@@ -23105,6 +26894,8 @@ export namespace Prisma {
     applicantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    interviews?: InterviewUncheckedUpdateManyWithoutApplicationNestedInput
+    emailLogs?: EmailLogUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationCreateManyInput = {
@@ -23496,6 +27287,72 @@ export namespace Prisma {
     skill?: StringFieldUpdateOperationsInput | string
     proficiency?: StringFieldUpdateOperationsInput | string
     applicantId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type SkillCreateInput = {
+    name: string
+    proficiency: string
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicant: ApplicantCreateNestedOneWithoutGeneralSkillsInput
+  }
+
+  export type SkillUncheckedCreateInput = {
+    id?: number
+    name: string
+    proficiency: string
+    category?: string | null
+    applicantId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SkillUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    proficiency?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicant?: ApplicantUpdateOneRequiredWithoutGeneralSkillsNestedInput
+  }
+
+  export type SkillUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    proficiency?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SkillCreateManyInput = {
+    id?: number
+    name: string
+    proficiency: string
+    category?: string | null
+    applicantId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SkillUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    proficiency?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SkillUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    proficiency?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ChatRoomCreateInput = {
@@ -24060,6 +27917,194 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type InterviewCreateInput = {
+    scheduledAt: Date | string
+    duration?: number
+    location?: string | null
+    type?: string
+    notes?: string | null
+    interviewers?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    application: ApplicationCreateNestedOneWithoutInterviewsInput
+  }
+
+  export type InterviewUncheckedCreateInput = {
+    id?: number
+    applicationId: number
+    scheduledAt: Date | string
+    duration?: number
+    location?: string | null
+    type?: string
+    notes?: string | null
+    interviewers?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InterviewUpdateInput = {
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewers?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneRequiredWithoutInterviewsNestedInput
+  }
+
+  export type InterviewUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    applicationId?: IntFieldUpdateOperationsInput | number
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewers?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InterviewCreateManyInput = {
+    id?: number
+    applicationId: number
+    scheduledAt: Date | string
+    duration?: number
+    location?: string | null
+    type?: string
+    notes?: string | null
+    interviewers?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InterviewUpdateManyMutationInput = {
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewers?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InterviewUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    applicationId?: IntFieldUpdateOperationsInput | number
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewers?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailLogCreateInput = {
+    to: string
+    subject: string
+    message: string
+    employerId?: number | null
+    applicantId?: number | null
+    status?: string
+    sentAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+    application?: ApplicationCreateNestedOneWithoutEmailLogsInput
+  }
+
+  export type EmailLogUncheckedCreateInput = {
+    id?: number
+    to: string
+    subject: string
+    message: string
+    applicationId?: number | null
+    employerId?: number | null
+    applicantId?: number | null
+    status?: string
+    sentAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+  }
+
+  export type EmailLogUpdateInput = {
+    to?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    employerId?: NullableIntFieldUpdateOperationsInput | number | null
+    applicantId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneWithoutEmailLogsNestedInput
+  }
+
+  export type EmailLogUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    to?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    applicationId?: NullableIntFieldUpdateOperationsInput | number | null
+    employerId?: NullableIntFieldUpdateOperationsInput | number | null
+    applicantId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailLogCreateManyInput = {
+    id?: number
+    to: string
+    subject: string
+    message: string
+    applicationId?: number | null
+    employerId?: number | null
+    applicantId?: number | null
+    status?: string
+    sentAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+  }
+
+  export type EmailLogUpdateManyMutationInput = {
+    to?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    employerId?: NullableIntFieldUpdateOperationsInput | number | null
+    applicantId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailLogUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    to?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    applicationId?: NullableIntFieldUpdateOperationsInput | number | null
+    employerId?: NullableIntFieldUpdateOperationsInput | number | null
+    applicantId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -24256,6 +28301,12 @@ export namespace Prisma {
     none?: ComputerSkillWhereInput
   }
 
+  export type SkillListRelationFilter = {
+    every?: SkillWhereInput
+    some?: SkillWhereInput
+    none?: SkillWhereInput
+  }
+
   export type NotificationListRelationFilter = {
     every?: NotificationWhereInput
     some?: NotificationWhereInput
@@ -24285,6 +28336,10 @@ export namespace Prisma {
   }
 
   export type ComputerSkillOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SkillOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -24457,6 +28512,26 @@ export namespace Prisma {
   export type ApplicantScalarRelationFilter = {
     is?: ApplicantWhereInput
     isNot?: ApplicantWhereInput
+  }
+
+  export type InterviewListRelationFilter = {
+    every?: InterviewWhereInput
+    some?: InterviewWhereInput
+    none?: InterviewWhereInput
+  }
+
+  export type EmailLogListRelationFilter = {
+    every?: EmailLogWhereInput
+    some?: EmailLogWhereInput
+    none?: EmailLogWhereInput
+  }
+
+  export type InterviewOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type EmailLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type ApplicationOrderByRelevanceInput = {
@@ -24846,6 +28921,52 @@ export namespace Prisma {
   }
 
   export type ComputerSkillSumOrderByAggregateInput = {
+    id?: SortOrder
+    applicantId?: SortOrder
+  }
+
+  export type SkillOrderByRelevanceInput = {
+    fields: SkillOrderByRelevanceFieldEnum | SkillOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type SkillCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    proficiency?: SortOrder
+    category?: SortOrder
+    applicantId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SkillAvgOrderByAggregateInput = {
+    id?: SortOrder
+    applicantId?: SortOrder
+  }
+
+  export type SkillMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    proficiency?: SortOrder
+    category?: SortOrder
+    applicantId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SkillMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    proficiency?: SortOrder
+    category?: SortOrder
+    applicantId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SkillSumOrderByAggregateInput = {
     id?: SortOrder
     applicantId?: SortOrder
   }
@@ -25321,6 +29442,133 @@ export namespace Prisma {
     originalUserId?: SortOrder
   }
 
+  export type ApplicationScalarRelationFilter = {
+    is?: ApplicationWhereInput
+    isNot?: ApplicationWhereInput
+  }
+
+  export type InterviewOrderByRelevanceInput = {
+    fields: InterviewOrderByRelevanceFieldEnum | InterviewOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type InterviewCountOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    scheduledAt?: SortOrder
+    duration?: SortOrder
+    location?: SortOrder
+    type?: SortOrder
+    notes?: SortOrder
+    interviewers?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InterviewAvgOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    duration?: SortOrder
+  }
+
+  export type InterviewMaxOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    scheduledAt?: SortOrder
+    duration?: SortOrder
+    location?: SortOrder
+    type?: SortOrder
+    notes?: SortOrder
+    interviewers?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InterviewMinOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    scheduledAt?: SortOrder
+    duration?: SortOrder
+    location?: SortOrder
+    type?: SortOrder
+    notes?: SortOrder
+    interviewers?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InterviewSumOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    duration?: SortOrder
+  }
+
+  export type EmailLogOrderByRelevanceInput = {
+    fields: EmailLogOrderByRelevanceFieldEnum | EmailLogOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type EmailLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    to?: SortOrder
+    subject?: SortOrder
+    message?: SortOrder
+    applicationId?: SortOrder
+    employerId?: SortOrder
+    applicantId?: SortOrder
+    status?: SortOrder
+    sentAt?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EmailLogAvgOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    employerId?: SortOrder
+    applicantId?: SortOrder
+  }
+
+  export type EmailLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    to?: SortOrder
+    subject?: SortOrder
+    message?: SortOrder
+    applicationId?: SortOrder
+    employerId?: SortOrder
+    applicantId?: SortOrder
+    status?: SortOrder
+    sentAt?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EmailLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    to?: SortOrder
+    subject?: SortOrder
+    message?: SortOrder
+    applicationId?: SortOrder
+    employerId?: SortOrder
+    applicantId?: SortOrder
+    status?: SortOrder
+    sentAt?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EmailLogSumOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    employerId?: SortOrder
+    applicantId?: SortOrder
+  }
+
   export type ApplicantCreateNestedManyWithoutCategoriesInput = {
     create?: XOR<ApplicantCreateWithoutCategoriesInput, ApplicantUncheckedCreateWithoutCategoriesInput> | ApplicantCreateWithoutCategoriesInput[] | ApplicantUncheckedCreateWithoutCategoriesInput[]
     connectOrCreate?: ApplicantCreateOrConnectWithoutCategoriesInput | ApplicantCreateOrConnectWithoutCategoriesInput[]
@@ -25454,6 +29702,13 @@ export namespace Prisma {
     connect?: ComputerSkillWhereUniqueInput | ComputerSkillWhereUniqueInput[]
   }
 
+  export type SkillCreateNestedManyWithoutApplicantInput = {
+    create?: XOR<SkillCreateWithoutApplicantInput, SkillUncheckedCreateWithoutApplicantInput> | SkillCreateWithoutApplicantInput[] | SkillUncheckedCreateWithoutApplicantInput[]
+    connectOrCreate?: SkillCreateOrConnectWithoutApplicantInput | SkillCreateOrConnectWithoutApplicantInput[]
+    createMany?: SkillCreateManyApplicantInputEnvelope
+    connect?: SkillWhereUniqueInput | SkillWhereUniqueInput[]
+  }
+
   export type NotificationCreateNestedManyWithoutApplicantInput = {
     create?: XOR<NotificationCreateWithoutApplicantInput, NotificationUncheckedCreateWithoutApplicantInput> | NotificationCreateWithoutApplicantInput[] | NotificationUncheckedCreateWithoutApplicantInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutApplicantInput | NotificationCreateOrConnectWithoutApplicantInput[]
@@ -25500,6 +29755,13 @@ export namespace Prisma {
     connectOrCreate?: ComputerSkillCreateOrConnectWithoutApplicantInput | ComputerSkillCreateOrConnectWithoutApplicantInput[]
     createMany?: ComputerSkillCreateManyApplicantInputEnvelope
     connect?: ComputerSkillWhereUniqueInput | ComputerSkillWhereUniqueInput[]
+  }
+
+  export type SkillUncheckedCreateNestedManyWithoutApplicantInput = {
+    create?: XOR<SkillCreateWithoutApplicantInput, SkillUncheckedCreateWithoutApplicantInput> | SkillCreateWithoutApplicantInput[] | SkillUncheckedCreateWithoutApplicantInput[]
+    connectOrCreate?: SkillCreateOrConnectWithoutApplicantInput | SkillCreateOrConnectWithoutApplicantInput[]
+    createMany?: SkillCreateManyApplicantInputEnvelope
+    connect?: SkillWhereUniqueInput | SkillWhereUniqueInput[]
   }
 
   export type NotificationUncheckedCreateNestedManyWithoutApplicantInput = {
@@ -25597,6 +29859,20 @@ export namespace Prisma {
     deleteMany?: ComputerSkillScalarWhereInput | ComputerSkillScalarWhereInput[]
   }
 
+  export type SkillUpdateManyWithoutApplicantNestedInput = {
+    create?: XOR<SkillCreateWithoutApplicantInput, SkillUncheckedCreateWithoutApplicantInput> | SkillCreateWithoutApplicantInput[] | SkillUncheckedCreateWithoutApplicantInput[]
+    connectOrCreate?: SkillCreateOrConnectWithoutApplicantInput | SkillCreateOrConnectWithoutApplicantInput[]
+    upsert?: SkillUpsertWithWhereUniqueWithoutApplicantInput | SkillUpsertWithWhereUniqueWithoutApplicantInput[]
+    createMany?: SkillCreateManyApplicantInputEnvelope
+    set?: SkillWhereUniqueInput | SkillWhereUniqueInput[]
+    disconnect?: SkillWhereUniqueInput | SkillWhereUniqueInput[]
+    delete?: SkillWhereUniqueInput | SkillWhereUniqueInput[]
+    connect?: SkillWhereUniqueInput | SkillWhereUniqueInput[]
+    update?: SkillUpdateWithWhereUniqueWithoutApplicantInput | SkillUpdateWithWhereUniqueWithoutApplicantInput[]
+    updateMany?: SkillUpdateManyWithWhereWithoutApplicantInput | SkillUpdateManyWithWhereWithoutApplicantInput[]
+    deleteMany?: SkillScalarWhereInput | SkillScalarWhereInput[]
+  }
+
   export type NotificationUpdateManyWithoutApplicantNestedInput = {
     create?: XOR<NotificationCreateWithoutApplicantInput, NotificationUncheckedCreateWithoutApplicantInput> | NotificationCreateWithoutApplicantInput[] | NotificationUncheckedCreateWithoutApplicantInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutApplicantInput | NotificationCreateOrConnectWithoutApplicantInput[]
@@ -25692,6 +29968,20 @@ export namespace Prisma {
     update?: ComputerSkillUpdateWithWhereUniqueWithoutApplicantInput | ComputerSkillUpdateWithWhereUniqueWithoutApplicantInput[]
     updateMany?: ComputerSkillUpdateManyWithWhereWithoutApplicantInput | ComputerSkillUpdateManyWithWhereWithoutApplicantInput[]
     deleteMany?: ComputerSkillScalarWhereInput | ComputerSkillScalarWhereInput[]
+  }
+
+  export type SkillUncheckedUpdateManyWithoutApplicantNestedInput = {
+    create?: XOR<SkillCreateWithoutApplicantInput, SkillUncheckedCreateWithoutApplicantInput> | SkillCreateWithoutApplicantInput[] | SkillUncheckedCreateWithoutApplicantInput[]
+    connectOrCreate?: SkillCreateOrConnectWithoutApplicantInput | SkillCreateOrConnectWithoutApplicantInput[]
+    upsert?: SkillUpsertWithWhereUniqueWithoutApplicantInput | SkillUpsertWithWhereUniqueWithoutApplicantInput[]
+    createMany?: SkillCreateManyApplicantInputEnvelope
+    set?: SkillWhereUniqueInput | SkillWhereUniqueInput[]
+    disconnect?: SkillWhereUniqueInput | SkillWhereUniqueInput[]
+    delete?: SkillWhereUniqueInput | SkillWhereUniqueInput[]
+    connect?: SkillWhereUniqueInput | SkillWhereUniqueInput[]
+    update?: SkillUpdateWithWhereUniqueWithoutApplicantInput | SkillUpdateWithWhereUniqueWithoutApplicantInput[]
+    updateMany?: SkillUpdateManyWithWhereWithoutApplicantInput | SkillUpdateManyWithWhereWithoutApplicantInput[]
+    deleteMany?: SkillScalarWhereInput | SkillScalarWhereInput[]
   }
 
   export type NotificationUncheckedUpdateManyWithoutApplicantNestedInput = {
@@ -25932,11 +30222,39 @@ export namespace Prisma {
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
+  export type InterviewCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<InterviewCreateWithoutApplicationInput, InterviewUncheckedCreateWithoutApplicationInput> | InterviewCreateWithoutApplicationInput[] | InterviewUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: InterviewCreateOrConnectWithoutApplicationInput | InterviewCreateOrConnectWithoutApplicationInput[]
+    createMany?: InterviewCreateManyApplicationInputEnvelope
+    connect?: InterviewWhereUniqueInput | InterviewWhereUniqueInput[]
+  }
+
+  export type EmailLogCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<EmailLogCreateWithoutApplicationInput, EmailLogUncheckedCreateWithoutApplicationInput> | EmailLogCreateWithoutApplicationInput[] | EmailLogUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: EmailLogCreateOrConnectWithoutApplicationInput | EmailLogCreateOrConnectWithoutApplicationInput[]
+    createMany?: EmailLogCreateManyApplicationInputEnvelope
+    connect?: EmailLogWhereUniqueInput | EmailLogWhereUniqueInput[]
+  }
+
   export type NotificationUncheckedCreateNestedManyWithoutApplicationInput = {
     create?: XOR<NotificationCreateWithoutApplicationInput, NotificationUncheckedCreateWithoutApplicationInput> | NotificationCreateWithoutApplicationInput[] | NotificationUncheckedCreateWithoutApplicationInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutApplicationInput | NotificationCreateOrConnectWithoutApplicationInput[]
     createMany?: NotificationCreateManyApplicationInputEnvelope
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
+  export type InterviewUncheckedCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<InterviewCreateWithoutApplicationInput, InterviewUncheckedCreateWithoutApplicationInput> | InterviewCreateWithoutApplicationInput[] | InterviewUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: InterviewCreateOrConnectWithoutApplicationInput | InterviewCreateOrConnectWithoutApplicationInput[]
+    createMany?: InterviewCreateManyApplicationInputEnvelope
+    connect?: InterviewWhereUniqueInput | InterviewWhereUniqueInput[]
+  }
+
+  export type EmailLogUncheckedCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<EmailLogCreateWithoutApplicationInput, EmailLogUncheckedCreateWithoutApplicationInput> | EmailLogCreateWithoutApplicationInput[] | EmailLogUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: EmailLogCreateOrConnectWithoutApplicationInput | EmailLogCreateOrConnectWithoutApplicationInput[]
+    createMany?: EmailLogCreateManyApplicationInputEnvelope
+    connect?: EmailLogWhereUniqueInput | EmailLogWhereUniqueInput[]
   }
 
   export type JobUpdateOneRequiredWithoutApplicationsNestedInput = {
@@ -25969,6 +30287,34 @@ export namespace Prisma {
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
+  export type InterviewUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<InterviewCreateWithoutApplicationInput, InterviewUncheckedCreateWithoutApplicationInput> | InterviewCreateWithoutApplicationInput[] | InterviewUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: InterviewCreateOrConnectWithoutApplicationInput | InterviewCreateOrConnectWithoutApplicationInput[]
+    upsert?: InterviewUpsertWithWhereUniqueWithoutApplicationInput | InterviewUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: InterviewCreateManyApplicationInputEnvelope
+    set?: InterviewWhereUniqueInput | InterviewWhereUniqueInput[]
+    disconnect?: InterviewWhereUniqueInput | InterviewWhereUniqueInput[]
+    delete?: InterviewWhereUniqueInput | InterviewWhereUniqueInput[]
+    connect?: InterviewWhereUniqueInput | InterviewWhereUniqueInput[]
+    update?: InterviewUpdateWithWhereUniqueWithoutApplicationInput | InterviewUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: InterviewUpdateManyWithWhereWithoutApplicationInput | InterviewUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: InterviewScalarWhereInput | InterviewScalarWhereInput[]
+  }
+
+  export type EmailLogUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<EmailLogCreateWithoutApplicationInput, EmailLogUncheckedCreateWithoutApplicationInput> | EmailLogCreateWithoutApplicationInput[] | EmailLogUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: EmailLogCreateOrConnectWithoutApplicationInput | EmailLogCreateOrConnectWithoutApplicationInput[]
+    upsert?: EmailLogUpsertWithWhereUniqueWithoutApplicationInput | EmailLogUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: EmailLogCreateManyApplicationInputEnvelope
+    set?: EmailLogWhereUniqueInput | EmailLogWhereUniqueInput[]
+    disconnect?: EmailLogWhereUniqueInput | EmailLogWhereUniqueInput[]
+    delete?: EmailLogWhereUniqueInput | EmailLogWhereUniqueInput[]
+    connect?: EmailLogWhereUniqueInput | EmailLogWhereUniqueInput[]
+    update?: EmailLogUpdateWithWhereUniqueWithoutApplicationInput | EmailLogUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: EmailLogUpdateManyWithWhereWithoutApplicationInput | EmailLogUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: EmailLogScalarWhereInput | EmailLogScalarWhereInput[]
+  }
+
   export type NotificationUncheckedUpdateManyWithoutApplicationNestedInput = {
     create?: XOR<NotificationCreateWithoutApplicationInput, NotificationUncheckedCreateWithoutApplicationInput> | NotificationCreateWithoutApplicationInput[] | NotificationUncheckedCreateWithoutApplicationInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutApplicationInput | NotificationCreateOrConnectWithoutApplicationInput[]
@@ -25981,6 +30327,34 @@ export namespace Prisma {
     update?: NotificationUpdateWithWhereUniqueWithoutApplicationInput | NotificationUpdateWithWhereUniqueWithoutApplicationInput[]
     updateMany?: NotificationUpdateManyWithWhereWithoutApplicationInput | NotificationUpdateManyWithWhereWithoutApplicationInput[]
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
+  export type InterviewUncheckedUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<InterviewCreateWithoutApplicationInput, InterviewUncheckedCreateWithoutApplicationInput> | InterviewCreateWithoutApplicationInput[] | InterviewUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: InterviewCreateOrConnectWithoutApplicationInput | InterviewCreateOrConnectWithoutApplicationInput[]
+    upsert?: InterviewUpsertWithWhereUniqueWithoutApplicationInput | InterviewUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: InterviewCreateManyApplicationInputEnvelope
+    set?: InterviewWhereUniqueInput | InterviewWhereUniqueInput[]
+    disconnect?: InterviewWhereUniqueInput | InterviewWhereUniqueInput[]
+    delete?: InterviewWhereUniqueInput | InterviewWhereUniqueInput[]
+    connect?: InterviewWhereUniqueInput | InterviewWhereUniqueInput[]
+    update?: InterviewUpdateWithWhereUniqueWithoutApplicationInput | InterviewUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: InterviewUpdateManyWithWhereWithoutApplicationInput | InterviewUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: InterviewScalarWhereInput | InterviewScalarWhereInput[]
+  }
+
+  export type EmailLogUncheckedUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<EmailLogCreateWithoutApplicationInput, EmailLogUncheckedCreateWithoutApplicationInput> | EmailLogCreateWithoutApplicationInput[] | EmailLogUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: EmailLogCreateOrConnectWithoutApplicationInput | EmailLogCreateOrConnectWithoutApplicationInput[]
+    upsert?: EmailLogUpsertWithWhereUniqueWithoutApplicationInput | EmailLogUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: EmailLogCreateManyApplicationInputEnvelope
+    set?: EmailLogWhereUniqueInput | EmailLogWhereUniqueInput[]
+    disconnect?: EmailLogWhereUniqueInput | EmailLogWhereUniqueInput[]
+    delete?: EmailLogWhereUniqueInput | EmailLogWhereUniqueInput[]
+    connect?: EmailLogWhereUniqueInput | EmailLogWhereUniqueInput[]
+    update?: EmailLogUpdateWithWhereUniqueWithoutApplicationInput | EmailLogUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: EmailLogUpdateManyWithWhereWithoutApplicationInput | EmailLogUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: EmailLogScalarWhereInput | EmailLogScalarWhereInput[]
   }
 
   export type ApplicantCreateNestedOneWithoutNotificationsInput = {
@@ -26105,6 +30479,20 @@ export namespace Prisma {
     upsert?: ApplicantUpsertWithoutSkillsInput
     connect?: ApplicantWhereUniqueInput
     update?: XOR<XOR<ApplicantUpdateToOneWithWhereWithoutSkillsInput, ApplicantUpdateWithoutSkillsInput>, ApplicantUncheckedUpdateWithoutSkillsInput>
+  }
+
+  export type ApplicantCreateNestedOneWithoutGeneralSkillsInput = {
+    create?: XOR<ApplicantCreateWithoutGeneralSkillsInput, ApplicantUncheckedCreateWithoutGeneralSkillsInput>
+    connectOrCreate?: ApplicantCreateOrConnectWithoutGeneralSkillsInput
+    connect?: ApplicantWhereUniqueInput
+  }
+
+  export type ApplicantUpdateOneRequiredWithoutGeneralSkillsNestedInput = {
+    create?: XOR<ApplicantCreateWithoutGeneralSkillsInput, ApplicantUncheckedCreateWithoutGeneralSkillsInput>
+    connectOrCreate?: ApplicantCreateOrConnectWithoutGeneralSkillsInput
+    upsert?: ApplicantUpsertWithoutGeneralSkillsInput
+    connect?: ApplicantWhereUniqueInput
+    update?: XOR<XOR<ApplicantUpdateToOneWithWhereWithoutGeneralSkillsInput, ApplicantUpdateWithoutGeneralSkillsInput>, ApplicantUncheckedUpdateWithoutGeneralSkillsInput>
   }
 
   export type UserCreateNestedOneWithoutChatRoomsInput = {
@@ -26525,6 +30913,36 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAuditLogsInput, UserUpdateWithoutAuditLogsInput>, UserUncheckedUpdateWithoutAuditLogsInput>
   }
 
+  export type ApplicationCreateNestedOneWithoutInterviewsInput = {
+    create?: XOR<ApplicationCreateWithoutInterviewsInput, ApplicationUncheckedCreateWithoutInterviewsInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutInterviewsInput
+    connect?: ApplicationWhereUniqueInput
+  }
+
+  export type ApplicationUpdateOneRequiredWithoutInterviewsNestedInput = {
+    create?: XOR<ApplicationCreateWithoutInterviewsInput, ApplicationUncheckedCreateWithoutInterviewsInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutInterviewsInput
+    upsert?: ApplicationUpsertWithoutInterviewsInput
+    connect?: ApplicationWhereUniqueInput
+    update?: XOR<XOR<ApplicationUpdateToOneWithWhereWithoutInterviewsInput, ApplicationUpdateWithoutInterviewsInput>, ApplicationUncheckedUpdateWithoutInterviewsInput>
+  }
+
+  export type ApplicationCreateNestedOneWithoutEmailLogsInput = {
+    create?: XOR<ApplicationCreateWithoutEmailLogsInput, ApplicationUncheckedCreateWithoutEmailLogsInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutEmailLogsInput
+    connect?: ApplicationWhereUniqueInput
+  }
+
+  export type ApplicationUpdateOneWithoutEmailLogsNestedInput = {
+    create?: XOR<ApplicationCreateWithoutEmailLogsInput, ApplicationUncheckedCreateWithoutEmailLogsInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutEmailLogsInput
+    upsert?: ApplicationUpsertWithoutEmailLogsInput
+    disconnect?: ApplicationWhereInput | boolean
+    delete?: ApplicationWhereInput | boolean
+    connect?: ApplicationWhereUniqueInput
+    update?: XOR<XOR<ApplicationUpdateToOneWithWhereWithoutEmailLogsInput, ApplicationUpdateWithoutEmailLogsInput>, ApplicationUncheckedUpdateWithoutEmailLogsInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -26790,6 +31208,7 @@ export namespace Prisma {
     experiences?: WorkExperienceCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
   }
 
@@ -26804,6 +31223,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUncheckedCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyUncheckedCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillUncheckedCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
   }
 
@@ -26939,6 +31359,8 @@ export namespace Prisma {
     createdAt?: Date | string
     job: JobCreateNestedOneWithoutApplicationsInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    interviews?: InterviewCreateNestedManyWithoutApplicationInput
+    emailLogs?: EmailLogCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutApplicantInput = {
@@ -26947,6 +31369,8 @@ export namespace Prisma {
     jobId: number
     createdAt?: Date | string
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    interviews?: InterviewUncheckedCreateNestedManyWithoutApplicationInput
+    emailLogs?: EmailLogUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutApplicantInput = {
@@ -27068,6 +31492,33 @@ export namespace Prisma {
 
   export type ComputerSkillCreateManyApplicantInputEnvelope = {
     data: ComputerSkillCreateManyApplicantInput | ComputerSkillCreateManyApplicantInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SkillCreateWithoutApplicantInput = {
+    name: string
+    proficiency: string
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SkillUncheckedCreateWithoutApplicantInput = {
+    id?: number
+    name: string
+    proficiency: string
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SkillCreateOrConnectWithoutApplicantInput = {
+    where: SkillWhereUniqueInput
+    create: XOR<SkillCreateWithoutApplicantInput, SkillUncheckedCreateWithoutApplicantInput>
+  }
+
+  export type SkillCreateManyApplicantInputEnvelope = {
+    data: SkillCreateManyApplicantInput | SkillCreateManyApplicantInput[]
     skipDuplicates?: boolean
   }
 
@@ -27307,6 +31758,35 @@ export namespace Prisma {
     skill?: StringFilter<"ComputerSkill"> | string
     proficiency?: StringFilter<"ComputerSkill"> | string
     applicantId?: IntFilter<"ComputerSkill"> | number
+  }
+
+  export type SkillUpsertWithWhereUniqueWithoutApplicantInput = {
+    where: SkillWhereUniqueInput
+    update: XOR<SkillUpdateWithoutApplicantInput, SkillUncheckedUpdateWithoutApplicantInput>
+    create: XOR<SkillCreateWithoutApplicantInput, SkillUncheckedCreateWithoutApplicantInput>
+  }
+
+  export type SkillUpdateWithWhereUniqueWithoutApplicantInput = {
+    where: SkillWhereUniqueInput
+    data: XOR<SkillUpdateWithoutApplicantInput, SkillUncheckedUpdateWithoutApplicantInput>
+  }
+
+  export type SkillUpdateManyWithWhereWithoutApplicantInput = {
+    where: SkillScalarWhereInput
+    data: XOR<SkillUpdateManyMutationInput, SkillUncheckedUpdateManyWithoutApplicantInput>
+  }
+
+  export type SkillScalarWhereInput = {
+    AND?: SkillScalarWhereInput | SkillScalarWhereInput[]
+    OR?: SkillScalarWhereInput[]
+    NOT?: SkillScalarWhereInput | SkillScalarWhereInput[]
+    id?: IntFilter<"Skill"> | number
+    name?: StringFilter<"Skill"> | string
+    proficiency?: StringFilter<"Skill"> | string
+    category?: StringNullableFilter<"Skill"> | string | null
+    applicantId?: IntFilter<"Skill"> | number
+    createdAt?: DateTimeFilter<"Skill"> | Date | string
+    updatedAt?: DateTimeFilter<"Skill"> | Date | string
   }
 
   export type NotificationUpsertWithWhereUniqueWithoutApplicantInput = {
@@ -27570,6 +32050,8 @@ export namespace Prisma {
     createdAt?: Date | string
     applicant: ApplicantCreateNestedOneWithoutApplicationsInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    interviews?: InterviewCreateNestedManyWithoutApplicationInput
+    emailLogs?: EmailLogCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutJobInput = {
@@ -27578,6 +32060,8 @@ export namespace Prisma {
     applicantId: number
     createdAt?: Date | string
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    interviews?: InterviewUncheckedCreateNestedManyWithoutApplicationInput
+    emailLogs?: EmailLogUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutJobInput = {
@@ -27707,6 +32191,7 @@ export namespace Prisma {
     experiences?: WorkExperienceCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
   }
@@ -27721,6 +32206,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUncheckedCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyUncheckedCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillUncheckedCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
   }
@@ -27762,6 +32248,76 @@ export namespace Prisma {
 
   export type NotificationCreateManyApplicationInputEnvelope = {
     data: NotificationCreateManyApplicationInput | NotificationCreateManyApplicationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InterviewCreateWithoutApplicationInput = {
+    scheduledAt: Date | string
+    duration?: number
+    location?: string | null
+    type?: string
+    notes?: string | null
+    interviewers?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InterviewUncheckedCreateWithoutApplicationInput = {
+    id?: number
+    scheduledAt: Date | string
+    duration?: number
+    location?: string | null
+    type?: string
+    notes?: string | null
+    interviewers?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InterviewCreateOrConnectWithoutApplicationInput = {
+    where: InterviewWhereUniqueInput
+    create: XOR<InterviewCreateWithoutApplicationInput, InterviewUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type InterviewCreateManyApplicationInputEnvelope = {
+    data: InterviewCreateManyApplicationInput | InterviewCreateManyApplicationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type EmailLogCreateWithoutApplicationInput = {
+    to: string
+    subject: string
+    message: string
+    employerId?: number | null
+    applicantId?: number | null
+    status?: string
+    sentAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+  }
+
+  export type EmailLogUncheckedCreateWithoutApplicationInput = {
+    id?: number
+    to: string
+    subject: string
+    message: string
+    employerId?: number | null
+    applicantId?: number | null
+    status?: string
+    sentAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+  }
+
+  export type EmailLogCreateOrConnectWithoutApplicationInput = {
+    where: EmailLogWhereUniqueInput
+    create: XOR<EmailLogCreateWithoutApplicationInput, EmailLogUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type EmailLogCreateManyApplicationInputEnvelope = {
+    data: EmailLogCreateManyApplicationInput | EmailLogCreateManyApplicationInput[]
     skipDuplicates?: boolean
   }
 
@@ -27821,6 +32377,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
   }
@@ -27835,6 +32392,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUncheckedUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUncheckedUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUncheckedUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
   }
@@ -27855,6 +32413,72 @@ export namespace Prisma {
     data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutApplicationInput>
   }
 
+  export type InterviewUpsertWithWhereUniqueWithoutApplicationInput = {
+    where: InterviewWhereUniqueInput
+    update: XOR<InterviewUpdateWithoutApplicationInput, InterviewUncheckedUpdateWithoutApplicationInput>
+    create: XOR<InterviewCreateWithoutApplicationInput, InterviewUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type InterviewUpdateWithWhereUniqueWithoutApplicationInput = {
+    where: InterviewWhereUniqueInput
+    data: XOR<InterviewUpdateWithoutApplicationInput, InterviewUncheckedUpdateWithoutApplicationInput>
+  }
+
+  export type InterviewUpdateManyWithWhereWithoutApplicationInput = {
+    where: InterviewScalarWhereInput
+    data: XOR<InterviewUpdateManyMutationInput, InterviewUncheckedUpdateManyWithoutApplicationInput>
+  }
+
+  export type InterviewScalarWhereInput = {
+    AND?: InterviewScalarWhereInput | InterviewScalarWhereInput[]
+    OR?: InterviewScalarWhereInput[]
+    NOT?: InterviewScalarWhereInput | InterviewScalarWhereInput[]
+    id?: IntFilter<"Interview"> | number
+    applicationId?: IntFilter<"Interview"> | number
+    scheduledAt?: DateTimeFilter<"Interview"> | Date | string
+    duration?: IntFilter<"Interview"> | number
+    location?: StringNullableFilter<"Interview"> | string | null
+    type?: StringFilter<"Interview"> | string
+    notes?: StringNullableFilter<"Interview"> | string | null
+    interviewers?: StringNullableFilter<"Interview"> | string | null
+    status?: StringFilter<"Interview"> | string
+    createdAt?: DateTimeFilter<"Interview"> | Date | string
+    updatedAt?: DateTimeFilter<"Interview"> | Date | string
+  }
+
+  export type EmailLogUpsertWithWhereUniqueWithoutApplicationInput = {
+    where: EmailLogWhereUniqueInput
+    update: XOR<EmailLogUpdateWithoutApplicationInput, EmailLogUncheckedUpdateWithoutApplicationInput>
+    create: XOR<EmailLogCreateWithoutApplicationInput, EmailLogUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type EmailLogUpdateWithWhereUniqueWithoutApplicationInput = {
+    where: EmailLogWhereUniqueInput
+    data: XOR<EmailLogUpdateWithoutApplicationInput, EmailLogUncheckedUpdateWithoutApplicationInput>
+  }
+
+  export type EmailLogUpdateManyWithWhereWithoutApplicationInput = {
+    where: EmailLogScalarWhereInput
+    data: XOR<EmailLogUpdateManyMutationInput, EmailLogUncheckedUpdateManyWithoutApplicationInput>
+  }
+
+  export type EmailLogScalarWhereInput = {
+    AND?: EmailLogScalarWhereInput | EmailLogScalarWhereInput[]
+    OR?: EmailLogScalarWhereInput[]
+    NOT?: EmailLogScalarWhereInput | EmailLogScalarWhereInput[]
+    id?: IntFilter<"EmailLog"> | number
+    to?: StringFilter<"EmailLog"> | string
+    subject?: StringFilter<"EmailLog"> | string
+    message?: StringFilter<"EmailLog"> | string
+    applicationId?: IntNullableFilter<"EmailLog"> | number | null
+    employerId?: IntNullableFilter<"EmailLog"> | number | null
+    applicantId?: IntNullableFilter<"EmailLog"> | number | null
+    status?: StringFilter<"EmailLog"> | string
+    sentAt?: DateTimeNullableFilter<"EmailLog"> | Date | string | null
+    error?: StringNullableFilter<"EmailLog"> | string | null
+    createdAt?: DateTimeFilter<"EmailLog"> | Date | string
+  }
+
   export type ApplicantCreateWithoutNotificationsInput = {
     fullName: string
     nida: string
@@ -27865,6 +32489,7 @@ export namespace Prisma {
     experiences?: WorkExperienceCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
   }
 
@@ -27879,6 +32504,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUncheckedCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyUncheckedCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillUncheckedCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
   }
 
@@ -27914,6 +32540,8 @@ export namespace Prisma {
     createdAt?: Date | string
     job: JobCreateNestedOneWithoutApplicationsInput
     applicant: ApplicantCreateNestedOneWithoutApplicationsInput
+    interviews?: InterviewCreateNestedManyWithoutApplicationInput
+    emailLogs?: EmailLogCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutNotificationsInput = {
@@ -27922,6 +32550,8 @@ export namespace Prisma {
     jobId: number
     applicantId: number
     createdAt?: Date | string
+    interviews?: InterviewUncheckedCreateNestedManyWithoutApplicationInput
+    emailLogs?: EmailLogUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutNotificationsInput = {
@@ -27950,6 +32580,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
   }
 
@@ -27964,6 +32595,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUncheckedUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUncheckedUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUncheckedUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
   }
 
@@ -28011,6 +32643,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     job?: JobUpdateOneRequiredWithoutApplicationsNestedInput
     applicant?: ApplicantUpdateOneRequiredWithoutApplicationsNestedInput
+    interviews?: InterviewUpdateManyWithoutApplicationNestedInput
+    emailLogs?: EmailLogUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutNotificationsInput = {
@@ -28019,6 +32653,8 @@ export namespace Prisma {
     jobId?: IntFieldUpdateOperationsInput | number
     applicantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    interviews?: InterviewUncheckedUpdateManyWithoutApplicationNestedInput
+    emailLogs?: EmailLogUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicantCreateWithoutQualificationsInput = {
@@ -28030,6 +32666,7 @@ export namespace Prisma {
     experiences?: WorkExperienceCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
   }
@@ -28044,6 +32681,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUncheckedCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyUncheckedCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillUncheckedCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
   }
@@ -28073,6 +32711,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
   }
@@ -28087,6 +32726,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUncheckedUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUncheckedUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUncheckedUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
   }
@@ -28100,6 +32740,7 @@ export namespace Prisma {
     qualifications?: AcademicQualificationCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
   }
@@ -28114,6 +32755,7 @@ export namespace Prisma {
     qualifications?: AcademicQualificationUncheckedCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyUncheckedCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillUncheckedCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
   }
@@ -28143,6 +32785,7 @@ export namespace Prisma {
     qualifications?: AcademicQualificationUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
   }
@@ -28157,6 +32800,7 @@ export namespace Prisma {
     qualifications?: AcademicQualificationUncheckedUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUncheckedUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUncheckedUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
   }
@@ -28170,6 +32814,7 @@ export namespace Prisma {
     qualifications?: AcademicQualificationCreateNestedManyWithoutApplicantInput
     experiences?: WorkExperienceCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
   }
@@ -28184,6 +32829,7 @@ export namespace Prisma {
     qualifications?: AcademicQualificationUncheckedCreateNestedManyWithoutApplicantInput
     experiences?: WorkExperienceUncheckedCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillUncheckedCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
   }
@@ -28213,6 +32859,7 @@ export namespace Prisma {
     qualifications?: AcademicQualificationUpdateManyWithoutApplicantNestedInput
     experiences?: WorkExperienceUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
   }
@@ -28227,6 +32874,7 @@ export namespace Prisma {
     qualifications?: AcademicQualificationUncheckedUpdateManyWithoutApplicantNestedInput
     experiences?: WorkExperienceUncheckedUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUncheckedUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
   }
@@ -28240,6 +32888,7 @@ export namespace Prisma {
     qualifications?: AcademicQualificationCreateNestedManyWithoutApplicantInput
     experiences?: WorkExperienceCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
   }
@@ -28254,6 +32903,7 @@ export namespace Prisma {
     qualifications?: AcademicQualificationUncheckedCreateNestedManyWithoutApplicantInput
     experiences?: WorkExperienceUncheckedCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyUncheckedCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
   }
@@ -28283,6 +32933,7 @@ export namespace Prisma {
     qualifications?: AcademicQualificationUpdateManyWithoutApplicantNestedInput
     experiences?: WorkExperienceUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
   }
@@ -28297,6 +32948,81 @@ export namespace Prisma {
     qualifications?: AcademicQualificationUncheckedUpdateManyWithoutApplicantNestedInput
     experiences?: WorkExperienceUncheckedUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUncheckedUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUncheckedUpdateManyWithoutApplicantNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
+    categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
+  }
+
+  export type ApplicantCreateWithoutGeneralSkillsInput = {
+    fullName: string
+    nida: string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutApplicantInput
+    applications?: ApplicationCreateNestedManyWithoutApplicantInput
+    qualifications?: AcademicQualificationCreateNestedManyWithoutApplicantInput
+    experiences?: WorkExperienceCreateNestedManyWithoutApplicantInput
+    languages?: LanguageProficiencyCreateNestedManyWithoutApplicantInput
+    skills?: ComputerSkillCreateNestedManyWithoutApplicantInput
+    notifications?: NotificationCreateNestedManyWithoutApplicantInput
+    categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
+  }
+
+  export type ApplicantUncheckedCreateWithoutGeneralSkillsInput = {
+    id?: number
+    fullName: string
+    nida: string
+    userId: number
+    createdAt?: Date | string
+    applications?: ApplicationUncheckedCreateNestedManyWithoutApplicantInput
+    qualifications?: AcademicQualificationUncheckedCreateNestedManyWithoutApplicantInput
+    experiences?: WorkExperienceUncheckedCreateNestedManyWithoutApplicantInput
+    languages?: LanguageProficiencyUncheckedCreateNestedManyWithoutApplicantInput
+    skills?: ComputerSkillUncheckedCreateNestedManyWithoutApplicantInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
+    categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
+  }
+
+  export type ApplicantCreateOrConnectWithoutGeneralSkillsInput = {
+    where: ApplicantWhereUniqueInput
+    create: XOR<ApplicantCreateWithoutGeneralSkillsInput, ApplicantUncheckedCreateWithoutGeneralSkillsInput>
+  }
+
+  export type ApplicantUpsertWithoutGeneralSkillsInput = {
+    update: XOR<ApplicantUpdateWithoutGeneralSkillsInput, ApplicantUncheckedUpdateWithoutGeneralSkillsInput>
+    create: XOR<ApplicantCreateWithoutGeneralSkillsInput, ApplicantUncheckedCreateWithoutGeneralSkillsInput>
+    where?: ApplicantWhereInput
+  }
+
+  export type ApplicantUpdateToOneWithWhereWithoutGeneralSkillsInput = {
+    where?: ApplicantWhereInput
+    data: XOR<ApplicantUpdateWithoutGeneralSkillsInput, ApplicantUncheckedUpdateWithoutGeneralSkillsInput>
+  }
+
+  export type ApplicantUpdateWithoutGeneralSkillsInput = {
+    fullName?: StringFieldUpdateOperationsInput | string
+    nida?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutApplicantNestedInput
+    applications?: ApplicationUpdateManyWithoutApplicantNestedInput
+    qualifications?: AcademicQualificationUpdateManyWithoutApplicantNestedInput
+    experiences?: WorkExperienceUpdateManyWithoutApplicantNestedInput
+    languages?: LanguageProficiencyUpdateManyWithoutApplicantNestedInput
+    skills?: ComputerSkillUpdateManyWithoutApplicantNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicantNestedInput
+    categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
+  }
+
+  export type ApplicantUncheckedUpdateWithoutGeneralSkillsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    nida?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applications?: ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
+    qualifications?: AcademicQualificationUncheckedUpdateManyWithoutApplicantNestedInput
+    experiences?: WorkExperienceUncheckedUpdateManyWithoutApplicantNestedInput
+    languages?: LanguageProficiencyUncheckedUpdateManyWithoutApplicantNestedInput
+    skills?: ComputerSkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
   }
@@ -28645,6 +33371,7 @@ export namespace Prisma {
     experiences?: WorkExperienceCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
   }
@@ -28659,6 +33386,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUncheckedCreateNestedManyWithoutApplicantInput
     languages?: LanguageProficiencyUncheckedCreateNestedManyWithoutApplicantInput
     skills?: ComputerSkillUncheckedCreateNestedManyWithoutApplicantInput
+    generalSkills?: SkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
   }
@@ -28851,6 +33579,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
   }
@@ -28865,6 +33594,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUncheckedUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUncheckedUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUncheckedUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
   }
@@ -29164,6 +33894,114 @@ export namespace Prisma {
     consents?: UserConsentUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type ApplicationCreateWithoutInterviewsInput = {
+    status?: string
+    createdAt?: Date | string
+    job: JobCreateNestedOneWithoutApplicationsInput
+    applicant: ApplicantCreateNestedOneWithoutApplicationsInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    emailLogs?: EmailLogCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutInterviewsInput = {
+    id?: number
+    status?: string
+    jobId: number
+    applicantId: number
+    createdAt?: Date | string
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    emailLogs?: EmailLogUncheckedCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationCreateOrConnectWithoutInterviewsInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutInterviewsInput, ApplicationUncheckedCreateWithoutInterviewsInput>
+  }
+
+  export type ApplicationUpsertWithoutInterviewsInput = {
+    update: XOR<ApplicationUpdateWithoutInterviewsInput, ApplicationUncheckedUpdateWithoutInterviewsInput>
+    create: XOR<ApplicationCreateWithoutInterviewsInput, ApplicationUncheckedCreateWithoutInterviewsInput>
+    where?: ApplicationWhereInput
+  }
+
+  export type ApplicationUpdateToOneWithWhereWithoutInterviewsInput = {
+    where?: ApplicationWhereInput
+    data: XOR<ApplicationUpdateWithoutInterviewsInput, ApplicationUncheckedUpdateWithoutInterviewsInput>
+  }
+
+  export type ApplicationUpdateWithoutInterviewsInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    job?: JobUpdateOneRequiredWithoutApplicationsNestedInput
+    applicant?: ApplicantUpdateOneRequiredWithoutApplicationsNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    emailLogs?: EmailLogUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateWithoutInterviewsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    jobId?: IntFieldUpdateOperationsInput | number
+    applicantId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    emailLogs?: EmailLogUncheckedUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationCreateWithoutEmailLogsInput = {
+    status?: string
+    createdAt?: Date | string
+    job: JobCreateNestedOneWithoutApplicationsInput
+    applicant: ApplicantCreateNestedOneWithoutApplicationsInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    interviews?: InterviewCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutEmailLogsInput = {
+    id?: number
+    status?: string
+    jobId: number
+    applicantId: number
+    createdAt?: Date | string
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    interviews?: InterviewUncheckedCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationCreateOrConnectWithoutEmailLogsInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutEmailLogsInput, ApplicationUncheckedCreateWithoutEmailLogsInput>
+  }
+
+  export type ApplicationUpsertWithoutEmailLogsInput = {
+    update: XOR<ApplicationUpdateWithoutEmailLogsInput, ApplicationUncheckedUpdateWithoutEmailLogsInput>
+    create: XOR<ApplicationCreateWithoutEmailLogsInput, ApplicationUncheckedCreateWithoutEmailLogsInput>
+    where?: ApplicationWhereInput
+  }
+
+  export type ApplicationUpdateToOneWithWhereWithoutEmailLogsInput = {
+    where?: ApplicationWhereInput
+    data: XOR<ApplicationUpdateWithoutEmailLogsInput, ApplicationUncheckedUpdateWithoutEmailLogsInput>
+  }
+
+  export type ApplicationUpdateWithoutEmailLogsInput = {
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    job?: JobUpdateOneRequiredWithoutApplicationsNestedInput
+    applicant?: ApplicantUpdateOneRequiredWithoutApplicationsNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    interviews?: InterviewUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateWithoutEmailLogsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    jobId?: IntFieldUpdateOperationsInput | number
+    applicantId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    interviews?: InterviewUncheckedUpdateManyWithoutApplicationNestedInput
+  }
+
   export type ApplicantUpdateWithoutCategoriesInput = {
     fullName?: StringFieldUpdateOperationsInput | string
     nida?: StringFieldUpdateOperationsInput | string
@@ -29174,6 +34012,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
   }
 
@@ -29188,6 +34027,7 @@ export namespace Prisma {
     experiences?: WorkExperienceUncheckedUpdateManyWithoutApplicantNestedInput
     languages?: LanguageProficiencyUncheckedUpdateManyWithoutApplicantNestedInput
     skills?: ComputerSkillUncheckedUpdateManyWithoutApplicantNestedInput
+    generalSkills?: SkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
   }
 
@@ -29281,6 +34121,15 @@ export namespace Prisma {
     proficiency: string
   }
 
+  export type SkillCreateManyApplicantInput = {
+    id?: number
+    name: string
+    proficiency: string
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type NotificationCreateManyApplicantInput = {
     id?: number
     type: $Enums.NotificationType
@@ -29299,6 +34148,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     job?: JobUpdateOneRequiredWithoutApplicationsNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    interviews?: InterviewUpdateManyWithoutApplicationNestedInput
+    emailLogs?: EmailLogUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutApplicantInput = {
@@ -29307,6 +34158,8 @@ export namespace Prisma {
     jobId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    interviews?: InterviewUncheckedUpdateManyWithoutApplicationNestedInput
+    emailLogs?: EmailLogUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateManyWithoutApplicantInput = {
@@ -29424,6 +34277,32 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     skill?: StringFieldUpdateOperationsInput | string
     proficiency?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type SkillUpdateWithoutApplicantInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    proficiency?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SkillUncheckedUpdateWithoutApplicantInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    proficiency?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SkillUncheckedUpdateManyWithoutApplicantInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    proficiency?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NotificationUpdateWithoutApplicantInput = {
@@ -29593,6 +34472,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     applicant?: ApplicantUpdateOneRequiredWithoutApplicationsNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    interviews?: InterviewUpdateManyWithoutApplicationNestedInput
+    emailLogs?: EmailLogUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutJobInput = {
@@ -29601,6 +34482,8 @@ export namespace Prisma {
     applicantId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    interviews?: InterviewUncheckedUpdateManyWithoutApplicationNestedInput
+    emailLogs?: EmailLogUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateManyWithoutJobInput = {
@@ -29642,6 +34525,32 @@ export namespace Prisma {
     employerId?: number | null
   }
 
+  export type InterviewCreateManyApplicationInput = {
+    id?: number
+    scheduledAt: Date | string
+    duration?: number
+    location?: string | null
+    type?: string
+    notes?: string | null
+    interviewers?: string | null
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EmailLogCreateManyApplicationInput = {
+    id?: number
+    to: string
+    subject: string
+    message: string
+    employerId?: number | null
+    applicantId?: number | null
+    status?: string
+    sentAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+  }
+
   export type NotificationUpdateWithoutApplicationInput = {
     type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     title?: StringFieldUpdateOperationsInput | string
@@ -29678,6 +34587,82 @@ export namespace Prisma {
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     applicantId?: NullableIntFieldUpdateOperationsInput | number | null
     employerId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type InterviewUpdateWithoutApplicationInput = {
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewers?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InterviewUncheckedUpdateWithoutApplicationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewers?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InterviewUncheckedUpdateManyWithoutApplicationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    duration?: IntFieldUpdateOperationsInput | number
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewers?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailLogUpdateWithoutApplicationInput = {
+    to?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    employerId?: NullableIntFieldUpdateOperationsInput | number | null
+    applicantId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailLogUncheckedUpdateWithoutApplicationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    to?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    employerId?: NullableIntFieldUpdateOperationsInput | number | null
+    applicantId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailLogUncheckedUpdateManyWithoutApplicationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    to?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    employerId?: NullableIntFieldUpdateOperationsInput | number | null
+    applicantId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ChatMessageCreateManyRoomInput = {

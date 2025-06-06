@@ -16,6 +16,8 @@ enum Role {
 enum NotificationType {
   STATUS_CHANGE
   NEW_APPLICATION
+  INTERVIEW_SCHEDULED
+  MESSAGE
   GENERAL
 }
 
@@ -40,6 +42,7 @@ model Applicant {
   experiences    WorkExperience[]
   languages      LanguageProficiency[]
   skills         ComputerSkill[]
+  generalSkills  Skill[] // New flexible skills
   notifications  Notification[]
 
   categories JobCategory[] @relation("ApplicantCategories")
@@ -83,6 +86,8 @@ model Application {
   createdAt   DateTime  @default(now())
 
   notifications Notification[]
+  interviews    Interview[]
+  emailLogs     EmailLog[]
 }
 
 model Notification {
@@ -150,6 +155,18 @@ model ComputerSkill {
   applicant   Applicant @relation(fields: [applicantId], references: [id])
 }
 
+// New flexible skills system
+model Skill {
+  id          Int       @id @default(autoincrement())
+  name        String
+  proficiency String // Beginner, Intermediate, Advanced, Expert
+  category    String? // Technical, Soft Skills, Language, etc.
+  applicantId Int
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
 // Chat Support System Models
 model ChatRoom {
   id        Int       @id @default(autoincrement())
@@ -215,4 +232,71 @@ model User {
   chatRooms    ChatRoom[]
   agentChats   ChatRoom[]    @relation("ChatAgent")
   chatMessages ChatMessage[]
+  consents     UserConsent[]
+  auditLogs    AuditLog[]
+}
+
+// Privacy and Ethics Models
+model UserConsent {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  consentType String // 'profile_data', 'job_matching', 'analytics', etc.
+  granted     Boolean
+  grantedAt   DateTime?
+  revokedAt   DateTime?
+  purpose     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([userId, consentType], name: "userId_consentType")
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String // 'CONSENT_CHANGE', 'DATA_DELETION', 'DATA_EXPORT', etc.
+  details   String? // JSON string with additional details
+  timestamp DateTime @default(now())
+}
+
+model AnonymizedData {
+  id             Int      @id @default(autoincrement())
+  anonymousId    String   @unique
+  originalUserId Int?
+  anonymizedData String // JSON string with anonymized user data
+  createdAt      DateTime @default(now())
+}
+
+// Interview Management Models
+model Interview {
+  id            Int         @id @default(autoincrement())
+  applicationId Int
+  application   Application @relation(fields: [applicationId], references: [id])
+  scheduledAt   DateTime
+  duration      Int         @default(60) // minutes
+  location      String?
+  type          String      @default("in-person") // in-person, video-call, phone, online
+  notes         String?
+  interviewers  String?
+  status        String      @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED, RESCHEDULED
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+// Email Communication Models
+model EmailLog {
+  id            Int          @id @default(autoincrement())
+  to            String
+  subject       String
+  message       String
+  applicationId Int?
+  application   Application? @relation(fields: [applicationId], references: [id])
+  employerId    Int?
+  applicantId   Int?
+  status        String       @default("PENDING") // PENDING, SENT, FAILED
+  sentAt        DateTime?
+  error         String?
+  createdAt     DateTime     @default(now())
 }

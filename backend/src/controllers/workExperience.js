@@ -1,4 +1,5 @@
 const prisma = require('../prisma');
+const { validateHistoricalDateRange } = require('../utils/dateValidation');
 
 exports.createWorkExperience = async (req, res) => {
   try {
@@ -14,6 +15,17 @@ exports.createWorkExperience = async (req, res) => {
       supervisorTel,
       supervisorAddress
     } = req.body;
+
+    // Validate required fields
+    if (!applicantId || !institution || !jobTitle || !startDate) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Use the utility function for date validation
+    const dateValidation = validateHistoricalDateRange(startDate, endDate);
+    if (!dateValidation.isValid) {
+      return res.status(400).json({ error: dateValidation.error });
+    }
 
     const experience = await prisma.workExperience.create({
       data: {
@@ -50,11 +62,22 @@ exports.getWorkExperience = async (req, res) => {
 exports.updateWorkExperience = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
+    const { startDate, endDate } = req.body;
+
+    // Validate dates if provided
+    if (startDate || endDate) {
+      const dateValidation = validateHistoricalDateRange(startDate, endDate);
+      if (!dateValidation.isValid) {
+        return res.status(400).json({ error: dateValidation.error });
+      }
+    }
+
     const data = {
       ...req.body,
-      startDate: req.body.startDate ? new Date(req.body.startDate) : undefined,
-      endDate: req.body.endDate ? new Date(req.body.endDate) : undefined,
+      startDate: startDate ? new Date(startDate) : undefined,
+      endDate: endDate ? new Date(endDate) : undefined,
     };
+
     const updated = await prisma.workExperience.update({
       where: { id },
       data

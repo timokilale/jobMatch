@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchEmployerApplications } from '../../redux/slices/applications';
 import CVPreview from '../SidebarItems/CVPreview';
+import InterviewScheduler from '../InterviewScheduler';
+import EmailComposer from '../EmailComposer';
+import CandidateActions from '../CandidateActions';
 
 
 const Candidates = () => {
@@ -13,6 +16,8 @@ const Candidates = () => {
   } = useSelector((state) => state.applications) || {};
 
   const [viewingApplication, setViewingApplication] = useState(null);
+  const [schedulingInterview, setSchedulingInterview] = useState(null);
+  const [composingEmail, setComposingEmail] = useState(null);
 
   const { user } = useSelector((state) => state.auth);
   const [searchTerm, setSearchTerm] = useState('');
@@ -232,37 +237,63 @@ const Candidates = () => {
                   
                   {/* Actions */}
                   <div className="flex gap-2">
-                    <button 
-                      className="p-2 hover:bg-green-100 rounded-full transition-colors"
+                    <button
+                      onClick={() => setComposingEmail(application)}
+                      className="p-2 hover:bg-blue-100 rounded-full transition-colors"
                       title="Send Email"
                     >
-                      <i className="fas fa-envelope text-green-600"></i>
+                      <i className="fas fa-envelope text-blue-600"></i>
                     </button>
-                    <button 
+                    <button
                       onClick={() => setViewingApplication(application)}
                       className="p-2 hover:bg-green-100 rounded-full transition-colors"
                       title="View CV"
                     >
                       <i className="fas fa-file-alt text-green-600"></i>
                     </button>
-                    <button 
-                      className="p-2 hover:bg-green-100 rounded-full transition-colors"
+                    <button
+                      onClick={() => setSchedulingInterview(application)}
+                      className="p-2 hover:bg-purple-100 rounded-full transition-colors"
                       title="Schedule Interview"
                     >
-                      <i className="fas fa-calendar text-green-600"></i>
+                      <i className="fas fa-calendar text-purple-600"></i>
                     </button>
-                    <button 
-                      className="p-2 hover:bg-green-100 rounded-full transition-colors"
-                      title="More Options"
-                    >
-                      <i className="fas fa-ellipsis-h text-green-600"></i>
-                    </button>
+                    <CandidateActions
+                      application={application}
+                      onActionComplete={() => {
+                        // Refresh applications list
+                        dispatch(fetchEmployerApplications(user.id));
+                      }}
+                    />
                   </div>
                 </div>
               ))}
           </div>
         </>
       )}
+
+      {/* Interview Scheduler Modal */}
+      <InterviewScheduler
+        application={schedulingInterview}
+        isOpen={!!schedulingInterview}
+        onClose={() => setSchedulingInterview(null)}
+        onScheduled={(interviewData) => {
+          console.log('Interview scheduled:', interviewData);
+          // Refresh applications list
+          dispatch(fetchEmployerApplications(user.id));
+        }}
+      />
+
+      {/* Email Composer Modal */}
+      <EmailComposer
+        application={composingEmail}
+        isOpen={!!composingEmail}
+        onClose={() => setComposingEmail(null)}
+        onSent={() => {
+          console.log('Email sent successfully');
+          // Optionally refresh applications or show success message
+        }}
+      />
     </div>
   );
 };

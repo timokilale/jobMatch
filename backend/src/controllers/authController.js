@@ -1,6 +1,9 @@
 const prisma = require('../prisma');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const PrivacyManager = require('../services/privacyManager');
+
+const privacyManager = new PrivacyManager();
 
 
 const registerApplicant = async (req, res) => {
@@ -26,6 +29,16 @@ const registerApplicant = async (req, res) => {
       },
       include: { applicant: true }
     });
+
+    // Grant default consents for new users
+    try {
+      await privacyManager.recordConsent(user.id, 'analytics', true, 'Default consent granted during registration for analytics features');
+      await privacyManager.recordConsent(user.id, 'job_matching', true, 'Default consent granted during registration for job matching features');
+      await privacyManager.recordConsent(user.id, 'profile_data', true, 'Default consent granted during registration for profile data processing');
+    } catch (consentError) {
+      console.error('Error granting default consents:', consentError);
+      // Don't fail registration if consent fails, but log it
+    }
 
     // Generate JWT
     const token = jwt.sign(
@@ -81,6 +94,16 @@ const registerEmployer = async (req, res) => {
       },
       include: { employer: true }
     });
+
+    // Grant default consents for new employers
+    try {
+      await privacyManager.recordConsent(user.id, 'analytics', true, 'Default consent granted during registration for analytics features');
+      await privacyManager.recordConsent(user.id, 'job_matching', true, 'Default consent granted during registration for job matching features');
+      await privacyManager.recordConsent(user.id, 'profile_data', true, 'Default consent granted during registration for profile data processing');
+    } catch (consentError) {
+      console.error('Error granting default consents:', consentError);
+      // Don't fail registration if consent fails, but log it
+    }
 
     const token = jwt.sign(
       { userId: user.id, role: user.role },

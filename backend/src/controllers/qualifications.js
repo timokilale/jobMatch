@@ -1,6 +1,7 @@
 // controllers/qualifications.js
 const path = require('path');
 const prisma = require('../prisma');
+const { validateHistoricalDateRange } = require('../utils/dateValidation');
 
 const createAcademicQualification = async (req, res) => {
   try {
@@ -59,14 +60,16 @@ const getAcademicQualifications = async (req, res) => {
 };
 
 const validateQualification = (req, res, next) => {
-  const { educationLevel, startDate } = req.body;
+  const { educationLevel, startDate, endDate } = req.body;
 
   if (!educationLevel || !startDate) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
-  if (isNaN(new Date(startDate))) {
-    return res.status(400).json({ error: "Invalid start date format" });
+  // Use the utility function for date validation
+  const dateValidation = validateHistoricalDateRange(startDate, endDate);
+  if (!dateValidation.isValid) {
+    return res.status(400).json({ error: dateValidation.error });
   }
 
   next();

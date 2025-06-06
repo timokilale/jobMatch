@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { 
-  addQualification, 
-  fetchQualifications, 
-  updateQualification, 
+import {
+  addQualification,
+  fetchQualifications,
+  updateQualification,
   deleteQualification,
-  clearErrors 
+  clearErrors
 } from '../redux/slices/qualificationSlice';
+import { validateHistoricalDateRange } from '../utils/dateValidation';
 
 const AcademicQualificationsLogic = (setShowForm) => {
   const dispatch = useDispatch();
@@ -96,9 +97,10 @@ const AcademicQualificationsLogic = (setShowForm) => {
       return false;
     }
     
-    // Ensure dates are valid
-    if (formData.endDate && new Date(formData.startDate) > new Date(formData.endDate)) {
-      alert("End date must be after start date");
+    // Validate dates using utility function
+    const dateValidation = validateHistoricalDateRange(formData.startDate, formData.endDate);
+    if (!dateValidation.isValid) {
+      alert(dateValidation.error);
       return false;
     }
     

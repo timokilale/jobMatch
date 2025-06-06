@@ -32,7 +32,7 @@ const LanguageProficiency = () => {
 
   
   return (
-    <div className="p-6 flex flex-col">
+    <div className="p-6 flex flex-col min-h-screen overflow-y-auto">
         <h1 className="text-2xl font-bold text-green-800 mb-6">Language Proficiency</h1>
 
         {showForm ? (

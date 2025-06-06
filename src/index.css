@@ -10,6 +10,29 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Ensure body can always scroll */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Ensure all main containers can scroll */
+html, body, #root {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Global scrollable container class */
+.scrollable-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100vh;
+}
+
+/* Ensure page content can scroll when it exceeds viewport */
+.page-container {
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 code {
@@ -136,5 +159,59 @@ code {
     .chat-widget-mobile .chat-window {
       @apply w-80 h-96;
     }
+  }
+
+  /* Ensure all content areas can scroll */
+  .content-area {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 100vh;
+  }
+
+  /* Fix for forms and long content */
+  .form-container {
+    max-height: none;
+    overflow-y: auto;
+  }
+
+  /* Ensure tables can scroll horizontally on mobile */
+  .table-container {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+
+  /* Prevent fixed heights from blocking scrolling */
+  .min-h-screen {
+    min-height: 100vh !important;
+    height: auto !important;
+  }
+
+  /* Ensure sidebar content can scroll */
+  .sidebar-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 4rem);
+  }
+
+  /* Global fix for any remaining overflow issues */
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Ensure no element blocks scrolling */
+  .overflow-hidden {
+    overflow-y: auto !important;
+  }
+
+  /* Fix for any remaining fixed height containers */
+  .h-screen {
+    min-height: 100vh !important;
+    height: auto !important;
+  }
+
+  /* Ensure modals and overlays can scroll */
+  .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
   }
 }

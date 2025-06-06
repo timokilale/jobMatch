@@ -218,6 +218,16 @@ exports.Prisma.ComputerSkillScalarFieldEnum = {
   applicantId: 'applicantId'
 };
 
+exports.Prisma.SkillScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  proficiency: 'proficiency',
+  category: 'category',
+  applicantId: 'applicantId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.ChatRoomScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -298,6 +308,34 @@ exports.Prisma.AnonymizedDataScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.InterviewScalarFieldEnum = {
+  id: 'id',
+  applicationId: 'applicationId',
+  scheduledAt: 'scheduledAt',
+  duration: 'duration',
+  location: 'location',
+  type: 'type',
+  notes: 'notes',
+  interviewers: 'interviewers',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EmailLogScalarFieldEnum = {
+  id: 'id',
+  to: 'to',
+  subject: 'subject',
+  message: 'message',
+  applicationId: 'applicationId',
+  employerId: 'employerId',
+  applicantId: 'applicantId',
+  status: 'status',
+  sentAt: 'sentAt',
+  error: 'error',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -369,6 +407,12 @@ exports.Prisma.ComputerSkillOrderByRelevanceFieldEnum = {
   proficiency: 'proficiency'
 };
 
+exports.Prisma.SkillOrderByRelevanceFieldEnum = {
+  name: 'name',
+  proficiency: 'proficiency',
+  category: 'category'
+};
+
 exports.Prisma.ChatRoomOrderByRelevanceFieldEnum = {
   topic: 'topic',
   status: 'status'
@@ -411,9 +455,27 @@ exports.Prisma.AnonymizedDataOrderByRelevanceFieldEnum = {
   anonymousId: 'anonymousId',
   anonymizedData: 'anonymizedData'
 };
+
+exports.Prisma.InterviewOrderByRelevanceFieldEnum = {
+  location: 'location',
+  type: 'type',
+  notes: 'notes',
+  interviewers: 'interviewers',
+  status: 'status'
+};
+
+exports.Prisma.EmailLogOrderByRelevanceFieldEnum = {
+  to: 'to',
+  subject: 'subject',
+  message: 'message',
+  status: 'status',
+  error: 'error'
+};
 exports.NotificationType = exports.$Enums.NotificationType = {
   STATUS_CHANGE: 'STATUS_CHANGE',
   NEW_APPLICATION: 'NEW_APPLICATION',
+  INTERVIEW_SCHEDULED: 'INTERVIEW_SCHEDULED',
+  MESSAGE: 'MESSAGE',
   GENERAL: 'GENERAL'
 };
 
@@ -433,6 +495,7 @@ exports.Prisma.ModelName = {
   WorkExperience: 'WorkExperience',
   LanguageProficiency: 'LanguageProficiency',
   ComputerSkill: 'ComputerSkill',
+  Skill: 'Skill',
   ChatRoom: 'ChatRoom',
   ChatMessage: 'ChatMessage',
   MarketTrend: 'MarketTrend',
@@ -440,7 +503,9 @@ exports.Prisma.ModelName = {
   User: 'User',
   UserConsent: 'UserConsent',
   AuditLog: 'AuditLog',
-  AnonymizedData: 'AnonymizedData'
+  AnonymizedData: 'AnonymizedData',
+  Interview: 'Interview',
+  EmailLog: 'EmailLog'
 };
 
 /**

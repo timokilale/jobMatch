@@ -123,7 +123,7 @@ const AppliedJobs = () => {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-6 py-4 mb-36">
+    <div className="w-full max-w-6xl mx-auto px-6 py-4 mb-36 min-h-screen overflow-y-auto">
       {/* Filter Tabs */}
       <div className="mb-18">
         <div className="flex flex-wrap gap-2 border-b border-gray-200">

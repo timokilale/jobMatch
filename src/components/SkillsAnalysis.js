@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/api';
+import { withAnalyticsConsent } from './withConsent';
 
 const SkillsAnalysis = ({ applicantId }) => {
   const [analysis, setAnalysis] = useState(null);
@@ -18,7 +19,7 @@ const SkillsAnalysis = ({ applicantId }) => {
       setLoading(true);
       setError(null);
       
-      const response = await api.get(`/skills/gaps/${applicantId}`);
+      const response = await api.get(`/skills-analysis/gaps/${applicantId}`);
       setAnalysis(response.data);
     } catch (error) {
       console.error('Error fetching skills analysis:', error);
@@ -396,4 +397,81 @@ const SkillsAnalysis = ({ applicantId }) => {
   );
 };
 
-export default SkillsAnalysis;
+// Create a fallback component for when consent is not granted
+const SkillsAnalysisFallback = ({ onRequestConsent }) => (
+  <div className="space-y-6">
+    <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">
+            <i className="fas fa-brain mr-3 text-green-600"></i>
+            Skills Analysis
+          </h1>
+          <p className="text-gray-600">
+            Comprehensive analysis of your skills and market alignment
+          </p>
+        </div>
+        <div className="text-center opacity-50">
+          <div className="text-3xl font-bold text-gray-400 mb-1">--</div>
+          <p className="text-sm text-gray-500">Market Alignment</p>
+        </div>
+      </div>
+    </div>
+
+    <div className="bg-blue-50 border border-blue-200 rounded-lg p-8 text-center">
+      <i className="fas fa-shield-alt text-4xl text-blue-600 mb-4"></i>
+      <h2 className="text-xl font-semibold text-blue-800 mb-2">Analytics Consent Required</h2>
+      <p className="text-blue-700 mb-6 max-w-md mx-auto">
+        To analyze your skills and provide personalized recommendations, we need your consent to process your profile data.
+      </p>
+      <div className="space-y-3">
+        <button
+          onClick={onRequestConsent}
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+        >
+          <i className="fas fa-check mr-2"></i>
+          Grant Analytics Permission
+        </button>
+        <div className="text-sm text-blue-600">
+          <p>✓ Personalized skill gap analysis</p>
+          <p>✓ Training recommendations</p>
+          <p>✓ Career path suggestions</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Sample/Demo content */}
+    <div className="bg-white rounded-lg shadow-sm opacity-50">
+      <div className="border-b border-gray-200">
+        <nav className="flex space-x-8 px-6">
+          {[
+            { label: 'Skill Gaps', icon: 'fas fa-exclamation-triangle' },
+            { label: 'Training', icon: 'fas fa-graduation-cap' },
+            { label: 'Career Paths', icon: 'fas fa-route' },
+            { label: 'Current Skills', icon: 'fas fa-check-circle' }
+          ].map((tab, index) => (
+            <div
+              key={index}
+              className="py-4 px-1 border-b-2 border-transparent text-gray-400 font-medium text-sm"
+            >
+              <i className={`${tab.icon} mr-2`}></i>
+              {tab.label}
+            </div>
+          ))}
+        </nav>
+      </div>
+      <div className="p-6">
+        <div className="text-center py-8">
+          <i className="fas fa-lock text-4xl text-gray-300 mb-4"></i>
+          <p className="text-gray-500">Grant consent to see your personalized skills analysis</p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Export the wrapped component with analytics consent
+export default withAnalyticsConsent(SkillsAnalysis, {
+  fallbackComponent: SkillsAnalysisFallback,
+  showPromptOnDenied: true
+});

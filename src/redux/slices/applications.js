@@ -89,6 +89,19 @@ export const fetchApplicantNotifications = createAsyncThunk(
   }
 );
 
+// Fetch notifications for employer
+export const fetchEmployerNotifications = createAsyncThunk(
+  'applications/fetchEmployerNotifications',
+  async (employerId, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/notifications/employer/${employerId}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Failed to fetch employer notifications');
+    }
+  }
+);
+
 // New thunk to mark notification as read
 export const markNotificationAsReadAsync = createAsyncThunk(
   'applications/markNotificationAsRead',
@@ -278,6 +291,20 @@ const applicationsSlice = createSlice({
       .addCase(fetchApplicantNotifications.rejected, (state, action) => {
         state.loadingNotifications = false;
         state.error = action.payload?.error || 'Failed to fetch notifications';
+      })
+
+      // Fetch employer notifications
+      .addCase(fetchEmployerNotifications.pending, (state) => {
+        state.loadingNotifications = true;
+      })
+      .addCase(fetchEmployerNotifications.fulfilled, (state, action) => {
+        state.loadingNotifications = false;
+        state.notifications = action.payload || [];
+        state.unreadNotificationCount = state.notifications.filter(n => !n.isRead).length;
+      })
+      .addCase(fetchEmployerNotifications.rejected, (state, action) => {
+        state.loadingNotifications = false;
+        state.error = action.payload?.error || 'Failed to fetch employer notifications';
       })
 
       // Mark notification as read

@@ -21,7 +21,7 @@ const ComputerSkills = () => {
 
 
   return (
-    <div className="p-6">
+    <div className="p-6 min-h-screen overflow-y-auto">
       <h1 className="text-2xl font-bold text-green-800 mb-6 flex justify-center">Computer Skills</h1>
         {showForm ? (
           <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mb-60">

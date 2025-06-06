@@ -33,7 +33,7 @@ function App() {
         <Route path="/test" element={<TestDashboard />} />
 
         <Route path="/" element={
-          <div className="bg-gray-50 min-h-screen">
+          <div className="bg-gray-50 min-h-screen page-container">
             <Header />
             <Hero />
           </div>

@@ -7,6 +7,7 @@ import Candidates from './EmployerSidebar/Candidates';
 import Analytics from './EmployerSidebar/Analytics';
 import Settings from './EmployerSidebar/Settings';
 import MarketAnalytics from './MarketAnalytics';
+import EmployerNotifications from './EmployerNotifications';
 import { fetchEmployerApplications } from '../redux/slices/applications';
 import { logout } from '../redux/slices/authSlice';
 
@@ -22,6 +23,7 @@ const EmployerDashboard = () => {
   
   const { role, user } = useSelector((state) => state.auth);
   const [activeView, setActiveView] = useState('dashboard');
+  const [showNotifications, setShowNotifications] = useState(false);
   const { jobPostings, loading: jobsLoading } = useJobs(user?.id);
 
   useEffect(() => {
@@ -75,7 +77,7 @@ const EmployerDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-green-50">
+    <div className="min-h-screen bg-green-50 page-container">
       {/* Dashboard Header */}
       
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -83,10 +85,8 @@ const EmployerDashboard = () => {
             <img src="/assets/logo.png" alt="Logo" className="w-36 h-auto" />
           </div>
           <div className="flex items-center space-x-4">
-            <button className="p-2 text-green-600 hover:bg-gray-100 rounded-full">
-              <span className="sr-only">Notifications</span>
-              <i className="fas fa-bell text-xl text-green-700"></i>
-            </button>
+            {/* Employer Notifications */}
+            <EmployerNotifications />
 
             {/* Logout Button */}
             <button
