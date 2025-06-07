@@ -73,17 +73,20 @@ class ChatService {
           socket.emit('error', 'Not authenticated');
           return;
         }
-        
+
         try {
           const chatRoom = await this.createOrGetChatRoom(socket.userId, data.topic);
           socket.join(`chat_${chatRoom.id}`);
-          
-          // Auto-assign agent or provide bot response
-          const response = await this.handleInitialMessage(chatRoom, data.message, socket);
-          
+
+          // Only send welcome message if there's an actual initial message
+          let response = null;
+          if (data.message && data.message.trim() !== '') {
+            response = await this.handleInitialMessage(chatRoom, data.message, socket);
+          }
+
           socket.emit('chat_started', {
             roomId: chatRoom.id,
-            message: response
+            message: response // Will be null for clean start
           });
         } catch (error) {
           console.error('Start chat error:', error);
@@ -122,12 +125,30 @@ class ChatService {
             type: savedMessage.type
           });
           
-          // Generate auto-response if needed
-          const autoResponse = await this.generateAutoResponse(message, roomId, socket);
-          if (autoResponse) {
+          // Check if this is the first user message in the room
+          const messageCount = await prisma.chatMessage.count({
+            where: {
+              roomId: parseInt(roomId),
+              senderId: { not: null } // Only count user messages, not bot messages
+            }
+          });
+
+          // If this is the first user message, send a welcome response
+          if (messageCount === 1) {
+            const userName = socket?.userData?.fullName || socket?.userData?.companyName || 'User';
+            const welcomeMessage = `Hello ${userName}! 👋 Welcome to Job Match support. I'm here to help you with job applications, profile updates, CV downloads, and more. How can I assist you today?`;
+
             setTimeout(() => {
-              this.sendBotMessage(roomId, autoResponse);
-            }, 1000);
+              this.sendBotMessage(roomId, welcomeMessage);
+            }, 500);
+          } else {
+            // Generate auto-response for subsequent messages
+            const autoResponse = await this.generateAutoResponse(message, roomId, socket);
+            if (autoResponse) {
+              setTimeout(() => {
+                this.sendBotMessage(roomId, autoResponse);
+              }, 1000);
+            }
           }
           
         } catch (error) {
@@ -261,10 +282,19 @@ class ChatService {
   
   async handleInitialMessage(chatRoom, message, socket) {
     try {
-      // Generate AI welcome response
+      const userName = socket?.userData?.fullName || socket?.userData?.companyName || 'User';
+
+      // If no initial message provided, just send a clean welcome
+      if (!message || message.trim() === '') {
+        const welcomeMessage = `Hello ${userName}! 👋 Welcome to Job Match support. I'm here to help you with job applications, profile updates, CV downloads, and more. What can I assist you with today?`;
+        await this.sendBotMessage(chatRoom.id, welcomeMessage);
+        return welcomeMessage;
+      }
+
+      // If there's an initial message, process it normally
       const context = {
         userRole: socket?.userRole || 'User',
-        userName: socket?.userData?.fullName || socket?.userData?.companyName || 'User',
+        userName: userName,
         chatHistory: [],
         roomId: chatRoom.id,
         isInitialMessage: true
@@ -281,11 +311,13 @@ class ChatService {
     } catch (error) {
       console.error('Error generating initial AI response:', error);
 
-      // Fallback to FAQ check
-      const faqResponse = this.checkFAQPatterns(message);
-      if (faqResponse) {
-        await this.sendBotMessage(chatRoom.id, faqResponse);
-        return faqResponse;
+      // Fallback to FAQ check if there's a message
+      if (message && message.trim() !== '') {
+        const faqResponse = this.checkFAQPatterns(message);
+        if (faqResponse) {
+          await this.sendBotMessage(chatRoom.id, faqResponse);
+          return faqResponse;
+        }
       }
 
       // Check for available agents
@@ -300,7 +332,8 @@ class ChatService {
         return "You've been connected to a support agent. They'll be with you shortly!";
       } else {
         // Default bot assistance message
-        const defaultMessage = "Hello! 👋 Welcome to our job matching support. I'm here to help you with job applications, profile updates, CV downloads, and more. What can I assist you with today?";
+        const userName = socket?.userData?.fullName || socket?.userData?.companyName || 'User';
+        const defaultMessage = `Hello ${userName}! 👋 Welcome to Job Match support. I'm here to help you with job applications, profile updates, CV downloads, and more. What can I assist you with today?`;
         await this.sendBotMessage(chatRoom.id, defaultMessage);
         return defaultMessage;
       }
@@ -512,8 +545,7 @@ class ChatService {
       }
     });
 
-    // Load chat history
-    await this.loadChatHistory(socket);
+    // Don't automatically load chat history - let users start fresh
     console.log(`User ${user.id} authenticated successfully`);
   }
 

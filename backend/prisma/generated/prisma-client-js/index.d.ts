@@ -109,6 +109,11 @@ export type ChatRoom = $Result.DefaultSelection<Prisma.$ChatRoomPayload>
  */
 export type ChatMessage = $Result.DefaultSelection<Prisma.$ChatMessagePayload>
 /**
+ * Model NotificationSettings
+ * 
+ */
+export type NotificationSettings = $Result.DefaultSelection<Prisma.$NotificationSettingsPayload>
+/**
  * Model MarketTrend
  * 
  */
@@ -545,6 +550,16 @@ export class PrismaClient<
     * ```
     */
   get chatMessage(): Prisma.ChatMessageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.notificationSettings`: Exposes CRUD operations for the **NotificationSettings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more NotificationSettings
+    * const notificationSettings = await prisma.notificationSettings.findMany()
+    * ```
+    */
+  get notificationSettings(): Prisma.NotificationSettingsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.marketTrend`: Exposes CRUD operations for the **MarketTrend** model.
@@ -1064,6 +1079,7 @@ export namespace Prisma {
     SkillDemand: 'SkillDemand',
     ChatRoom: 'ChatRoom',
     ChatMessage: 'ChatMessage',
+    NotificationSettings: 'NotificationSettings',
     MarketTrend: 'MarketTrend',
     UserConsent: 'UserConsent',
     AuditLog: 'AuditLog',
@@ -1088,7 +1104,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "jobCategory" | "skillMaster" | "country" | "user" | "applicant" | "employer" | "job" | "jobRequirement" | "applicantSkill" | "application" | "notification" | "academicQualification" | "workExperience" | "languageProficiency" | "computerSkill" | "generalSkill" | "skillDemand" | "chatRoom" | "chatMessage" | "marketTrend" | "userConsent" | "auditLog" | "anonymizedData" | "interview" | "emailLog"
+      modelProps: "jobCategory" | "skillMaster" | "country" | "user" | "applicant" | "employer" | "job" | "jobRequirement" | "applicantSkill" | "application" | "notification" | "academicQualification" | "workExperience" | "languageProficiency" | "computerSkill" | "generalSkill" | "skillDemand" | "chatRoom" | "chatMessage" | "notificationSettings" | "marketTrend" | "userConsent" | "auditLog" | "anonymizedData" | "interview" | "emailLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2346,6 +2362,72 @@ export namespace Prisma {
           }
         }
       }
+      NotificationSettings: {
+        payload: Prisma.$NotificationSettingsPayload<ExtArgs>
+        fields: Prisma.NotificationSettingsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NotificationSettingsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationSettingsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NotificationSettingsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationSettingsPayload>
+          }
+          findFirst: {
+            args: Prisma.NotificationSettingsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationSettingsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NotificationSettingsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationSettingsPayload>
+          }
+          findMany: {
+            args: Prisma.NotificationSettingsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationSettingsPayload>[]
+          }
+          create: {
+            args: Prisma.NotificationSettingsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationSettingsPayload>
+          }
+          createMany: {
+            args: Prisma.NotificationSettingsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.NotificationSettingsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationSettingsPayload>
+          }
+          update: {
+            args: Prisma.NotificationSettingsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationSettingsPayload>
+          }
+          deleteMany: {
+            args: Prisma.NotificationSettingsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NotificationSettingsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.NotificationSettingsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationSettingsPayload>
+          }
+          aggregate: {
+            args: Prisma.NotificationSettingsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNotificationSettings>
+          }
+          groupBy: {
+            args: Prisma.NotificationSettingsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NotificationSettingsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NotificationSettingsCountArgs<ExtArgs>
+            result: $Utils.Optional<NotificationSettingsCountAggregateOutputType> | number
+          }
+        }
+      }
       MarketTrend: {
         payload: Prisma.$MarketTrendPayload<ExtArgs>
         fields: Prisma.MarketTrendFieldRefs
@@ -2845,6 +2927,7 @@ export namespace Prisma {
     skillDemand?: SkillDemandOmit
     chatRoom?: ChatRoomOmit
     chatMessage?: ChatMessageOmit
+    notificationSettings?: NotificationSettingsOmit
     marketTrend?: MarketTrendOmit
     userConsent?: UserConsentOmit
     auditLog?: AuditLogOmit
@@ -7936,6 +8019,7 @@ export namespace Prisma {
     generalSkills?: boolean | Applicant$generalSkillsArgs<ExtArgs>
     notifications?: boolean | Applicant$notificationsArgs<ExtArgs>
     categories?: boolean | Applicant$categoriesArgs<ExtArgs>
+    notificationSettings?: boolean | Applicant$notificationSettingsArgs<ExtArgs>
     _count?: boolean | ApplicantCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["applicant"]>
 
@@ -7967,6 +8051,7 @@ export namespace Prisma {
     generalSkills?: boolean | Applicant$generalSkillsArgs<ExtArgs>
     notifications?: boolean | Applicant$notificationsArgs<ExtArgs>
     categories?: boolean | Applicant$categoriesArgs<ExtArgs>
+    notificationSettings?: boolean | Applicant$notificationSettingsArgs<ExtArgs>
     _count?: boolean | ApplicantCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -7983,6 +8068,7 @@ export namespace Prisma {
       generalSkills: Prisma.$GeneralSkillPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       categories: Prisma.$JobCategoryPayload<ExtArgs>[]
+      notificationSettings: Prisma.$NotificationSettingsPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -8346,6 +8432,7 @@ export namespace Prisma {
     generalSkills<T extends Applicant$generalSkillsArgs<ExtArgs> = {}>(args?: Subset<T, Applicant$generalSkillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GeneralSkillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends Applicant$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Applicant$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     categories<T extends Applicant$categoriesArgs<ExtArgs> = {}>(args?: Subset<T, Applicant$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notificationSettings<T extends Applicant$notificationSettingsArgs<ExtArgs> = {}>(args?: Subset<T, Applicant$notificationSettingsArgs<ExtArgs>>): Prisma__NotificationSettingsClient<$Result.GetResult<Prisma.$NotificationSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8942,6 +9029,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: JobCategoryScalarFieldEnum | JobCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * Applicant.notificationSettings
+   */
+  export type Applicant$notificationSettingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationSettings
+     */
+    select?: NotificationSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NotificationSettings
+     */
+    omit?: NotificationSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationSettingsInclude<ExtArgs> | null
+    where?: NotificationSettingsWhereInput
   }
 
   /**
@@ -23810,6 +23916,1127 @@ export namespace Prisma {
 
 
   /**
+   * Model NotificationSettings
+   */
+
+  export type AggregateNotificationSettings = {
+    _count: NotificationSettingsCountAggregateOutputType | null
+    _avg: NotificationSettingsAvgAggregateOutputType | null
+    _sum: NotificationSettingsSumAggregateOutputType | null
+    _min: NotificationSettingsMinAggregateOutputType | null
+    _max: NotificationSettingsMaxAggregateOutputType | null
+  }
+
+  export type NotificationSettingsAvgAggregateOutputType = {
+    id: number | null
+    applicantId: number | null
+  }
+
+  export type NotificationSettingsSumAggregateOutputType = {
+    id: number | null
+    applicantId: number | null
+  }
+
+  export type NotificationSettingsMinAggregateOutputType = {
+    id: number | null
+    applicantId: number | null
+    emailEnabled: boolean | null
+    emailJobMatches: boolean | null
+    emailApplicationStatus: boolean | null
+    emailInterviews: boolean | null
+    emailMarketing: boolean | null
+    smsEnabled: boolean | null
+    smsApplicationStatus: boolean | null
+    smsInterviews: boolean | null
+    smsUrgent: boolean | null
+    pushEnabled: boolean | null
+    pushJobMatches: boolean | null
+    pushApplicationStatus: boolean | null
+    pushInterviews: boolean | null
+    profileVisible: boolean | null
+    autoApply: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type NotificationSettingsMaxAggregateOutputType = {
+    id: number | null
+    applicantId: number | null
+    emailEnabled: boolean | null
+    emailJobMatches: boolean | null
+    emailApplicationStatus: boolean | null
+    emailInterviews: boolean | null
+    emailMarketing: boolean | null
+    smsEnabled: boolean | null
+    smsApplicationStatus: boolean | null
+    smsInterviews: boolean | null
+    smsUrgent: boolean | null
+    pushEnabled: boolean | null
+    pushJobMatches: boolean | null
+    pushApplicationStatus: boolean | null
+    pushInterviews: boolean | null
+    profileVisible: boolean | null
+    autoApply: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type NotificationSettingsCountAggregateOutputType = {
+    id: number
+    applicantId: number
+    emailEnabled: number
+    emailJobMatches: number
+    emailApplicationStatus: number
+    emailInterviews: number
+    emailMarketing: number
+    smsEnabled: number
+    smsApplicationStatus: number
+    smsInterviews: number
+    smsUrgent: number
+    pushEnabled: number
+    pushJobMatches: number
+    pushApplicationStatus: number
+    pushInterviews: number
+    profileVisible: number
+    autoApply: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type NotificationSettingsAvgAggregateInputType = {
+    id?: true
+    applicantId?: true
+  }
+
+  export type NotificationSettingsSumAggregateInputType = {
+    id?: true
+    applicantId?: true
+  }
+
+  export type NotificationSettingsMinAggregateInputType = {
+    id?: true
+    applicantId?: true
+    emailEnabled?: true
+    emailJobMatches?: true
+    emailApplicationStatus?: true
+    emailInterviews?: true
+    emailMarketing?: true
+    smsEnabled?: true
+    smsApplicationStatus?: true
+    smsInterviews?: true
+    smsUrgent?: true
+    pushEnabled?: true
+    pushJobMatches?: true
+    pushApplicationStatus?: true
+    pushInterviews?: true
+    profileVisible?: true
+    autoApply?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type NotificationSettingsMaxAggregateInputType = {
+    id?: true
+    applicantId?: true
+    emailEnabled?: true
+    emailJobMatches?: true
+    emailApplicationStatus?: true
+    emailInterviews?: true
+    emailMarketing?: true
+    smsEnabled?: true
+    smsApplicationStatus?: true
+    smsInterviews?: true
+    smsUrgent?: true
+    pushEnabled?: true
+    pushJobMatches?: true
+    pushApplicationStatus?: true
+    pushInterviews?: true
+    profileVisible?: true
+    autoApply?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type NotificationSettingsCountAggregateInputType = {
+    id?: true
+    applicantId?: true
+    emailEnabled?: true
+    emailJobMatches?: true
+    emailApplicationStatus?: true
+    emailInterviews?: true
+    emailMarketing?: true
+    smsEnabled?: true
+    smsApplicationStatus?: true
+    smsInterviews?: true
+    smsUrgent?: true
+    pushEnabled?: true
+    pushJobMatches?: true
+    pushApplicationStatus?: true
+    pushInterviews?: true
+    profileVisible?: true
+    autoApply?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type NotificationSettingsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NotificationSettings to aggregate.
+     */
+    where?: NotificationSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NotificationSettings to fetch.
+     */
+    orderBy?: NotificationSettingsOrderByWithRelationInput | NotificationSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NotificationSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NotificationSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NotificationSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned NotificationSettings
+    **/
+    _count?: true | NotificationSettingsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: NotificationSettingsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: NotificationSettingsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NotificationSettingsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NotificationSettingsMaxAggregateInputType
+  }
+
+  export type GetNotificationSettingsAggregateType<T extends NotificationSettingsAggregateArgs> = {
+        [P in keyof T & keyof AggregateNotificationSettings]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNotificationSettings[P]>
+      : GetScalarType<T[P], AggregateNotificationSettings[P]>
+  }
+
+
+
+
+  export type NotificationSettingsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationSettingsWhereInput
+    orderBy?: NotificationSettingsOrderByWithAggregationInput | NotificationSettingsOrderByWithAggregationInput[]
+    by: NotificationSettingsScalarFieldEnum[] | NotificationSettingsScalarFieldEnum
+    having?: NotificationSettingsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NotificationSettingsCountAggregateInputType | true
+    _avg?: NotificationSettingsAvgAggregateInputType
+    _sum?: NotificationSettingsSumAggregateInputType
+    _min?: NotificationSettingsMinAggregateInputType
+    _max?: NotificationSettingsMaxAggregateInputType
+  }
+
+  export type NotificationSettingsGroupByOutputType = {
+    id: number
+    applicantId: number
+    emailEnabled: boolean
+    emailJobMatches: boolean
+    emailApplicationStatus: boolean
+    emailInterviews: boolean
+    emailMarketing: boolean
+    smsEnabled: boolean
+    smsApplicationStatus: boolean
+    smsInterviews: boolean
+    smsUrgent: boolean
+    pushEnabled: boolean
+    pushJobMatches: boolean
+    pushApplicationStatus: boolean
+    pushInterviews: boolean
+    profileVisible: boolean
+    autoApply: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: NotificationSettingsCountAggregateOutputType | null
+    _avg: NotificationSettingsAvgAggregateOutputType | null
+    _sum: NotificationSettingsSumAggregateOutputType | null
+    _min: NotificationSettingsMinAggregateOutputType | null
+    _max: NotificationSettingsMaxAggregateOutputType | null
+  }
+
+  type GetNotificationSettingsGroupByPayload<T extends NotificationSettingsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NotificationSettingsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NotificationSettingsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NotificationSettingsGroupByOutputType[P]>
+            : GetScalarType<T[P], NotificationSettingsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NotificationSettingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    applicantId?: boolean
+    emailEnabled?: boolean
+    emailJobMatches?: boolean
+    emailApplicationStatus?: boolean
+    emailInterviews?: boolean
+    emailMarketing?: boolean
+    smsEnabled?: boolean
+    smsApplicationStatus?: boolean
+    smsInterviews?: boolean
+    smsUrgent?: boolean
+    pushEnabled?: boolean
+    pushJobMatches?: boolean
+    pushApplicationStatus?: boolean
+    pushInterviews?: boolean
+    profileVisible?: boolean
+    autoApply?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    applicant?: boolean | ApplicantDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["notificationSettings"]>
+
+
+
+  export type NotificationSettingsSelectScalar = {
+    id?: boolean
+    applicantId?: boolean
+    emailEnabled?: boolean
+    emailJobMatches?: boolean
+    emailApplicationStatus?: boolean
+    emailInterviews?: boolean
+    emailMarketing?: boolean
+    smsEnabled?: boolean
+    smsApplicationStatus?: boolean
+    smsInterviews?: boolean
+    smsUrgent?: boolean
+    pushEnabled?: boolean
+    pushJobMatches?: boolean
+    pushApplicationStatus?: boolean
+    pushInterviews?: boolean
+    profileVisible?: boolean
+    autoApply?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type NotificationSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicantId" | "emailEnabled" | "emailJobMatches" | "emailApplicationStatus" | "emailInterviews" | "emailMarketing" | "smsEnabled" | "smsApplicationStatus" | "smsInterviews" | "smsUrgent" | "pushEnabled" | "pushJobMatches" | "pushApplicationStatus" | "pushInterviews" | "profileVisible" | "autoApply" | "createdAt" | "updatedAt", ExtArgs["result"]["notificationSettings"]>
+  export type NotificationSettingsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    applicant?: boolean | ApplicantDefaultArgs<ExtArgs>
+  }
+
+  export type $NotificationSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "NotificationSettings"
+    objects: {
+      applicant: Prisma.$ApplicantPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      applicantId: number
+      emailEnabled: boolean
+      emailJobMatches: boolean
+      emailApplicationStatus: boolean
+      emailInterviews: boolean
+      emailMarketing: boolean
+      smsEnabled: boolean
+      smsApplicationStatus: boolean
+      smsInterviews: boolean
+      smsUrgent: boolean
+      pushEnabled: boolean
+      pushJobMatches: boolean
+      pushApplicationStatus: boolean
+      pushInterviews: boolean
+      profileVisible: boolean
+      autoApply: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["notificationSettings"]>
+    composites: {}
+  }
+
+  type NotificationSettingsGetPayload<S extends boolean | null | undefined | NotificationSettingsDefaultArgs> = $Result.GetResult<Prisma.$NotificationSettingsPayload, S>
+
+  type NotificationSettingsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<NotificationSettingsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: NotificationSettingsCountAggregateInputType | true
+    }
+
+  export interface NotificationSettingsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['NotificationSettings'], meta: { name: 'NotificationSettings' } }
+    /**
+     * Find zero or one NotificationSettings that matches the filter.
+     * @param {NotificationSettingsFindUniqueArgs} args - Arguments to find a NotificationSettings
+     * @example
+     * // Get one NotificationSettings
+     * const notificationSettings = await prisma.notificationSettings.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NotificationSettingsFindUniqueArgs>(args: SelectSubset<T, NotificationSettingsFindUniqueArgs<ExtArgs>>): Prisma__NotificationSettingsClient<$Result.GetResult<Prisma.$NotificationSettingsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one NotificationSettings that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {NotificationSettingsFindUniqueOrThrowArgs} args - Arguments to find a NotificationSettings
+     * @example
+     * // Get one NotificationSettings
+     * const notificationSettings = await prisma.notificationSettings.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NotificationSettingsFindUniqueOrThrowArgs>(args: SelectSubset<T, NotificationSettingsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NotificationSettingsClient<$Result.GetResult<Prisma.$NotificationSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NotificationSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationSettingsFindFirstArgs} args - Arguments to find a NotificationSettings
+     * @example
+     * // Get one NotificationSettings
+     * const notificationSettings = await prisma.notificationSettings.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NotificationSettingsFindFirstArgs>(args?: SelectSubset<T, NotificationSettingsFindFirstArgs<ExtArgs>>): Prisma__NotificationSettingsClient<$Result.GetResult<Prisma.$NotificationSettingsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NotificationSettings that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationSettingsFindFirstOrThrowArgs} args - Arguments to find a NotificationSettings
+     * @example
+     * // Get one NotificationSettings
+     * const notificationSettings = await prisma.notificationSettings.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NotificationSettingsFindFirstOrThrowArgs>(args?: SelectSubset<T, NotificationSettingsFindFirstOrThrowArgs<ExtArgs>>): Prisma__NotificationSettingsClient<$Result.GetResult<Prisma.$NotificationSettingsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more NotificationSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationSettingsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all NotificationSettings
+     * const notificationSettings = await prisma.notificationSettings.findMany()
+     * 
+     * // Get first 10 NotificationSettings
+     * const notificationSettings = await prisma.notificationSettings.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const notificationSettingsWithIdOnly = await prisma.notificationSettings.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NotificationSettingsFindManyArgs>(args?: SelectSubset<T, NotificationSettingsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationSettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a NotificationSettings.
+     * @param {NotificationSettingsCreateArgs} args - Arguments to create a NotificationSettings.
+     * @example
+     * // Create one NotificationSettings
+     * const NotificationSettings = await prisma.notificationSettings.create({
+     *   data: {
+     *     // ... data to create a NotificationSettings
+     *   }
+     * })
+     * 
+     */
+    create<T extends NotificationSettingsCreateArgs>(args: SelectSubset<T, NotificationSettingsCreateArgs<ExtArgs>>): Prisma__NotificationSettingsClient<$Result.GetResult<Prisma.$NotificationSettingsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many NotificationSettings.
+     * @param {NotificationSettingsCreateManyArgs} args - Arguments to create many NotificationSettings.
+     * @example
+     * // Create many NotificationSettings
+     * const notificationSettings = await prisma.notificationSettings.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NotificationSettingsCreateManyArgs>(args?: SelectSubset<T, NotificationSettingsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a NotificationSettings.
+     * @param {NotificationSettingsDeleteArgs} args - Arguments to delete one NotificationSettings.
+     * @example
+     * // Delete one NotificationSettings
+     * const NotificationSettings = await prisma.notificationSettings.delete({
+     *   where: {
+     *     // ... filter to delete one NotificationSettings
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NotificationSettingsDeleteArgs>(args: SelectSubset<T, NotificationSettingsDeleteArgs<ExtArgs>>): Prisma__NotificationSettingsClient<$Result.GetResult<Prisma.$NotificationSettingsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one NotificationSettings.
+     * @param {NotificationSettingsUpdateArgs} args - Arguments to update one NotificationSettings.
+     * @example
+     * // Update one NotificationSettings
+     * const notificationSettings = await prisma.notificationSettings.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NotificationSettingsUpdateArgs>(args: SelectSubset<T, NotificationSettingsUpdateArgs<ExtArgs>>): Prisma__NotificationSettingsClient<$Result.GetResult<Prisma.$NotificationSettingsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more NotificationSettings.
+     * @param {NotificationSettingsDeleteManyArgs} args - Arguments to filter NotificationSettings to delete.
+     * @example
+     * // Delete a few NotificationSettings
+     * const { count } = await prisma.notificationSettings.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NotificationSettingsDeleteManyArgs>(args?: SelectSubset<T, NotificationSettingsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NotificationSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationSettingsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many NotificationSettings
+     * const notificationSettings = await prisma.notificationSettings.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NotificationSettingsUpdateManyArgs>(args: SelectSubset<T, NotificationSettingsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one NotificationSettings.
+     * @param {NotificationSettingsUpsertArgs} args - Arguments to update or create a NotificationSettings.
+     * @example
+     * // Update or create a NotificationSettings
+     * const notificationSettings = await prisma.notificationSettings.upsert({
+     *   create: {
+     *     // ... data to create a NotificationSettings
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the NotificationSettings we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NotificationSettingsUpsertArgs>(args: SelectSubset<T, NotificationSettingsUpsertArgs<ExtArgs>>): Prisma__NotificationSettingsClient<$Result.GetResult<Prisma.$NotificationSettingsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of NotificationSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationSettingsCountArgs} args - Arguments to filter NotificationSettings to count.
+     * @example
+     * // Count the number of NotificationSettings
+     * const count = await prisma.notificationSettings.count({
+     *   where: {
+     *     // ... the filter for the NotificationSettings we want to count
+     *   }
+     * })
+    **/
+    count<T extends NotificationSettingsCountArgs>(
+      args?: Subset<T, NotificationSettingsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NotificationSettingsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a NotificationSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationSettingsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NotificationSettingsAggregateArgs>(args: Subset<T, NotificationSettingsAggregateArgs>): Prisma.PrismaPromise<GetNotificationSettingsAggregateType<T>>
+
+    /**
+     * Group by NotificationSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationSettingsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NotificationSettingsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NotificationSettingsGroupByArgs['orderBy'] }
+        : { orderBy?: NotificationSettingsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NotificationSettingsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNotificationSettingsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the NotificationSettings model
+   */
+  readonly fields: NotificationSettingsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for NotificationSettings.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NotificationSettingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    applicant<T extends ApplicantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantDefaultArgs<ExtArgs>>): Prisma__ApplicantClient<$Result.GetResult<Prisma.$ApplicantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the NotificationSettings model
+   */
+  interface NotificationSettingsFieldRefs {
+    readonly id: FieldRef<"NotificationSettings", 'Int'>
+    readonly applicantId: FieldRef<"NotificationSettings", 'Int'>
+    readonly emailEnabled: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly emailJobMatches: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly emailApplicationStatus: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly emailInterviews: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly emailMarketing: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly smsEnabled: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly smsApplicationStatus: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly smsInterviews: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly smsUrgent: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly pushEnabled: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly pushJobMatches: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly pushApplicationStatus: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly pushInterviews: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly profileVisible: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly autoApply: FieldRef<"NotificationSettings", 'Boolean'>
+    readonly createdAt: FieldRef<"NotificationSettings", 'DateTime'>
+    readonly updatedAt: FieldRef<"NotificationSettings", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * NotificationSettings findUnique
+   */
+  export type NotificationSettingsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationSettings
+     */
+    select?: NotificationSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NotificationSettings
+     */
+    omit?: NotificationSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which NotificationSettings to fetch.
+     */
+    where: NotificationSettingsWhereUniqueInput
+  }
+
+  /**
+   * NotificationSettings findUniqueOrThrow
+   */
+  export type NotificationSettingsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationSettings
+     */
+    select?: NotificationSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NotificationSettings
+     */
+    omit?: NotificationSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which NotificationSettings to fetch.
+     */
+    where: NotificationSettingsWhereUniqueInput
+  }
+
+  /**
+   * NotificationSettings findFirst
+   */
+  export type NotificationSettingsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationSettings
+     */
+    select?: NotificationSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NotificationSettings
+     */
+    omit?: NotificationSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which NotificationSettings to fetch.
+     */
+    where?: NotificationSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NotificationSettings to fetch.
+     */
+    orderBy?: NotificationSettingsOrderByWithRelationInput | NotificationSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NotificationSettings.
+     */
+    cursor?: NotificationSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NotificationSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NotificationSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NotificationSettings.
+     */
+    distinct?: NotificationSettingsScalarFieldEnum | NotificationSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * NotificationSettings findFirstOrThrow
+   */
+  export type NotificationSettingsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationSettings
+     */
+    select?: NotificationSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NotificationSettings
+     */
+    omit?: NotificationSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which NotificationSettings to fetch.
+     */
+    where?: NotificationSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NotificationSettings to fetch.
+     */
+    orderBy?: NotificationSettingsOrderByWithRelationInput | NotificationSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NotificationSettings.
+     */
+    cursor?: NotificationSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NotificationSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NotificationSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NotificationSettings.
+     */
+    distinct?: NotificationSettingsScalarFieldEnum | NotificationSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * NotificationSettings findMany
+   */
+  export type NotificationSettingsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationSettings
+     */
+    select?: NotificationSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NotificationSettings
+     */
+    omit?: NotificationSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which NotificationSettings to fetch.
+     */
+    where?: NotificationSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NotificationSettings to fetch.
+     */
+    orderBy?: NotificationSettingsOrderByWithRelationInput | NotificationSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing NotificationSettings.
+     */
+    cursor?: NotificationSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NotificationSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NotificationSettings.
+     */
+    skip?: number
+    distinct?: NotificationSettingsScalarFieldEnum | NotificationSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * NotificationSettings create
+   */
+  export type NotificationSettingsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationSettings
+     */
+    select?: NotificationSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NotificationSettings
+     */
+    omit?: NotificationSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationSettingsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a NotificationSettings.
+     */
+    data: XOR<NotificationSettingsCreateInput, NotificationSettingsUncheckedCreateInput>
+  }
+
+  /**
+   * NotificationSettings createMany
+   */
+  export type NotificationSettingsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many NotificationSettings.
+     */
+    data: NotificationSettingsCreateManyInput | NotificationSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * NotificationSettings update
+   */
+  export type NotificationSettingsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationSettings
+     */
+    select?: NotificationSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NotificationSettings
+     */
+    omit?: NotificationSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationSettingsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a NotificationSettings.
+     */
+    data: XOR<NotificationSettingsUpdateInput, NotificationSettingsUncheckedUpdateInput>
+    /**
+     * Choose, which NotificationSettings to update.
+     */
+    where: NotificationSettingsWhereUniqueInput
+  }
+
+  /**
+   * NotificationSettings updateMany
+   */
+  export type NotificationSettingsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update NotificationSettings.
+     */
+    data: XOR<NotificationSettingsUpdateManyMutationInput, NotificationSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which NotificationSettings to update
+     */
+    where?: NotificationSettingsWhereInput
+    /**
+     * Limit how many NotificationSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * NotificationSettings upsert
+   */
+  export type NotificationSettingsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationSettings
+     */
+    select?: NotificationSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NotificationSettings
+     */
+    omit?: NotificationSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationSettingsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the NotificationSettings to update in case it exists.
+     */
+    where: NotificationSettingsWhereUniqueInput
+    /**
+     * In case the NotificationSettings found by the `where` argument doesn't exist, create a new NotificationSettings with this data.
+     */
+    create: XOR<NotificationSettingsCreateInput, NotificationSettingsUncheckedCreateInput>
+    /**
+     * In case the NotificationSettings was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NotificationSettingsUpdateInput, NotificationSettingsUncheckedUpdateInput>
+  }
+
+  /**
+   * NotificationSettings delete
+   */
+  export type NotificationSettingsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationSettings
+     */
+    select?: NotificationSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NotificationSettings
+     */
+    omit?: NotificationSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationSettingsInclude<ExtArgs> | null
+    /**
+     * Filter which NotificationSettings to delete.
+     */
+    where: NotificationSettingsWhereUniqueInput
+  }
+
+  /**
+   * NotificationSettings deleteMany
+   */
+  export type NotificationSettingsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NotificationSettings to delete
+     */
+    where?: NotificationSettingsWhereInput
+    /**
+     * Limit how many NotificationSettings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * NotificationSettings without action
+   */
+  export type NotificationSettingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificationSettings
+     */
+    select?: NotificationSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NotificationSettings
+     */
+    omit?: NotificationSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationSettingsInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model MarketTrend
    */
 
@@ -30124,6 +31351,31 @@ export namespace Prisma {
   export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
 
 
+  export const NotificationSettingsScalarFieldEnum: {
+    id: 'id',
+    applicantId: 'applicantId',
+    emailEnabled: 'emailEnabled',
+    emailJobMatches: 'emailJobMatches',
+    emailApplicationStatus: 'emailApplicationStatus',
+    emailInterviews: 'emailInterviews',
+    emailMarketing: 'emailMarketing',
+    smsEnabled: 'smsEnabled',
+    smsApplicationStatus: 'smsApplicationStatus',
+    smsInterviews: 'smsInterviews',
+    smsUrgent: 'smsUrgent',
+    pushEnabled: 'pushEnabled',
+    pushJobMatches: 'pushJobMatches',
+    pushApplicationStatus: 'pushApplicationStatus',
+    pushInterviews: 'pushInterviews',
+    profileVisible: 'profileVisible',
+    autoApply: 'autoApply',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type NotificationSettingsScalarFieldEnum = (typeof NotificationSettingsScalarFieldEnum)[keyof typeof NotificationSettingsScalarFieldEnum]
+
+
   export const MarketTrendScalarFieldEnum: {
     id: 'id',
     industry: 'industry',
@@ -30867,6 +32119,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillListRelationFilter
     notifications?: NotificationListRelationFilter
     categories?: JobCategoryListRelationFilter
+    notificationSettings?: XOR<NotificationSettingsNullableScalarRelationFilter, NotificationSettingsWhereInput> | null
   }
 
   export type ApplicantOrderByWithRelationInput = {
@@ -30891,6 +32144,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
     categories?: JobCategoryOrderByRelationAggregateInput
+    notificationSettings?: NotificationSettingsOrderByWithRelationInput
     _relevance?: ApplicantOrderByRelevanceInput
   }
 
@@ -30919,6 +32173,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillListRelationFilter
     notifications?: NotificationListRelationFilter
     categories?: JobCategoryListRelationFilter
+    notificationSettings?: XOR<NotificationSettingsNullableScalarRelationFilter, NotificationSettingsWhereInput> | null
   }, "id" | "nida" | "userId">
 
   export type ApplicantOrderByWithAggregationInput = {
@@ -32201,6 +33456,133 @@ export namespace Prisma {
     timestamp?: DateTimeWithAggregatesFilter<"ChatMessage"> | Date | string
   }
 
+  export type NotificationSettingsWhereInput = {
+    AND?: NotificationSettingsWhereInput | NotificationSettingsWhereInput[]
+    OR?: NotificationSettingsWhereInput[]
+    NOT?: NotificationSettingsWhereInput | NotificationSettingsWhereInput[]
+    id?: IntFilter<"NotificationSettings"> | number
+    applicantId?: IntFilter<"NotificationSettings"> | number
+    emailEnabled?: BoolFilter<"NotificationSettings"> | boolean
+    emailJobMatches?: BoolFilter<"NotificationSettings"> | boolean
+    emailApplicationStatus?: BoolFilter<"NotificationSettings"> | boolean
+    emailInterviews?: BoolFilter<"NotificationSettings"> | boolean
+    emailMarketing?: BoolFilter<"NotificationSettings"> | boolean
+    smsEnabled?: BoolFilter<"NotificationSettings"> | boolean
+    smsApplicationStatus?: BoolFilter<"NotificationSettings"> | boolean
+    smsInterviews?: BoolFilter<"NotificationSettings"> | boolean
+    smsUrgent?: BoolFilter<"NotificationSettings"> | boolean
+    pushEnabled?: BoolFilter<"NotificationSettings"> | boolean
+    pushJobMatches?: BoolFilter<"NotificationSettings"> | boolean
+    pushApplicationStatus?: BoolFilter<"NotificationSettings"> | boolean
+    pushInterviews?: BoolFilter<"NotificationSettings"> | boolean
+    profileVisible?: BoolFilter<"NotificationSettings"> | boolean
+    autoApply?: BoolFilter<"NotificationSettings"> | boolean
+    createdAt?: DateTimeFilter<"NotificationSettings"> | Date | string
+    updatedAt?: DateTimeFilter<"NotificationSettings"> | Date | string
+    applicant?: XOR<ApplicantScalarRelationFilter, ApplicantWhereInput>
+  }
+
+  export type NotificationSettingsOrderByWithRelationInput = {
+    id?: SortOrder
+    applicantId?: SortOrder
+    emailEnabled?: SortOrder
+    emailJobMatches?: SortOrder
+    emailApplicationStatus?: SortOrder
+    emailInterviews?: SortOrder
+    emailMarketing?: SortOrder
+    smsEnabled?: SortOrder
+    smsApplicationStatus?: SortOrder
+    smsInterviews?: SortOrder
+    smsUrgent?: SortOrder
+    pushEnabled?: SortOrder
+    pushJobMatches?: SortOrder
+    pushApplicationStatus?: SortOrder
+    pushInterviews?: SortOrder
+    profileVisible?: SortOrder
+    autoApply?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    applicant?: ApplicantOrderByWithRelationInput
+  }
+
+  export type NotificationSettingsWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    applicantId?: number
+    AND?: NotificationSettingsWhereInput | NotificationSettingsWhereInput[]
+    OR?: NotificationSettingsWhereInput[]
+    NOT?: NotificationSettingsWhereInput | NotificationSettingsWhereInput[]
+    emailEnabled?: BoolFilter<"NotificationSettings"> | boolean
+    emailJobMatches?: BoolFilter<"NotificationSettings"> | boolean
+    emailApplicationStatus?: BoolFilter<"NotificationSettings"> | boolean
+    emailInterviews?: BoolFilter<"NotificationSettings"> | boolean
+    emailMarketing?: BoolFilter<"NotificationSettings"> | boolean
+    smsEnabled?: BoolFilter<"NotificationSettings"> | boolean
+    smsApplicationStatus?: BoolFilter<"NotificationSettings"> | boolean
+    smsInterviews?: BoolFilter<"NotificationSettings"> | boolean
+    smsUrgent?: BoolFilter<"NotificationSettings"> | boolean
+    pushEnabled?: BoolFilter<"NotificationSettings"> | boolean
+    pushJobMatches?: BoolFilter<"NotificationSettings"> | boolean
+    pushApplicationStatus?: BoolFilter<"NotificationSettings"> | boolean
+    pushInterviews?: BoolFilter<"NotificationSettings"> | boolean
+    profileVisible?: BoolFilter<"NotificationSettings"> | boolean
+    autoApply?: BoolFilter<"NotificationSettings"> | boolean
+    createdAt?: DateTimeFilter<"NotificationSettings"> | Date | string
+    updatedAt?: DateTimeFilter<"NotificationSettings"> | Date | string
+    applicant?: XOR<ApplicantScalarRelationFilter, ApplicantWhereInput>
+  }, "id" | "applicantId">
+
+  export type NotificationSettingsOrderByWithAggregationInput = {
+    id?: SortOrder
+    applicantId?: SortOrder
+    emailEnabled?: SortOrder
+    emailJobMatches?: SortOrder
+    emailApplicationStatus?: SortOrder
+    emailInterviews?: SortOrder
+    emailMarketing?: SortOrder
+    smsEnabled?: SortOrder
+    smsApplicationStatus?: SortOrder
+    smsInterviews?: SortOrder
+    smsUrgent?: SortOrder
+    pushEnabled?: SortOrder
+    pushJobMatches?: SortOrder
+    pushApplicationStatus?: SortOrder
+    pushInterviews?: SortOrder
+    profileVisible?: SortOrder
+    autoApply?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: NotificationSettingsCountOrderByAggregateInput
+    _avg?: NotificationSettingsAvgOrderByAggregateInput
+    _max?: NotificationSettingsMaxOrderByAggregateInput
+    _min?: NotificationSettingsMinOrderByAggregateInput
+    _sum?: NotificationSettingsSumOrderByAggregateInput
+  }
+
+  export type NotificationSettingsScalarWhereWithAggregatesInput = {
+    AND?: NotificationSettingsScalarWhereWithAggregatesInput | NotificationSettingsScalarWhereWithAggregatesInput[]
+    OR?: NotificationSettingsScalarWhereWithAggregatesInput[]
+    NOT?: NotificationSettingsScalarWhereWithAggregatesInput | NotificationSettingsScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"NotificationSettings"> | number
+    applicantId?: IntWithAggregatesFilter<"NotificationSettings"> | number
+    emailEnabled?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    emailJobMatches?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    emailApplicationStatus?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    emailInterviews?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    emailMarketing?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    smsEnabled?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    smsApplicationStatus?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    smsInterviews?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    smsUrgent?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    pushEnabled?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    pushJobMatches?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    pushApplicationStatus?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    pushInterviews?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    profileVisible?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    autoApply?: BoolWithAggregatesFilter<"NotificationSettings"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"NotificationSettings"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"NotificationSettings"> | Date | string
+  }
+
   export type MarketTrendWhereInput = {
     AND?: MarketTrendWhereInput | MarketTrendWhereInput[]
     OR?: MarketTrendWhereInput[]
@@ -32973,6 +34355,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantUncheckedCreateInput = {
@@ -32996,6 +34379,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsUncheckedCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantUpdateInput = {
@@ -33018,6 +34402,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantUncheckedUpdateInput = {
@@ -33041,6 +34426,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUncheckedUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantCreateManyInput = {
@@ -34368,6 +35754,156 @@ export namespace Prisma {
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type NotificationSettingsCreateInput = {
+    emailEnabled?: boolean
+    emailJobMatches?: boolean
+    emailApplicationStatus?: boolean
+    emailInterviews?: boolean
+    emailMarketing?: boolean
+    smsEnabled?: boolean
+    smsApplicationStatus?: boolean
+    smsInterviews?: boolean
+    smsUrgent?: boolean
+    pushEnabled?: boolean
+    pushJobMatches?: boolean
+    pushApplicationStatus?: boolean
+    pushInterviews?: boolean
+    profileVisible?: boolean
+    autoApply?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicant: ApplicantCreateNestedOneWithoutNotificationSettingsInput
+  }
+
+  export type NotificationSettingsUncheckedCreateInput = {
+    id?: number
+    applicantId: number
+    emailEnabled?: boolean
+    emailJobMatches?: boolean
+    emailApplicationStatus?: boolean
+    emailInterviews?: boolean
+    emailMarketing?: boolean
+    smsEnabled?: boolean
+    smsApplicationStatus?: boolean
+    smsInterviews?: boolean
+    smsUrgent?: boolean
+    pushEnabled?: boolean
+    pushJobMatches?: boolean
+    pushApplicationStatus?: boolean
+    pushInterviews?: boolean
+    profileVisible?: boolean
+    autoApply?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NotificationSettingsUpdateInput = {
+    emailEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailJobMatches?: BoolFieldUpdateOperationsInput | boolean
+    emailApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    emailInterviews?: BoolFieldUpdateOperationsInput | boolean
+    emailMarketing?: BoolFieldUpdateOperationsInput | boolean
+    smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    smsInterviews?: BoolFieldUpdateOperationsInput | boolean
+    smsUrgent?: BoolFieldUpdateOperationsInput | boolean
+    pushEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pushJobMatches?: BoolFieldUpdateOperationsInput | boolean
+    pushApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    pushInterviews?: BoolFieldUpdateOperationsInput | boolean
+    profileVisible?: BoolFieldUpdateOperationsInput | boolean
+    autoApply?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicant?: ApplicantUpdateOneRequiredWithoutNotificationSettingsNestedInput
+  }
+
+  export type NotificationSettingsUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    applicantId?: IntFieldUpdateOperationsInput | number
+    emailEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailJobMatches?: BoolFieldUpdateOperationsInput | boolean
+    emailApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    emailInterviews?: BoolFieldUpdateOperationsInput | boolean
+    emailMarketing?: BoolFieldUpdateOperationsInput | boolean
+    smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    smsInterviews?: BoolFieldUpdateOperationsInput | boolean
+    smsUrgent?: BoolFieldUpdateOperationsInput | boolean
+    pushEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pushJobMatches?: BoolFieldUpdateOperationsInput | boolean
+    pushApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    pushInterviews?: BoolFieldUpdateOperationsInput | boolean
+    profileVisible?: BoolFieldUpdateOperationsInput | boolean
+    autoApply?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationSettingsCreateManyInput = {
+    id?: number
+    applicantId: number
+    emailEnabled?: boolean
+    emailJobMatches?: boolean
+    emailApplicationStatus?: boolean
+    emailInterviews?: boolean
+    emailMarketing?: boolean
+    smsEnabled?: boolean
+    smsApplicationStatus?: boolean
+    smsInterviews?: boolean
+    smsUrgent?: boolean
+    pushEnabled?: boolean
+    pushJobMatches?: boolean
+    pushApplicationStatus?: boolean
+    pushInterviews?: boolean
+    profileVisible?: boolean
+    autoApply?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NotificationSettingsUpdateManyMutationInput = {
+    emailEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailJobMatches?: BoolFieldUpdateOperationsInput | boolean
+    emailApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    emailInterviews?: BoolFieldUpdateOperationsInput | boolean
+    emailMarketing?: BoolFieldUpdateOperationsInput | boolean
+    smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    smsInterviews?: BoolFieldUpdateOperationsInput | boolean
+    smsUrgent?: BoolFieldUpdateOperationsInput | boolean
+    pushEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pushJobMatches?: BoolFieldUpdateOperationsInput | boolean
+    pushApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    pushInterviews?: BoolFieldUpdateOperationsInput | boolean
+    profileVisible?: BoolFieldUpdateOperationsInput | boolean
+    autoApply?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationSettingsUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    applicantId?: IntFieldUpdateOperationsInput | number
+    emailEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailJobMatches?: BoolFieldUpdateOperationsInput | boolean
+    emailApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    emailInterviews?: BoolFieldUpdateOperationsInput | boolean
+    emailMarketing?: BoolFieldUpdateOperationsInput | boolean
+    smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    smsInterviews?: BoolFieldUpdateOperationsInput | boolean
+    smsUrgent?: BoolFieldUpdateOperationsInput | boolean
+    pushEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pushJobMatches?: BoolFieldUpdateOperationsInput | boolean
+    pushApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    pushInterviews?: BoolFieldUpdateOperationsInput | boolean
+    profileVisible?: BoolFieldUpdateOperationsInput | boolean
+    autoApply?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type MarketTrendCreateInput = {
     industry: string
     metric: string
@@ -35324,6 +36860,11 @@ export namespace Prisma {
     every?: JobCategoryWhereInput
     some?: JobCategoryWhereInput
     none?: JobCategoryWhereInput
+  }
+
+  export type NotificationSettingsNullableScalarRelationFilter = {
+    is?: NotificationSettingsWhereInput | null
+    isNot?: NotificationSettingsWhereInput | null
   }
 
   export type ApplicationOrderByRelationAggregateInput = {
@@ -36472,6 +38013,82 @@ export namespace Prisma {
     senderId?: SortOrder
   }
 
+  export type NotificationSettingsCountOrderByAggregateInput = {
+    id?: SortOrder
+    applicantId?: SortOrder
+    emailEnabled?: SortOrder
+    emailJobMatches?: SortOrder
+    emailApplicationStatus?: SortOrder
+    emailInterviews?: SortOrder
+    emailMarketing?: SortOrder
+    smsEnabled?: SortOrder
+    smsApplicationStatus?: SortOrder
+    smsInterviews?: SortOrder
+    smsUrgent?: SortOrder
+    pushEnabled?: SortOrder
+    pushJobMatches?: SortOrder
+    pushApplicationStatus?: SortOrder
+    pushInterviews?: SortOrder
+    profileVisible?: SortOrder
+    autoApply?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type NotificationSettingsAvgOrderByAggregateInput = {
+    id?: SortOrder
+    applicantId?: SortOrder
+  }
+
+  export type NotificationSettingsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    applicantId?: SortOrder
+    emailEnabled?: SortOrder
+    emailJobMatches?: SortOrder
+    emailApplicationStatus?: SortOrder
+    emailInterviews?: SortOrder
+    emailMarketing?: SortOrder
+    smsEnabled?: SortOrder
+    smsApplicationStatus?: SortOrder
+    smsInterviews?: SortOrder
+    smsUrgent?: SortOrder
+    pushEnabled?: SortOrder
+    pushJobMatches?: SortOrder
+    pushApplicationStatus?: SortOrder
+    pushInterviews?: SortOrder
+    profileVisible?: SortOrder
+    autoApply?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type NotificationSettingsMinOrderByAggregateInput = {
+    id?: SortOrder
+    applicantId?: SortOrder
+    emailEnabled?: SortOrder
+    emailJobMatches?: SortOrder
+    emailApplicationStatus?: SortOrder
+    emailInterviews?: SortOrder
+    emailMarketing?: SortOrder
+    smsEnabled?: SortOrder
+    smsApplicationStatus?: SortOrder
+    smsInterviews?: SortOrder
+    smsUrgent?: SortOrder
+    pushEnabled?: SortOrder
+    pushJobMatches?: SortOrder
+    pushApplicationStatus?: SortOrder
+    pushInterviews?: SortOrder
+    profileVisible?: SortOrder
+    autoApply?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type NotificationSettingsSumOrderByAggregateInput = {
+    id?: SortOrder
+    applicantId?: SortOrder
+  }
+
   export type MarketTrendOrderByRelevanceInput = {
     fields: MarketTrendOrderByRelevanceFieldEnum | MarketTrendOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -37413,6 +39030,12 @@ export namespace Prisma {
     connect?: JobCategoryWhereUniqueInput | JobCategoryWhereUniqueInput[]
   }
 
+  export type NotificationSettingsCreateNestedOneWithoutApplicantInput = {
+    create?: XOR<NotificationSettingsCreateWithoutApplicantInput, NotificationSettingsUncheckedCreateWithoutApplicantInput>
+    connectOrCreate?: NotificationSettingsCreateOrConnectWithoutApplicantInput
+    connect?: NotificationSettingsWhereUniqueInput
+  }
+
   export type ApplicationUncheckedCreateNestedManyWithoutApplicantInput = {
     create?: XOR<ApplicationCreateWithoutApplicantInput, ApplicationUncheckedCreateWithoutApplicantInput> | ApplicationCreateWithoutApplicantInput[] | ApplicationUncheckedCreateWithoutApplicantInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutApplicantInput | ApplicationCreateOrConnectWithoutApplicantInput[]
@@ -37473,6 +39096,12 @@ export namespace Prisma {
     create?: XOR<JobCategoryCreateWithoutApplicantsInput, JobCategoryUncheckedCreateWithoutApplicantsInput> | JobCategoryCreateWithoutApplicantsInput[] | JobCategoryUncheckedCreateWithoutApplicantsInput[]
     connectOrCreate?: JobCategoryCreateOrConnectWithoutApplicantsInput | JobCategoryCreateOrConnectWithoutApplicantsInput[]
     connect?: JobCategoryWhereUniqueInput | JobCategoryWhereUniqueInput[]
+  }
+
+  export type NotificationSettingsUncheckedCreateNestedOneWithoutApplicantInput = {
+    create?: XOR<NotificationSettingsCreateWithoutApplicantInput, NotificationSettingsUncheckedCreateWithoutApplicantInput>
+    connectOrCreate?: NotificationSettingsCreateOrConnectWithoutApplicantInput
+    connect?: NotificationSettingsWhereUniqueInput
   }
 
   export type UserUpdateOneRequiredWithoutApplicantNestedInput = {
@@ -37608,6 +39237,16 @@ export namespace Prisma {
     deleteMany?: JobCategoryScalarWhereInput | JobCategoryScalarWhereInput[]
   }
 
+  export type NotificationSettingsUpdateOneWithoutApplicantNestedInput = {
+    create?: XOR<NotificationSettingsCreateWithoutApplicantInput, NotificationSettingsUncheckedCreateWithoutApplicantInput>
+    connectOrCreate?: NotificationSettingsCreateOrConnectWithoutApplicantInput
+    upsert?: NotificationSettingsUpsertWithoutApplicantInput
+    disconnect?: NotificationSettingsWhereInput | boolean
+    delete?: NotificationSettingsWhereInput | boolean
+    connect?: NotificationSettingsWhereUniqueInput
+    update?: XOR<XOR<NotificationSettingsUpdateToOneWithWhereWithoutApplicantInput, NotificationSettingsUpdateWithoutApplicantInput>, NotificationSettingsUncheckedUpdateWithoutApplicantInput>
+  }
+
   export type ApplicationUncheckedUpdateManyWithoutApplicantNestedInput = {
     create?: XOR<ApplicationCreateWithoutApplicantInput, ApplicationUncheckedCreateWithoutApplicantInput> | ApplicationCreateWithoutApplicantInput[] | ApplicationUncheckedCreateWithoutApplicantInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutApplicantInput | ApplicationCreateOrConnectWithoutApplicantInput[]
@@ -37731,6 +39370,16 @@ export namespace Prisma {
     update?: JobCategoryUpdateWithWhereUniqueWithoutApplicantsInput | JobCategoryUpdateWithWhereUniqueWithoutApplicantsInput[]
     updateMany?: JobCategoryUpdateManyWithWhereWithoutApplicantsInput | JobCategoryUpdateManyWithWhereWithoutApplicantsInput[]
     deleteMany?: JobCategoryScalarWhereInput | JobCategoryScalarWhereInput[]
+  }
+
+  export type NotificationSettingsUncheckedUpdateOneWithoutApplicantNestedInput = {
+    create?: XOR<NotificationSettingsCreateWithoutApplicantInput, NotificationSettingsUncheckedCreateWithoutApplicantInput>
+    connectOrCreate?: NotificationSettingsCreateOrConnectWithoutApplicantInput
+    upsert?: NotificationSettingsUpsertWithoutApplicantInput
+    disconnect?: NotificationSettingsWhereInput | boolean
+    delete?: NotificationSettingsWhereInput | boolean
+    connect?: NotificationSettingsWhereUniqueInput
+    update?: XOR<XOR<NotificationSettingsUpdateToOneWithWhereWithoutApplicantInput, NotificationSettingsUpdateWithoutApplicantInput>, NotificationSettingsUncheckedUpdateWithoutApplicantInput>
   }
 
   export type UserCreateNestedOneWithoutEmployerInput = {
@@ -38511,6 +40160,20 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChatMessagesInput, UserUpdateWithoutChatMessagesInput>, UserUncheckedUpdateWithoutChatMessagesInput>
   }
 
+  export type ApplicantCreateNestedOneWithoutNotificationSettingsInput = {
+    create?: XOR<ApplicantCreateWithoutNotificationSettingsInput, ApplicantUncheckedCreateWithoutNotificationSettingsInput>
+    connectOrCreate?: ApplicantCreateOrConnectWithoutNotificationSettingsInput
+    connect?: ApplicantWhereUniqueInput
+  }
+
+  export type ApplicantUpdateOneRequiredWithoutNotificationSettingsNestedInput = {
+    create?: XOR<ApplicantCreateWithoutNotificationSettingsInput, ApplicantUncheckedCreateWithoutNotificationSettingsInput>
+    connectOrCreate?: ApplicantCreateOrConnectWithoutNotificationSettingsInput
+    upsert?: ApplicantUpsertWithoutNotificationSettingsInput
+    connect?: ApplicantWhereUniqueInput
+    update?: XOR<XOR<ApplicantUpdateToOneWithWhereWithoutNotificationSettingsInput, ApplicantUpdateWithoutNotificationSettingsInput>, ApplicantUncheckedUpdateWithoutNotificationSettingsInput>
+  }
+
   export type UserCreateNestedOneWithoutConsentsInput = {
     create?: XOR<UserCreateWithoutConsentsInput, UserUncheckedCreateWithoutConsentsInput>
     connectOrCreate?: UserCreateOrConnectWithoutConsentsInput
@@ -38956,6 +40619,7 @@ export namespace Prisma {
     skills?: ApplicantSkillCreateNestedManyWithoutApplicantInput
     generalSkills?: GeneralSkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
+    notificationSettings?: NotificationSettingsCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantUncheckedCreateWithoutCategoriesInput = {
@@ -38978,6 +40642,7 @@ export namespace Prisma {
     skills?: ApplicantSkillUncheckedCreateNestedManyWithoutApplicantInput
     generalSkills?: GeneralSkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
+    notificationSettings?: NotificationSettingsUncheckedCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantCreateOrConnectWithoutCategoriesInput = {
@@ -39386,6 +41051,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantUncheckedCreateWithoutUserInput = {
@@ -39408,6 +41074,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsUncheckedCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantCreateOrConnectWithoutUserInput = {
@@ -39622,6 +41289,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantUncheckedUpdateWithoutUserInput = {
@@ -39644,6 +41312,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUncheckedUpdateOneWithoutApplicantNestedInput
   }
 
   export type EmployerUpsertWithoutUserInput = {
@@ -40161,6 +41830,52 @@ export namespace Prisma {
     create: XOR<JobCategoryCreateWithoutApplicantsInput, JobCategoryUncheckedCreateWithoutApplicantsInput>
   }
 
+  export type NotificationSettingsCreateWithoutApplicantInput = {
+    emailEnabled?: boolean
+    emailJobMatches?: boolean
+    emailApplicationStatus?: boolean
+    emailInterviews?: boolean
+    emailMarketing?: boolean
+    smsEnabled?: boolean
+    smsApplicationStatus?: boolean
+    smsInterviews?: boolean
+    smsUrgent?: boolean
+    pushEnabled?: boolean
+    pushJobMatches?: boolean
+    pushApplicationStatus?: boolean
+    pushInterviews?: boolean
+    profileVisible?: boolean
+    autoApply?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NotificationSettingsUncheckedCreateWithoutApplicantInput = {
+    id?: number
+    emailEnabled?: boolean
+    emailJobMatches?: boolean
+    emailApplicationStatus?: boolean
+    emailInterviews?: boolean
+    emailMarketing?: boolean
+    smsEnabled?: boolean
+    smsApplicationStatus?: boolean
+    smsInterviews?: boolean
+    smsUrgent?: boolean
+    pushEnabled?: boolean
+    pushJobMatches?: boolean
+    pushApplicationStatus?: boolean
+    pushInterviews?: boolean
+    profileVisible?: boolean
+    autoApply?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NotificationSettingsCreateOrConnectWithoutApplicantInput = {
+    where: NotificationSettingsWhereUniqueInput
+    create: XOR<NotificationSettingsCreateWithoutApplicantInput, NotificationSettingsUncheckedCreateWithoutApplicantInput>
+  }
+
   export type UserUpsertWithoutApplicantInput = {
     update: XOR<UserUpdateWithoutApplicantInput, UserUncheckedUpdateWithoutApplicantInput>
     create: XOR<UserCreateWithoutApplicantInput, UserUncheckedCreateWithoutApplicantInput>
@@ -40456,6 +42171,58 @@ export namespace Prisma {
     isActive?: BoolFilter<"JobCategory"> | boolean
     createdAt?: DateTimeFilter<"JobCategory"> | Date | string
     updatedAt?: DateTimeFilter<"JobCategory"> | Date | string
+  }
+
+  export type NotificationSettingsUpsertWithoutApplicantInput = {
+    update: XOR<NotificationSettingsUpdateWithoutApplicantInput, NotificationSettingsUncheckedUpdateWithoutApplicantInput>
+    create: XOR<NotificationSettingsCreateWithoutApplicantInput, NotificationSettingsUncheckedCreateWithoutApplicantInput>
+    where?: NotificationSettingsWhereInput
+  }
+
+  export type NotificationSettingsUpdateToOneWithWhereWithoutApplicantInput = {
+    where?: NotificationSettingsWhereInput
+    data: XOR<NotificationSettingsUpdateWithoutApplicantInput, NotificationSettingsUncheckedUpdateWithoutApplicantInput>
+  }
+
+  export type NotificationSettingsUpdateWithoutApplicantInput = {
+    emailEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailJobMatches?: BoolFieldUpdateOperationsInput | boolean
+    emailApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    emailInterviews?: BoolFieldUpdateOperationsInput | boolean
+    emailMarketing?: BoolFieldUpdateOperationsInput | boolean
+    smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    smsInterviews?: BoolFieldUpdateOperationsInput | boolean
+    smsUrgent?: BoolFieldUpdateOperationsInput | boolean
+    pushEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pushJobMatches?: BoolFieldUpdateOperationsInput | boolean
+    pushApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    pushInterviews?: BoolFieldUpdateOperationsInput | boolean
+    profileVisible?: BoolFieldUpdateOperationsInput | boolean
+    autoApply?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationSettingsUncheckedUpdateWithoutApplicantInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    emailEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailJobMatches?: BoolFieldUpdateOperationsInput | boolean
+    emailApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    emailInterviews?: BoolFieldUpdateOperationsInput | boolean
+    emailMarketing?: BoolFieldUpdateOperationsInput | boolean
+    smsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    smsApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    smsInterviews?: BoolFieldUpdateOperationsInput | boolean
+    smsUrgent?: BoolFieldUpdateOperationsInput | boolean
+    pushEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pushJobMatches?: BoolFieldUpdateOperationsInput | boolean
+    pushApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    pushInterviews?: BoolFieldUpdateOperationsInput | boolean
+    profileVisible?: BoolFieldUpdateOperationsInput | boolean
+    autoApply?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateWithoutEmployerInput = {
@@ -41138,6 +42905,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantUncheckedCreateWithoutSkillsInput = {
@@ -41160,6 +42928,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsUncheckedCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantCreateOrConnectWithoutSkillsInput = {
@@ -41225,6 +42994,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantUncheckedUpdateWithoutSkillsInput = {
@@ -41247,6 +43017,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUncheckedUpdateOneWithoutApplicantNestedInput
   }
 
   export type SkillMasterUpsertWithoutApplicantSkillsInput = {
@@ -41350,6 +43121,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantUncheckedCreateWithoutApplicationsInput = {
@@ -41372,6 +43144,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsUncheckedCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantCreateOrConnectWithoutApplicationsInput = {
@@ -41570,6 +43343,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantUncheckedUpdateWithoutApplicationsInput = {
@@ -41592,6 +43366,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUncheckedUpdateOneWithoutApplicantNestedInput
   }
 
   export type NotificationUpsertWithWhereUniqueWithoutApplicationInput = {
@@ -41678,6 +43453,7 @@ export namespace Prisma {
     skills?: ApplicantSkillCreateNestedManyWithoutApplicantInput
     generalSkills?: GeneralSkillCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantUncheckedCreateWithoutNotificationsInput = {
@@ -41700,6 +43476,7 @@ export namespace Prisma {
     skills?: ApplicantSkillUncheckedCreateNestedManyWithoutApplicantInput
     generalSkills?: GeneralSkillUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsUncheckedCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantCreateOrConnectWithoutNotificationsInput = {
@@ -41811,6 +43588,7 @@ export namespace Prisma {
     skills?: ApplicantSkillUpdateManyWithoutApplicantNestedInput
     generalSkills?: GeneralSkillUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantUncheckedUpdateWithoutNotificationsInput = {
@@ -41833,6 +43611,7 @@ export namespace Prisma {
     skills?: ApplicantSkillUncheckedUpdateManyWithoutApplicantNestedInput
     generalSkills?: GeneralSkillUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUncheckedUpdateOneWithoutApplicantNestedInput
   }
 
   export type EmployerUpsertWithoutNotificationsInput = {
@@ -41940,6 +43719,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantUncheckedCreateWithoutQualificationsInput = {
@@ -41962,6 +43742,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsUncheckedCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantCreateOrConnectWithoutQualificationsInput = {
@@ -42019,6 +43800,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantUncheckedUpdateWithoutQualificationsInput = {
@@ -42041,6 +43823,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUncheckedUpdateOneWithoutApplicantNestedInput
   }
 
   export type CountryUpsertWithoutQualificationsInput = {
@@ -42088,6 +43871,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantUncheckedCreateWithoutExperiencesInput = {
@@ -42110,6 +43894,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsUncheckedCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantCreateOrConnectWithoutExperiencesInput = {
@@ -42147,6 +43932,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantUncheckedUpdateWithoutExperiencesInput = {
@@ -42169,6 +43955,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUncheckedUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantCreateWithoutLanguagesInput = {
@@ -42190,6 +43977,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantUncheckedCreateWithoutLanguagesInput = {
@@ -42212,6 +44000,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsUncheckedCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantCreateOrConnectWithoutLanguagesInput = {
@@ -42249,6 +44038,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantUncheckedUpdateWithoutLanguagesInput = {
@@ -42271,6 +44061,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUncheckedUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantCreateWithoutComputerSkillsInput = {
@@ -42292,6 +44083,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantUncheckedCreateWithoutComputerSkillsInput = {
@@ -42314,6 +44106,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsUncheckedCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantCreateOrConnectWithoutComputerSkillsInput = {
@@ -42351,6 +44144,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantUncheckedUpdateWithoutComputerSkillsInput = {
@@ -42373,6 +44167,7 @@ export namespace Prisma {
     generalSkills?: GeneralSkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUncheckedUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantCreateWithoutGeneralSkillsInput = {
@@ -42394,6 +44189,7 @@ export namespace Prisma {
     skills?: ApplicantSkillCreateNestedManyWithoutApplicantInput
     notifications?: NotificationCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantUncheckedCreateWithoutGeneralSkillsInput = {
@@ -42416,6 +44212,7 @@ export namespace Prisma {
     skills?: ApplicantSkillUncheckedCreateNestedManyWithoutApplicantInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
     categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
+    notificationSettings?: NotificationSettingsUncheckedCreateNestedOneWithoutApplicantInput
   }
 
   export type ApplicantCreateOrConnectWithoutGeneralSkillsInput = {
@@ -42453,6 +44250,7 @@ export namespace Prisma {
     skills?: ApplicantSkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantUncheckedUpdateWithoutGeneralSkillsInput = {
@@ -42475,6 +44273,7 @@ export namespace Prisma {
     skills?: ApplicantSkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
     categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
+    notificationSettings?: NotificationSettingsUncheckedUpdateOneWithoutApplicantNestedInput
   }
 
   export type SkillMasterCreateWithoutSkillDemandsInput = {
@@ -42882,6 +44681,112 @@ export namespace Prisma {
     agentChats?: ChatRoomUncheckedUpdateManyWithoutAgentNestedInput
     consents?: UserConsentUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ApplicantCreateWithoutNotificationSettingsInput = {
+    fullName: string
+    nida: string
+    phone?: string | null
+    address?: string | null
+    dateOfBirth?: Date | string | null
+    gender?: string | null
+    profileCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutApplicantInput
+    applications?: ApplicationCreateNestedManyWithoutApplicantInput
+    qualifications?: AcademicQualificationCreateNestedManyWithoutApplicantInput
+    experiences?: WorkExperienceCreateNestedManyWithoutApplicantInput
+    languages?: LanguageProficiencyCreateNestedManyWithoutApplicantInput
+    computerSkills?: ComputerSkillCreateNestedManyWithoutApplicantInput
+    skills?: ApplicantSkillCreateNestedManyWithoutApplicantInput
+    generalSkills?: GeneralSkillCreateNestedManyWithoutApplicantInput
+    notifications?: NotificationCreateNestedManyWithoutApplicantInput
+    categories?: JobCategoryCreateNestedManyWithoutApplicantsInput
+  }
+
+  export type ApplicantUncheckedCreateWithoutNotificationSettingsInput = {
+    id?: number
+    fullName: string
+    nida: string
+    phone?: string | null
+    address?: string | null
+    dateOfBirth?: Date | string | null
+    gender?: string | null
+    userId: number
+    profileCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applications?: ApplicationUncheckedCreateNestedManyWithoutApplicantInput
+    qualifications?: AcademicQualificationUncheckedCreateNestedManyWithoutApplicantInput
+    experiences?: WorkExperienceUncheckedCreateNestedManyWithoutApplicantInput
+    languages?: LanguageProficiencyUncheckedCreateNestedManyWithoutApplicantInput
+    computerSkills?: ComputerSkillUncheckedCreateNestedManyWithoutApplicantInput
+    skills?: ApplicantSkillUncheckedCreateNestedManyWithoutApplicantInput
+    generalSkills?: GeneralSkillUncheckedCreateNestedManyWithoutApplicantInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicantInput
+    categories?: JobCategoryUncheckedCreateNestedManyWithoutApplicantsInput
+  }
+
+  export type ApplicantCreateOrConnectWithoutNotificationSettingsInput = {
+    where: ApplicantWhereUniqueInput
+    create: XOR<ApplicantCreateWithoutNotificationSettingsInput, ApplicantUncheckedCreateWithoutNotificationSettingsInput>
+  }
+
+  export type ApplicantUpsertWithoutNotificationSettingsInput = {
+    update: XOR<ApplicantUpdateWithoutNotificationSettingsInput, ApplicantUncheckedUpdateWithoutNotificationSettingsInput>
+    create: XOR<ApplicantCreateWithoutNotificationSettingsInput, ApplicantUncheckedCreateWithoutNotificationSettingsInput>
+    where?: ApplicantWhereInput
+  }
+
+  export type ApplicantUpdateToOneWithWhereWithoutNotificationSettingsInput = {
+    where?: ApplicantWhereInput
+    data: XOR<ApplicantUpdateWithoutNotificationSettingsInput, ApplicantUncheckedUpdateWithoutNotificationSettingsInput>
+  }
+
+  export type ApplicantUpdateWithoutNotificationSettingsInput = {
+    fullName?: StringFieldUpdateOperationsInput | string
+    nida?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    profileCompleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutApplicantNestedInput
+    applications?: ApplicationUpdateManyWithoutApplicantNestedInput
+    qualifications?: AcademicQualificationUpdateManyWithoutApplicantNestedInput
+    experiences?: WorkExperienceUpdateManyWithoutApplicantNestedInput
+    languages?: LanguageProficiencyUpdateManyWithoutApplicantNestedInput
+    computerSkills?: ComputerSkillUpdateManyWithoutApplicantNestedInput
+    skills?: ApplicantSkillUpdateManyWithoutApplicantNestedInput
+    generalSkills?: GeneralSkillUpdateManyWithoutApplicantNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicantNestedInput
+    categories?: JobCategoryUpdateManyWithoutApplicantsNestedInput
+  }
+
+  export type ApplicantUncheckedUpdateWithoutNotificationSettingsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    nida?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: IntFieldUpdateOperationsInput | number
+    profileCompleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applications?: ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
+    qualifications?: AcademicQualificationUncheckedUpdateManyWithoutApplicantNestedInput
+    experiences?: WorkExperienceUncheckedUpdateManyWithoutApplicantNestedInput
+    languages?: LanguageProficiencyUncheckedUpdateManyWithoutApplicantNestedInput
+    computerSkills?: ComputerSkillUncheckedUpdateManyWithoutApplicantNestedInput
+    skills?: ApplicantSkillUncheckedUpdateManyWithoutApplicantNestedInput
+    generalSkills?: GeneralSkillUncheckedUpdateManyWithoutApplicantNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
+    categories?: JobCategoryUncheckedUpdateManyWithoutApplicantsNestedInput
   }
 
   export type UserCreateWithoutConsentsInput = {
@@ -43333,6 +45238,7 @@ export namespace Prisma {
     skills?: ApplicantSkillUpdateManyWithoutApplicantNestedInput
     generalSkills?: GeneralSkillUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUpdateManyWithoutApplicantNestedInput
+    notificationSettings?: NotificationSettingsUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantUncheckedUpdateWithoutCategoriesInput = {
@@ -43355,6 +45261,7 @@ export namespace Prisma {
     skills?: ApplicantSkillUncheckedUpdateManyWithoutApplicantNestedInput
     generalSkills?: GeneralSkillUncheckedUpdateManyWithoutApplicantNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicantNestedInput
+    notificationSettings?: NotificationSettingsUncheckedUpdateOneWithoutApplicantNestedInput
   }
 
   export type ApplicantUncheckedUpdateManyWithoutCategoriesInput = {

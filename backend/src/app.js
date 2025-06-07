@@ -57,6 +57,8 @@ app.use('/api/general-skills', require('./routes/generalSkills'));
 app.use('/api/jobs', require('./routes/jobs'));
 app.use('/api/applications', require('./routes/applications'));
 app.use('/api/categories', require('./routes/categories'));
+app.use('/api/applicant-categories', require('./routes/applicantCategories')); // New category management
+app.use('/api/notification-settings', require('./routes/notificationSettings')); // Notification preferences
 app.use('/api/pdf', require('./routes/pdf'));
 app.use('/api/market', require('./routes/marketAnalytics'));
 app.use('/api/skills-analysis', require('./routes/skillsAnalysis'));

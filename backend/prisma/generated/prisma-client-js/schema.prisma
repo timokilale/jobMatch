@@ -153,16 +153,17 @@ model Applicant {
   updatedAt        DateTime  @updatedAt
 
   // Relations
-  user           User                    @relation(fields: [userId], references: [id])
-  applications   Application[]
-  qualifications AcademicQualification[]
-  experiences    WorkExperience[]
-  languages      LanguageProficiency[]
-  computerSkills ComputerSkill[] // Legacy - to be migrated to ApplicantSkill
-  skills         ApplicantSkill[]
-  generalSkills  GeneralSkill[]
-  notifications  Notification[]
-  categories     JobCategory[]           @relation("ApplicantCategories")
+  user                 User                    @relation(fields: [userId], references: [id])
+  applications         Application[]
+  qualifications       AcademicQualification[]
+  experiences          WorkExperience[]
+  languages            LanguageProficiency[]
+  computerSkills       ComputerSkill[] // Legacy - to be migrated to ApplicantSkill
+  skills               ApplicantSkill[]
+  generalSkills        GeneralSkill[]
+  notifications        Notification[]
+  categories           JobCategory[]           @relation("ApplicantCategories")
+  notificationSettings NotificationSettings?
 
   @@index([nida])
   @@index([userId])
@@ -487,6 +488,41 @@ model ChatMessage {
   isRead    Boolean   @default(false)
   readAt    DateTime?
   timestamp DateTime  @default(now())
+}
+
+// Notification Settings for Applicants
+model NotificationSettings {
+  id          Int       @id @default(autoincrement())
+  applicantId Int       @unique
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+
+  // Email notifications
+  emailEnabled           Boolean @default(true)
+  emailJobMatches        Boolean @default(true)
+  emailApplicationStatus Boolean @default(true)
+  emailInterviews        Boolean @default(true)
+  emailMarketing         Boolean @default(false)
+
+  // SMS notifications
+  smsEnabled           Boolean @default(false)
+  smsApplicationStatus Boolean @default(false)
+  smsInterviews        Boolean @default(false)
+  smsUrgent            Boolean @default(false)
+
+  // Push notifications (for future mobile app)
+  pushEnabled           Boolean @default(true)
+  pushJobMatches        Boolean @default(true)
+  pushApplicationStatus Boolean @default(true)
+  pushInterviews        Boolean @default(true)
+
+  // General preferences
+  profileVisible Boolean @default(true)
+  autoApply      Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([applicantId])
 }
 
 // Market Analytics Models

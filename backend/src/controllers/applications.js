@@ -1,5 +1,6 @@
 const prisma = require('../prisma');
 const { createStatusChangeNotification } = require('./notifications');
+const notificationService = require('../services/notificationService');
 
 exports.applyToJob = async (req, res) => {
   const { applicantId, jobId } = req.body;
@@ -204,6 +205,9 @@ exports.updateApplicationStatus = async (req, res) => {
     if (currentApplication.status !== finalStatus && ['ACCEPTED', 'REJECTED'].includes(finalStatus)) {
       const notificationStatus = finalStatus === 'ACCEPTED' ? 'accepted' : 'rejected';
       await createStatusChangeNotification(applicationId, notificationStatus);
+
+      // Send email/SMS notification to applicant
+      await notificationService.notifyApplicationStatus(applicationId, finalStatus);
     }
 
     res.json(updatedApplication);
@@ -271,6 +275,9 @@ exports.makeApplicationDecision = async (req, res) => {
     // Create notification for status change - PASS LOWERCASE VALUE
     if (currentApplication.status !== status) {
       await createStatusChangeNotification(applicationId, decision.toLowerCase() === 'accept' ? 'accepted' : 'rejected');
+
+      // Send email/SMS notification to applicant
+      await notificationService.notifyApplicationStatus(applicationId, status);
     }
 
     res.json({

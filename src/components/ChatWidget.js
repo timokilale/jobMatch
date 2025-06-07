@@ -185,20 +185,11 @@ const ChatWidget = () => {
       console.error('Socket not connected');
       return;
     }
-    
-    const initialMessage = "Hello! I need help with the job matching system.";
+
+    // Start chat without sending an initial message
     socket.emit('start_chat', {
       topic: 'General Support',
-      message: initialMessage
-    });
-    
-    addMessage({
-      id: Date.now(),
-      message: initialMessage,
-      senderId: user.id,
-      senderName: user.fullName || user.companyName,
-      timestamp: new Date(),
-      type: 'text'
+      message: '' // Empty message to just initialize the chat
     });
   };
   
@@ -248,6 +239,8 @@ const ChatWidget = () => {
     setIsOpen(!isOpen);
     if (!isOpen) {
       setUnreadCount(0);
+      // Clear any existing messages for a fresh start
+      setMessages([]);
       if (!chatRoom && isConnected) {
         startChat();
       }

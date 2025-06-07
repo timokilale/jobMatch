@@ -359,6 +359,28 @@ exports.Prisma.ChatMessageScalarFieldEnum = {
   timestamp: 'timestamp'
 };
 
+exports.Prisma.NotificationSettingsScalarFieldEnum = {
+  id: 'id',
+  applicantId: 'applicantId',
+  emailEnabled: 'emailEnabled',
+  emailJobMatches: 'emailJobMatches',
+  emailApplicationStatus: 'emailApplicationStatus',
+  emailInterviews: 'emailInterviews',
+  emailMarketing: 'emailMarketing',
+  smsEnabled: 'smsEnabled',
+  smsApplicationStatus: 'smsApplicationStatus',
+  smsInterviews: 'smsInterviews',
+  smsUrgent: 'smsUrgent',
+  pushEnabled: 'pushEnabled',
+  pushJobMatches: 'pushJobMatches',
+  pushApplicationStatus: 'pushApplicationStatus',
+  pushInterviews: 'pushInterviews',
+  profileVisible: 'profileVisible',
+  autoApply: 'autoApply',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.MarketTrendScalarFieldEnum = {
   id: 'id',
   industry: 'industry',
@@ -661,6 +683,7 @@ exports.Prisma.ModelName = {
   SkillDemand: 'SkillDemand',
   ChatRoom: 'ChatRoom',
   ChatMessage: 'ChatMessage',
+  NotificationSettings: 'NotificationSettings',
   MarketTrend: 'MarketTrend',
   UserConsent: 'UserConsent',
   AuditLog: 'AuditLog',

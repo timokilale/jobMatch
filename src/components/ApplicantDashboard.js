@@ -14,6 +14,7 @@ import TutorialSystem, { useTutorial } from "./TutorialSystem";
 import AccessibilitySettings from "./AccessibilitySettings";
 import SkillsAnalysis from "./SkillsAnalysis";
 import MarketAnalytics from "./MarketAnalytics";
+import Settings from "./Settings";
 
 import PrivacySettings from "./PrivacySettings";
 import ChatWidget from "./ChatWidget";
@@ -138,6 +139,12 @@ const ApplicantDashboard = () => {
       component: <CVPreview applicantId={user.id} />,
     },
     {
+      key: "settings",
+      title: "Settings",
+      icon: "cog",
+      component: <Settings />,
+    },
+    {
       key: "accessibility",
       title: "Accessibility",
       icon: "universal-access",
@@ -219,11 +226,11 @@ const ApplicantDashboard = () => {
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => handleSectionClick(sections.find(s => s.key === "applied-jobs"))}
+              onClick={() => handleSectionClick(sections.find(s => s.key === "settings"))}
               className="flex items-center space-x-2 text-green-700 hover:text-green-500 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors touch-target"
             >
-              <i className="fas fa-briefcase text-lg"></i>
-              <span className="hidden md:inline text-sm">Applied Jobs</span>
+              <i className="fas fa-cog text-lg"></i>
+              <span className="hidden md:inline text-sm">Settings</span>
             </button>
 
             <div data-tutorial="notifications">

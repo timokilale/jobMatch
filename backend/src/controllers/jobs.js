@@ -60,14 +60,30 @@ exports.getApplicantJobs = async (req, res) => {
       return res.status(404).json({ error: 'Applicant not found'});
     }
 
-    // Show ALL jobs to all applicants - let them decide what to apply for
-    // Include all job statuses except DRAFT (which are not ready for applications)
-    const jobs = await prisma.job.findMany({
-      where: {
-        status: {
-          in: ['ACTIVE', 'PAUSED'] // Show active and paused jobs, exclude drafts, closed, and expired
+    // Get applicant's selected category IDs
+    const selectedCategoryIds = applicant.categories.map(cat => cat.id);
+
+    // If no categories selected, show all jobs (fallback for users who haven't set preferences)
+    // Otherwise, show only jobs from selected categories
+    const whereCondition = {
+      status: {
+        in: ['ACTIVE', 'PAUSED'] // Show active and paused jobs, exclude drafts, closed, and expired
+      }
+    };
+
+    // Add category filtering if user has selected categories
+    if (selectedCategoryIds.length > 0) {
+      whereCondition.categories = {
+        some: {
+          id: {
+            in: selectedCategoryIds
+          }
         }
-      },
+      };
+    }
+
+    const jobs = await prisma.job.findMany({
+      where: whereCondition,
       include: {
         employer: {
           select: {
@@ -83,6 +99,8 @@ exports.getApplicantJobs = async (req, res) => {
       take: limit
     });
 
+    console.log(`✅ Applicant ${applicantId} has ${selectedCategoryIds.length} selected categories:`,
+      applicant.categories.map(cat => cat.name).join(', ') || 'None');
     console.log(`Found ${jobs.length} jobs for applicant ${applicantId}`);
 
     const jobsWithCompany = jobs.map(job => ({
@@ -90,16 +108,16 @@ exports.getApplicantJobs = async (req, res) => {
       company: job.employer.companyName
     }));
 
-    // Get total count of all available jobs
+    // Get total count of jobs matching the same filter criteria
     const totalJobs = await prisma.job.count({
-      where: {
-        status: {
-          in: ['ACTIVE', 'PAUSED']
-        }
-      }
+      where: whereCondition
     });
 
-    console.log(`Returning ${jobsWithCompany.length} jobs out of ${totalJobs} total available jobs`);
+    const categoryInfo = selectedCategoryIds.length > 0
+      ? `from ${selectedCategoryIds.length} selected categories`
+      : 'from all categories (no preferences set)';
+
+    console.log(`Returning ${jobsWithCompany.length} jobs out of ${totalJobs} total available jobs ${categoryInfo}`);
 
     res.json({
       jobs: jobsWithCompany,
