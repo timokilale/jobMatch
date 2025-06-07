@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, X, Edit2, Save, AlertCircle, Monitor, User, Globe, Palette, Users, MoreHorizontal, Calendar, Award, Trash2 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSkills, createSkill, updateSkill, deleteSkill, clearError, clearSuccess, searchSkills, fetchSkillCategories } from '../../redux/slices/skillsSlice';
+import EnhancedDatePicker from '../common/EnhancedDatePicker';
 
 const Skills = () => {
   const dispatch = useDispatch();
@@ -411,11 +412,15 @@ const Skills = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Last Used</label>
-                    <input
-                      type="date"
+                    <EnhancedDatePicker
+                      name="lastUsed"
                       value={newSkill.lastUsed}
                       onChange={(e) => setNewSkill({ ...newSkill, lastUsed: e.target.value })}
+                      label="Last Used"
+                      required={false}
+                      min="1970-01-01"
+                      max={new Date().toISOString().split('T')[0]}
+                      placeholder="Select when you last used this skill"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                   </div>
@@ -545,10 +550,14 @@ const Skills = () => {
                             placeholder="Years exp."
                             className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
                           />
-                          <input
-                            type="date"
+                          <EnhancedDatePicker
+                            name="lastUsed"
                             value={editingSkill.lastUsed || ''}
                             onChange={(e) => setEditingSkill({ ...editingSkill, lastUsed: e.target.value })}
+                            required={false}
+                            min="1970-01-01"
+                            max={new Date().toISOString().split('T')[0]}
+                            placeholder="Last used"
                             className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
                           />
                         </div>

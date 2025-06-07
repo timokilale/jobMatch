@@ -1,6 +1,8 @@
 import React from 'react';
 import { useEffect } from 'react';
 import useWork from '../../hooks/Work';
+import EnhancedDatePicker from '../common/EnhancedDatePicker';
+import { withUppercase } from '../../utils/textTransform';
 
 const WorkExperience = () => {
 const {
@@ -59,7 +61,7 @@ const formatDate = (isoDate) => {
             <input
               name="companyName"
               value={formData.companyName}
-              onChange={handleChange}
+              onChange={withUppercase(handleChange)}
               type="text"
               className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
               required
@@ -69,7 +71,7 @@ const formatDate = (isoDate) => {
               <input
                 name="jobTitle"
                 value={formData.jobTitle}
-                onChange={handleChange}
+                onChange={withUppercase(handleChange)}
                 type="text"
                 className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
                 required
@@ -80,7 +82,7 @@ const formatDate = (isoDate) => {
               <input
                 name="supervisorName"
                 value={formData.supervisorName}
-                onChange={handleChange}
+                onChange={withUppercase(handleChange)}
                 type="text"
                 className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
                 required
@@ -106,7 +108,7 @@ const formatDate = (isoDate) => {
             <textarea
               name="location"
               value={formData.location}
-              onChange={handleChange}
+              onChange={withUppercase(handleChange)}
               rows="2"
               className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
               required
@@ -116,7 +118,7 @@ const formatDate = (isoDate) => {
               <textarea
                 name="responsibilities"
                 value={formData.responsibilities}
-                onChange={handleChange}
+                onChange={withUppercase(handleChange)}
                 rows="4"
                 className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
                 required
@@ -125,32 +127,29 @@ const formatDate = (isoDate) => {
             
             {/* Date Section */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-green-800">Start Date *</label>
-                <input
-                  name="startDate"
-                  value={formData.startDate}
-                  onChange={handleChange}
-                  type="date"
-                  max={new Date().toISOString().split('T')[0]}
-                  className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
-                  required
-                />
-                <p className="text-xs text-gray-500">Start date cannot be in the future</p>
-              </div>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-green-800">End Date</label>
-                <input
-                  name="endDate"
-                  value={formData.endDate}
-                  onChange={handleChange}
-                  type="date"
-                  min={formData.startDate}
-                  max={new Date().toISOString().split('T')[0]}
-                  className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
-                />
-                <p className="text-xs text-gray-500">Leave empty if current job. End date cannot be in the future or before start date</p>
-              </div>
+              <EnhancedDatePicker
+                name="startDate"
+                value={formData.startDate}
+                onChange={handleChange}
+                label="Start Date"
+                required={true}
+                min="1970-01-01"
+                max={new Date().toISOString().split('T')[0]}
+                placeholder="Select start date"
+                className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
+              />
+
+              <EnhancedDatePicker
+                name="endDate"
+                value={formData.endDate}
+                onChange={handleChange}
+                label="End Date"
+                required={false}
+                min="1970-01-01"
+                max={new Date().toISOString().split('T')[0]}
+                placeholder="Select end date (leave empty if current job)"
+                className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
+              />
             </div>
           </div>
         </div>

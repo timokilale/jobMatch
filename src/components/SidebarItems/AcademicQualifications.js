@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AcademicQualificationsLogic from '../../hooks/AcademicQualifications';
+import EnhancedDatePicker from '../common/EnhancedDatePicker';
+import { withUppercase } from '../../utils/textTransform';
 
 
 const AcademicQualifications = () => {
@@ -80,13 +82,13 @@ const AcademicQualifications = () => {
           <div className="space-y-2">
             <label className="block text-sm font-medium text-green-800">Country *</label>
             <input
-              type="text" 
+              type="text"
               name="country"
               value={formData.country}
-              onChange={handleChange}
+              onChange={withUppercase(handleChange)}
               className="w-full p-2 border border-green-300 rounded-md  focus:border-green-500 focus:outline-none"
               required
-            />    
+            />
           </div>
 
 
@@ -95,13 +97,13 @@ const AcademicQualifications = () => {
           <div className="space-y-2">
             <label className="block text-sm font-medium text-green-800">Institution Name *</label>
             <input
-              type="text" 
+              type="text"
               name="institution"
               value={formData.institution}
-              onChange={handleChange}
+              onChange={withUppercase(handleChange)}
               className="w-full p-2 border border-green-300 rounded-md  focus:border-green-500 focus:outline-none"
               required
-            />    
+            />
          </div>
 
           <div className="space-y-2">
@@ -110,7 +112,7 @@ const AcademicQualifications = () => {
               type="text"
               name="program"
               value={formData.program}
-              onChange={handleChange}
+              onChange={withUppercase(handleChange)}
               className="w-full p-2 border border-green-300 rounded-md  focus:border-green-500 focus:outline-none"
               required
             />
@@ -119,33 +121,29 @@ const AcademicQualifications = () => {
 
         {/* Date Range */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-green-800">Start date *</label>
-            <input
-              type="date"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-              max={new Date().toISOString().split('T')[0]}
-              className="w-full p-2 border border-green-300 rounded-md   focus:border-green-500 focus:outline-none"
-              required
-            />
-            <p className="text-xs text-gray-500">Start date cannot be in the future</p>
-          </div>
+          <EnhancedDatePicker
+            name="startDate"
+            value={formData.startDate}
+            onChange={handleChange}
+            label="Start Date"
+            required={true}
+            min="1970-01-01"
+            max={new Date().toISOString().split('T')[0]}
+            placeholder="Select start date"
+            className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
+          />
 
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-green-800">End date</label>
-            <input
-              type="date"
-              name="endDate"
-              value={formData.endDate}
-              onChange={handleChange}
-              min={formData.startDate}
-              max={new Date().toISOString().split('T')[0]}
-              className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
-            />
-            <p className="text-xs text-gray-500">End date cannot be in the future or before start date</p>
-          </div>
+          <EnhancedDatePicker
+            name="endDate"
+            value={formData.endDate}
+            onChange={handleChange}
+            label="End Date"
+            required={false}
+            min="1970-01-01"
+            max={new Date().toISOString().split('T')[0]}
+            placeholder="Select end date (leave empty if ongoing)"
+            className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
+          />
         </div>
 
         {/* File Upload */}

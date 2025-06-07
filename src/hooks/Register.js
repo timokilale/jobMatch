@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerApplicant } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
+import { toUpperCase } from '../utils/textTransform';
 
 const useRegister = () => {
   const dispatch = useDispatch();
@@ -74,7 +75,7 @@ const useRegister = () => {
     selectedCategories,
     setSelectedCategories,
     categoryOptions,
-    setFullname: (value) => setFormData({ ...formData, fullname: value }),
+    setFullname: (value) => setFormData({ ...formData, fullname: toUpperCase(value) }),
     setNida: (value) => setFormData({ ...formData, nida: value }),
     setEmail: (value) => setFormData({ ...formData, email: value }),
     setPassword: (value) => setFormData({ ...formData, password: value }),

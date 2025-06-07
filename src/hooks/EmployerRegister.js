@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { registerEmployer } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { toUpperCase } from '../utils/textTransform';
 
 const useEmployerRegister = () => {
   const dispatch = useDispatch();
@@ -33,9 +34,9 @@ const useEmployerRegister = () => {
 
   return {
     ...formData,
-    setCompanyName: (value) => setFormData({ ...formData, companyName: value }),
+    setCompanyName: (value) => setFormData({ ...formData, companyName: toUpperCase(value) }),
     setEmail: (value) => setFormData({ ...formData, email: value }),
-    setAddress: (value) => setFormData({ ...formData, address: value }),
+    setAddress: (value) => setFormData({ ...formData, address: toUpperCase(value) }),
     setPassword: (value) => setFormData({ ...formData, password: value }),
     handleRegister,
   };
