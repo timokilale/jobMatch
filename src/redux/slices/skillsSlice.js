@@ -26,6 +26,35 @@ export const createSkill = createAsyncThunk(
   }
 );
 
+export const searchSkills = createAsyncThunk(
+  'skills/searchSkills',
+  async ({ query, category, limit }, { rejectWithValue }) => {
+    try {
+      const params = new URLSearchParams();
+      if (query) params.append('q', query);
+      if (category) params.append('category', category);
+      if (limit) params.append('limit', limit);
+
+      const response = await api.get(`/skills/search?${params.toString()}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.error);
+    }
+  }
+);
+
+export const fetchSkillCategories = createAsyncThunk(
+  'skills/fetchSkillCategories',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get('/skills/categories');
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.error);
+    }
+  }
+);
+
 export const updateSkill = createAsyncThunk(
   'skills/updateSkill',
   async ({ id, ...skillData }, { rejectWithValue }) => {
@@ -54,7 +83,10 @@ const skillsSlice = createSlice({
   name: 'skills',
   initialState: {
     skills: [],
+    searchResults: [],
+    categories: [],
     loading: false,
+    searchLoading: false,
     error: null,
     success: null
   },
@@ -130,6 +162,32 @@ const skillsSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteSkill.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Search skills
+      .addCase(searchSkills.pending, (state) => {
+        state.searchLoading = true;
+      })
+      .addCase(searchSkills.fulfilled, (state, action) => {
+        state.searchLoading = false;
+        state.searchResults = action.payload;
+      })
+      .addCase(searchSkills.rejected, (state, action) => {
+        state.searchLoading = false;
+        state.error = action.payload;
+      })
+
+      // Fetch skill categories
+      .addCase(fetchSkillCategories.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchSkillCategories.fulfilled, (state, action) => {
+        state.loading = false;
+        state.categories = action.payload;
+      })
+      .addCase(fetchSkillCategories.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

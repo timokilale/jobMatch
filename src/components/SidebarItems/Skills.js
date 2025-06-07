@@ -1,20 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, X, Edit2, Save, AlertCircle, Monitor, User, Globe, Palette, Users, MoreHorizontal } from 'lucide-react';
+import { Plus, X, Edit2, Save, AlertCircle, Monitor, User, Globe, Palette, Users, MoreHorizontal, Calendar, Award, Trash2 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchSkills, createSkill, updateSkill, deleteSkill, clearError, clearSuccess } from '../../redux/slices/skillsSlice';
+import { fetchSkills, createSkill, updateSkill, deleteSkill, clearError, clearSuccess, searchSkills, fetchSkillCategories } from '../../redux/slices/skillsSlice';
 
 const Skills = () => {
   const dispatch = useDispatch();
-  const { skills, loading, error, success } = useSelector(state => state.skills);
+  const { skills, searchResults, categories, loading, searchLoading, error, success } = useSelector(state => state.skills);
 
-  const [newSkill, setNewSkill] = useState({ name: '', proficiency: 'Beginner', category: 'Technical' });
+  const [newSkill, setNewSkill] = useState({
+    name: '',
+    proficiency: 'Beginner',
+    category: 'Technical',
+    yearsExperience: '',
+    lastUsed: '',
+    isCertified: false,
+    certificationName: ''
+  });
   const [editingId, setEditingId] = useState(null);
   const [editingSkill, setEditingSkill] = useState({});
   const [activeTab, setActiveTab] = useState('all');
   const [validationError, setValidationError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showAdvancedFields, setShowAdvancedFields] = useState(false);
 
   const proficiencyLevels = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
-  const categories = [
+  const skillCategories = [
     'Technical',
     'Computer Skills',
     'Soft Skills',
@@ -33,6 +43,7 @@ const Skills = () => {
 
   useEffect(() => {
     dispatch(fetchSkills());
+    dispatch(fetchSkillCategories());
   }, [dispatch]);
 
   useEffect(() => {
@@ -92,9 +103,21 @@ const Skills = () => {
       await dispatch(createSkill({
         skill: trimmedName,
         proficiency: newSkill.proficiency,
-        description: newSkill.category
+        description: newSkill.category,
+        yearsExperience: newSkill.yearsExperience || null,
+        lastUsed: newSkill.lastUsed || null,
+        isCertified: newSkill.isCertified,
+        certificationName: newSkill.certificationName || null
       })).unwrap();
-      setNewSkill({ name: '', proficiency: 'Beginner', category: 'Technical' });
+      setNewSkill({
+        name: '',
+        proficiency: 'Beginner',
+        category: 'Technical',
+        yearsExperience: '',
+        lastUsed: '',
+        isCertified: false,
+        certificationName: ''
+      });
       setValidationError('');
     } catch (error) {
       // Error is handled by Redux
@@ -130,7 +153,11 @@ const Skills = () => {
         id,
         skill: editingSkill.name,
         proficiency: editingSkill.proficiency,
-        description: editingSkill.category
+        description: editingSkill.category,
+        yearsExperience: editingSkill.yearsExperience || null,
+        lastUsed: editingSkill.lastUsed || null,
+        isCertified: editingSkill.isCertified || false,
+        certificationName: editingSkill.certificationName || null
       })).unwrap();
       setEditingId(null);
       setEditingSkill({});
@@ -154,7 +181,11 @@ const Skills = () => {
     setEditingSkill({
       name: skill.skill,
       proficiency: skill.proficiency,
-      category: skill.description
+      category: skill.description,
+      yearsExperience: skill.yearsExperience || '',
+      lastUsed: skill.lastUsed ? skill.lastUsed.split('T')[0] : '', // Format date for input
+      isCertified: skill.isCertified || false,
+      certificationName: skill.certificationName || ''
     });
   };
 
@@ -175,11 +206,15 @@ const Skills = () => {
   const getProficiencyColor = (proficiency) => {
     const colors = {
       'Beginner': 'bg-red-100 text-red-800',
+      'BEGINNER': 'bg-red-100 text-red-800',
       'Intermediate': 'bg-yellow-100 text-yellow-800',
+      'INTERMEDIATE': 'bg-yellow-100 text-yellow-800',
       'Advanced': 'bg-blue-100 text-blue-800',
-      'Expert': 'bg-green-100 text-green-800'
+      'ADVANCED': 'bg-blue-100 text-blue-800',
+      'Expert': 'bg-green-100 text-green-800',
+      'EXPERT': 'bg-green-100 text-green-800'
     };
-    return colors[proficiency];
+    return colors[proficiency] || 'bg-gray-100 text-gray-800';
   };
 
   const getCategoryColor = (category) => {
@@ -302,49 +337,116 @@ const Skills = () => {
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Skill Name</label>
-                <input
-                  type="text"
-                  value={newSkill.name}
-                  onChange={(e) => {
-                    setNewSkill({ ...newSkill, name: e.target.value });
-                    if (validationError) setValidationError('');
-                  }}
-                  placeholder={`e.g., ${
-                    activeTab === 'computer' ? 'Microsoft Excel, Photoshop' :
-                    activeTab === 'technical' ? 'JavaScript, Python' :
-                    activeTab === 'soft' ? 'Leadership, Communication' :
-                    'Enter skill name'
-                  }`}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Skill Name</label>
+                  <input
+                    type="text"
+                    value={newSkill.name}
+                    onChange={(e) => {
+                      setNewSkill({ ...newSkill, name: e.target.value });
+                      if (validationError) setValidationError('');
+                    }}
+                    placeholder={`e.g., ${
+                      activeTab === 'computer' ? 'Microsoft Excel, Photoshop' :
+                      activeTab === 'technical' ? 'JavaScript, Python' :
+                      activeTab === 'soft' ? 'Leadership, Communication' :
+                      'Enter skill name'
+                    }`}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Proficiency</label>
+                  <select
+                    value={newSkill.proficiency}
+                    onChange={(e) => setNewSkill({ ...newSkill, proficiency: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    {proficiencyLevels.map(level => (
+                      <option key={level} value={level}>{level}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-end">
+                  <button
+                    onClick={handleAddSkill}
+                    disabled={loading || !newSkill.name.trim()}
+                    className="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 disabled:opacity-50 flex items-center justify-center"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add {activeTab === 'computer' ? 'Computer Skill' :
+                         activeTab === 'technical' ? 'Technical Skill' :
+                         activeTab === 'soft' ? 'Soft Skill' : 'Skill'}
+                  </button>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Proficiency</label>
-                <select
-                  value={newSkill.proficiency}
-                  onChange={(e) => setNewSkill({ ...newSkill, proficiency: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                >
-                  {proficiencyLevels.map(level => (
-                    <option key={level} value={level}>{level}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex items-end">
+
+              {/* Advanced Fields Toggle */}
+              <div className="flex items-center space-x-2">
                 <button
-                  onClick={handleAddSkill}
-                  disabled={loading || !newSkill.name.trim()}
-                  className="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 disabled:opacity-50 flex items-center justify-center"
+                  type="button"
+                  onClick={() => setShowAdvancedFields(!showAdvancedFields)}
+                  className="text-sm text-green-600 hover:text-green-700 flex items-center space-x-1"
                 >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add {activeTab === 'computer' ? 'Computer Skill' :
-                       activeTab === 'technical' ? 'Technical Skill' :
-                       activeTab === 'soft' ? 'Soft Skill' : 'Skill'}
+                  <span>{showAdvancedFields ? 'Hide' : 'Show'} Advanced Options</span>
+                  <span className={`transform transition-transform ${showAdvancedFields ? 'rotate-180' : ''}`}>▼</span>
                 </button>
               </div>
+
+              {/* Advanced Fields */}
+              {showAdvancedFields && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Years of Experience</label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="50"
+                      value={newSkill.yearsExperience}
+                      onChange={(e) => setNewSkill({ ...newSkill, yearsExperience: e.target.value })}
+                      placeholder="e.g., 3"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Last Used</label>
+                    <input
+                      type="date"
+                      value={newSkill.lastUsed}
+                      onChange={(e) => setNewSkill({ ...newSkill, lastUsed: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <div className="flex items-center space-x-3">
+                      <input
+                        type="checkbox"
+                        id="isCertified"
+                        checked={newSkill.isCertified}
+                        onChange={(e) => setNewSkill({ ...newSkill, isCertified: e.target.checked })}
+                        className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                      />
+                      <label htmlFor="isCertified" className="text-sm font-medium text-gray-700">
+                        I have a certification for this skill
+                      </label>
+                    </div>
+                  </div>
+                  {newSkill.isCertified && (
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Certification Name</label>
+                      <input
+                        type="text"
+                        value={newSkill.certificationName}
+                        onChange={(e) => setNewSkill({ ...newSkill, certificationName: e.target.value })}
+                        placeholder="e.g., Microsoft Office Specialist, AWS Certified Developer"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -427,10 +529,53 @@ const Skills = () => {
                           onChange={(e) => setEditingSkill({ ...editingSkill, category: e.target.value })}
                           className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
                         >
-                          {categories.map(category => (
+                          {skillCategories.map(category => (
                             <option key={category} value={category}>{category}</option>
                           ))}
                         </select>
+
+                        {/* Advanced editing fields */}
+                        <div className="grid grid-cols-2 gap-2">
+                          <input
+                            type="number"
+                            min="0"
+                            max="50"
+                            value={editingSkill.yearsExperience || ''}
+                            onChange={(e) => setEditingSkill({ ...editingSkill, yearsExperience: e.target.value })}
+                            placeholder="Years exp."
+                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                          />
+                          <input
+                            type="date"
+                            value={editingSkill.lastUsed || ''}
+                            onChange={(e) => setEditingSkill({ ...editingSkill, lastUsed: e.target.value })}
+                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                          />
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            id={`certified-${skill.id}`}
+                            checked={editingSkill.isCertified || false}
+                            onChange={(e) => setEditingSkill({ ...editingSkill, isCertified: e.target.checked })}
+                            className="h-3 w-3 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                          />
+                          <label htmlFor={`certified-${skill.id}`} className="text-xs text-gray-700">
+                            Certified
+                          </label>
+                        </div>
+
+                        {editingSkill.isCertified && (
+                          <input
+                            type="text"
+                            value={editingSkill.certificationName || ''}
+                            onChange={(e) => setEditingSkill({ ...editingSkill, certificationName: e.target.value })}
+                            placeholder="Certification name"
+                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                          />
+                        )}
+
                         <div className="flex space-x-2">
                           <button
                             onClick={() => handleUpdateSkill(skill.id)}
@@ -471,12 +616,42 @@ const Skills = () => {
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getProficiencyColor(skill.proficiency)}`}>
-                            {skill.proficiency}
-                          </span>
-                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ml-2 ${getCategoryColor(skill.description)}`}>
-                            {skill.description}
-                          </span>
+                          <div className="flex flex-wrap gap-1">
+                            <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getProficiencyColor(skill.proficiency)}`}>
+                              {skill.proficiency}
+                            </span>
+                            <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(skill.description)}`}>
+                              {skill.description}
+                            </span>
+                            {skill.isCertified && (
+                              <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                <Award className="w-3 h-3 inline mr-1" />
+                                Certified
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Additional info */}
+                          <div className="text-xs text-gray-500 space-y-1">
+                            {skill.yearsExperience && (
+                              <div className="flex items-center space-x-1">
+                                <Calendar className="w-3 h-3" />
+                                <span>{skill.yearsExperience} years experience</span>
+                              </div>
+                            )}
+                            {skill.lastUsed && (
+                              <div className="flex items-center space-x-1">
+                                <Calendar className="w-3 h-3" />
+                                <span>Last used: {new Date(skill.lastUsed).toLocaleDateString()}</span>
+                              </div>
+                            )}
+                            {skill.certificationName && (
+                              <div className="flex items-center space-x-1">
+                                <Award className="w-3 h-3" />
+                                <span>{skill.certificationName}</span>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     )}

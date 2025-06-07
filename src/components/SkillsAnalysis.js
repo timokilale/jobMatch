@@ -18,8 +18,8 @@ const SkillsAnalysis = ({ applicantId }) => {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await api.get(`/skills-analysis/gaps/${applicantId}`);
+
+      const response = await api.get('/skill-gap-analysis');
       setAnalysis(response.data);
     } catch (error) {
       console.error('Error fetching skills analysis:', error);
@@ -93,17 +93,37 @@ const SkillsAnalysis = ({ applicantId }) => {
           <div>
             <h1 className="text-2xl font-bold text-gray-800 mb-2">
               <i className="fas fa-brain mr-3 text-green-600"></i>
-              Skills Analysis
+              Skills Gap Analysis
             </h1>
             <p className="text-gray-600">
-              Comprehensive analysis of your skills and market alignment
+              Real market analysis based on your selected job categories
             </p>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-green-600 mb-1">
-              {analysis.overallScore}%
+              {analysis.summary?.matchPercentage || 0}%
             </div>
-            <p className="text-sm text-gray-600">Market Alignment</p>
+            <p className="text-sm text-gray-600">Market Match</p>
+          </div>
+        </div>
+
+        {/* Summary Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+          <div className="text-center p-3 bg-white rounded-lg">
+            <div className="text-xl font-bold text-blue-600">{analysis.summary?.totalUserSkills || 0}</div>
+            <div className="text-sm text-gray-600">Your Skills</div>
+          </div>
+          <div className="text-center p-3 bg-white rounded-lg">
+            <div className="text-xl font-bold text-red-600">{analysis.summary?.skillGaps || 0}</div>
+            <div className="text-sm text-gray-600">Skill Gaps</div>
+          </div>
+          <div className="text-center p-3 bg-white rounded-lg">
+            <div className="text-xl font-bold text-green-600">{analysis.summary?.totalMarketSkills || 0}</div>
+            <div className="text-sm text-gray-600">Market Skills</div>
+          </div>
+          <div className="text-center p-3 bg-white rounded-lg">
+            <div className="text-xl font-bold text-purple-600">{analysis.summary?.selectedCategories || 0}</div>
+            <div className="text-sm text-gray-600">Categories</div>
           </div>
         </div>
       </div>
@@ -138,69 +158,68 @@ const SkillsAnalysis = ({ applicantId }) => {
           {/* Skill Gaps Tab */}
           {activeTab === 'gaps' && (
             <div className="space-y-6">
-              {/* Critical Skills */}
-              {analysis.skillGaps.critical.length > 0 && (
+              {analysis.summary?.selectedCategories === 0 ? (
+                <div className="text-center py-12">
+                  <img
+                    src="assets/logo.png"
+                    alt="Job Match"
+                    className="w-16 h-auto mx-auto opacity-60 mb-4"
+                  />
+                  <h3 className="text-lg font-semibold text-gray-600 mb-2">Select Job Categories First</h3>
+                  <p className="text-gray-500 max-w-md mx-auto mb-4">
+                    {analysis.message || 'Please select job categories in Settings to see personalized skill gap analysis.'}
+                  </p>
+                  <button
+                    onClick={() => window.location.href = '/dashboard?tab=settings'}
+                    className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    <i className="fas fa-cog mr-2"></i>
+                    Go to Settings
+                  </button>
+                </div>
+              ) : analysis.skillGaps && analysis.skillGaps.length > 0 ? (
                 <div>
                   <h3 className="text-lg font-semibold text-red-700 mb-4">
                     <i className="fas fa-exclamation-circle mr-2"></i>
-                    Critical Skills ({analysis.skillGaps.critical.length})
+                    Missing Skills ({analysis.skillGaps.length})
                   </h3>
+                  <p className="text-gray-600 mb-6">
+                    These skills are in demand for jobs in your selected categories but missing from your profile.
+                  </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {analysis.skillGaps.critical.map((skill, index) => (
-                      <div key={index} className="border border-red-200 rounded-lg p-4 bg-red-50">
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-medium text-red-800">{skill.skillName}</h4>
-                          <span className="text-xs bg-red-200 text-red-800 px-2 py-1 rounded">
-                            {skill.demandScore.toFixed(0)}% demand
+                    {analysis.skillGaps.slice(0, 20).map((skill, index) => (
+                      <div key={index} className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow">
+                        <div className="flex justify-between items-start mb-3">
+                          <h4 className="font-medium text-gray-800">{skill.name}</h4>
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            skill.demandCount > 5 ? 'bg-red-100 text-red-800' :
+                            skill.demandCount > 2 ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-blue-100 text-blue-800'
+                          }`}>
+                            {skill.demandCount} jobs
                           </span>
                         </div>
-                        <div className="flex items-center justify-between text-sm text-red-600">
-                          <span>
-                            <i className={getDifficultyIcon(skill.difficulty)}></i>
-                            <span className="ml-1">{skill.difficulty}</span>
-                          </span>
-                          <span>{skill.estimatedLearningTime}</span>
+                        <div className="text-sm text-gray-600 mb-3">
+                          <p><i className="fas fa-tag mr-1"></i>{skill.category}</p>
+                          <p><i className="fas fa-building mr-1"></i>{skill.companies.length} companies</p>
+                          <p><i className="fas fa-chart-line mr-1"></i>{skill.demandScore.toFixed(1)}% demand score</p>
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {skill.categories.slice(0, 3).map((cat, catIndex) => (
+                            <span key={catIndex} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                              {cat}
+                            </span>
+                          ))}
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
-              )}
-
-              {/* Important Skills */}
-              {analysis.skillGaps.important.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold text-yellow-700 mb-4">
-                    <i className="fas fa-exclamation-triangle mr-2"></i>
-                    Important Skills ({analysis.skillGaps.important.length})
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {analysis.skillGaps.important.map((skill, index) => (
-                      <div key={index} className="border border-yellow-200 rounded-lg p-4 bg-yellow-50">
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-medium text-yellow-800">{skill.skillName}</h4>
-                          <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
-                            {skill.demandScore.toFixed(0)}% demand
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm text-yellow-600">
-                          <span>
-                            <i className={getDifficultyIcon(skill.difficulty)}></i>
-                            <span className="ml-1">{skill.difficulty}</span>
-                          </span>
-                          <span>{skill.estimatedLearningTime}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {analysis.skillGaps.critical.length === 0 && analysis.skillGaps.important.length === 0 && (
+              ) : (
                 <div className="text-center py-8">
                   <i className="fas fa-check-circle text-4xl text-green-500 mb-4"></i>
-                  <h3 className="text-lg font-medium text-gray-800 mb-2">Great Job!</h3>
-                  <p className="text-gray-600">Your skills are well-aligned with market demand.</p>
+                  <h3 className="text-lg font-medium text-gray-800 mb-2">Excellent!</h3>
+                  <p className="text-gray-600">Your skills perfectly match the market demand in your selected categories.</p>
                 </div>
               )}
             </div>
@@ -208,102 +227,110 @@ const SkillsAnalysis = ({ applicantId }) => {
 
           {/* Training Recommendations Tab */}
           {activeTab === 'training' && (
-            <div className="space-y-4">
-              {/* Critical Skills */}
-              {analysis.skillGaps && analysis.skillGaps.critical && analysis.skillGaps.critical.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold text-red-700 mb-4">
-                    <i className="fas fa-exclamation-circle mr-2"></i>
-                    Critical Skills to Learn ({analysis.skillGaps.critical.length})
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {analysis.skillGaps.critical.map((skill, index) => (
-                      <div key={index} className="border border-red-200 rounded-lg p-4 bg-red-50">
-                        <div className="flex justify-between items-start mb-3">
-                          <h4 className="font-medium text-red-800">{skill.skillName}</h4>
-                          <span className="text-xs bg-red-200 text-red-800 px-2 py-1 rounded">
-                            Critical
-                          </span>
-                        </div>
-                        <div className="mb-3">
-                          <p className="text-sm text-red-600 mb-1">
-                            <i className="fas fa-chart-line mr-1"></i>
-                            {skill.demandScore.toFixed(0)}% market demand
-                          </p>
-                          <p className="text-sm text-red-600">
-                            <i className="fas fa-clock mr-1"></i>
-                            {skill.estimatedLearningTime}
-                          </p>
-                        </div>
-                        <a
-                          href={`https://www.coursera.org/search?query=${encodeURIComponent(skill.skillName)}&index=prod_all_launched_products_term_optimization`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center"
-                        >
-                          <i className="fas fa-external-link-alt mr-2"></i>
-                          Learn on Coursera
-                        </a>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Important Skills */}
-              {analysis.skillGaps && analysis.skillGaps.important && analysis.skillGaps.important.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold text-yellow-700 mb-4">
-                    <i className="fas fa-exclamation-triangle mr-2"></i>
-                    Important Skills to Learn ({analysis.skillGaps.important.length})
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {analysis.skillGaps.important.map((skill, index) => (
-                      <div key={index} className="border border-yellow-200 rounded-lg p-4 bg-yellow-50">
-                        <div className="flex justify-between items-start mb-3">
-                          <h4 className="font-medium text-yellow-800">{skill.skillName}</h4>
-                          <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
-                            Important
-                          </span>
-                        </div>
-                        <div className="mb-3">
-                          <p className="text-sm text-yellow-600 mb-1">
-                            <i className="fas fa-chart-line mr-1"></i>
-                            {skill.demandScore.toFixed(0)}% market demand
-                          </p>
-                          <p className="text-sm text-yellow-600">
-                            <i className="fas fa-clock mr-1"></i>
-                            {skill.estimatedLearningTime}
-                          </p>
-                        </div>
-                        <a
-                          href={`https://www.coursera.org/search?query=${encodeURIComponent(skill.skillName)}&index=prod_all_launched_products_term_optimization`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors flex items-center justify-center"
-                        >
-                          <i className="fas fa-external-link-alt mr-2"></i>
-                          Learn on Coursera
-                        </a>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* No Skills Gap Message */}
-              {(!analysis.skillGaps ||
-                (!analysis.skillGaps.critical || analysis.skillGaps.critical.length === 0) &&
-                (!analysis.skillGaps.important || analysis.skillGaps.important.length === 0)) && (
+            <div className="space-y-6">
+              {analysis.summary?.selectedCategories === 0 ? (
                 <div className="text-center py-12">
                   <img
                     src="assets/logo.png"
                     alt="Job Match"
                     className="w-16 h-auto mx-auto opacity-60 mb-4"
                   />
-                  <h3 className="text-lg font-semibold text-gray-600 mb-2">No Skill Gaps Found</h3>
+                  <h3 className="text-lg font-semibold text-gray-600 mb-2">Select Job Categories First</h3>
+                  <p className="text-gray-500 max-w-md mx-auto mb-4">
+                    Choose your preferred job categories to get personalized training recommendations.
+                  </p>
+                  <button
+                    onClick={() => window.location.href = '/dashboard?tab=settings'}
+                    className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    <i className="fas fa-cog mr-2"></i>
+                    Go to Settings
+                  </button>
+                </div>
+              ) : analysis.trainingRecommendations && analysis.trainingRecommendations.length > 0 ? (
+                <div>
+                  <h3 className="text-lg font-semibold text-green-700 mb-4">
+                    <i className="fas fa-graduation-cap mr-2"></i>
+                    Recommended Training ({analysis.trainingRecommendations.length})
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Prioritized training courses based on market demand in your selected categories.
+                  </p>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {analysis.trainingRecommendations.map((recommendation, index) => (
+                      <div key={index} className={`border rounded-lg p-6 ${
+                        recommendation.priority === 'High' ? 'border-red-200 bg-red-50' :
+                        recommendation.priority === 'Medium' ? 'border-yellow-200 bg-yellow-50' :
+                        'border-blue-200 bg-blue-50'
+                      }`}>
+                        <div className="flex justify-between items-start mb-4">
+                          <h4 className="font-semibold text-gray-800">{recommendation.skillName}</h4>
+                          <span className={`text-xs px-2 py-1 rounded font-medium ${
+                            recommendation.priority === 'High' ? 'bg-red-200 text-red-800' :
+                            recommendation.priority === 'Medium' ? 'bg-yellow-200 text-yellow-800' :
+                            'bg-blue-200 text-blue-800'
+                          }`}>
+                            {recommendation.priority} Priority
+                          </span>
+                        </div>
+
+                        <div className="mb-4 space-y-2">
+                          <p className="text-sm text-gray-600">
+                            <i className="fas fa-briefcase mr-2"></i>
+                            <strong>Impact:</strong> {recommendation.impact.potentialJobs} jobs, {recommendation.impact.companies} companies
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            <i className="fas fa-chart-line mr-2"></i>
+                            <strong>Demand:</strong> {recommendation.demandScore.toFixed(1)}% market score
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            <i className="fas fa-tag mr-2"></i>
+                            <strong>Category:</strong> {recommendation.skillCategory}
+                          </p>
+                        </div>
+
+                        <div className="bg-white rounded-lg p-4 mb-4">
+                          <h5 className="font-medium text-gray-800 mb-2">
+                            <i className="fas fa-book mr-2 text-green-600"></i>
+                            Recommended Course
+                          </h5>
+                          <p className="text-sm font-medium text-gray-700 mb-1">{recommendation.training.courseName}</p>
+                          <div className="flex justify-between text-xs text-gray-600 mb-3">
+                            <span><i className="fas fa-clock mr-1"></i>{recommendation.training.estimatedDuration}</span>
+                            <span><i className="fas fa-signal mr-1"></i>{recommendation.training.difficulty}</span>
+                          </div>
+                          <a
+                            href={recommendation.training.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`w-full px-4 py-2 rounded-lg transition-colors flex items-center justify-center text-white ${
+                              recommendation.priority === 'High' ? 'bg-red-600 hover:bg-red-700' :
+                              recommendation.priority === 'Medium' ? 'bg-yellow-600 hover:bg-yellow-700' :
+                              'bg-blue-600 hover:bg-blue-700'
+                            }`}
+                          >
+                            <i className="fas fa-external-link-alt mr-2"></i>
+                            Start Learning on Coursera
+                          </a>
+                        </div>
+
+                        <div className="text-xs text-gray-500">
+                          <p><strong>Categories:</strong> {recommendation.impact.categories.join(', ')}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <img
+                    src="assets/logo.png"
+                    alt="Job Match"
+                    className="w-16 h-auto mx-auto opacity-60 mb-4"
+                  />
+                  <h3 className="text-lg font-semibold text-gray-600 mb-2">No Training Needed</h3>
                   <p className="text-gray-500 max-w-md mx-auto">
-                    Great! Your skills are well-aligned with market demand. Keep updating your skills to stay competitive.
+                    Excellent! Your skills perfectly match the market demand. Keep learning to stay ahead.
                   </p>
                 </div>
               )}
@@ -313,55 +340,108 @@ const SkillsAnalysis = ({ applicantId }) => {
           {/* Career Paths Tab */}
           {activeTab === 'career' && (
             <div className="space-y-6">
-              {analysis.careerPaths.map((path, index) => (
-                <div key={index} className="border rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    <i className="fas fa-briefcase mr-2 text-blue-600"></i>
-                    {path.category} Career Path
+              {analysis.summary?.selectedCategories === 0 ? (
+                <div className="text-center py-12">
+                  <img
+                    src="assets/logo.png"
+                    alt="Job Match"
+                    className="w-16 h-auto mx-auto opacity-60 mb-4"
+                  />
+                  <h3 className="text-lg font-semibold text-gray-600 mb-2">Select Job Categories First</h3>
+                  <p className="text-gray-500 max-w-md mx-auto mb-4">
+                    Choose your preferred job categories to see career path recommendations.
+                  </p>
+                  <button
+                    onClick={() => window.location.href = '/dashboard?tab=settings'}
+                    className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    <i className="fas fa-cog mr-2"></i>
+                    Go to Settings
+                  </button>
+                </div>
+              ) : analysis.marketDemand && analysis.marketDemand.length > 0 ? (
+                <div>
+                  <h3 className="text-lg font-semibold text-blue-700 mb-4">
+                    <i className="fas fa-route mr-2"></i>
+                    Career Paths Based on Market Demand
                   </h3>
-                  
-                  <div className="mb-4">
-                    <span className="text-sm font-medium text-gray-600">Current Level: </span>
-                    <span className="text-sm font-semibold text-blue-600">{path.currentLevel}</span>
-                    <span className="ml-4 text-sm font-medium text-gray-600">Market Outlook: </span>
-                    <span className={`text-sm font-semibold ${path.marketOutlook === 'Growing' ? 'text-green-600' : 'text-gray-600'}`}>
-                      {path.marketOutlook}
-                    </span>
-                  </div>
+                  <p className="text-gray-600 mb-6">
+                    Career opportunities aligned with your skills and market demand in your selected categories.
+                  </p>
 
-                  <div className="space-y-4">
-                    {path.careerLevels.map((level, levelIndex) => (
-                      <div key={levelIndex} className={`p-4 rounded-lg border-l-4 ${
-                        level.level === path.currentLevel 
-                          ? 'bg-blue-50 border-blue-500' 
-                          : 'bg-gray-50 border-gray-300'
-                      }`}>
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-medium text-gray-800">{level.level}</h4>
-                          <span className="text-sm text-gray-600">{level.timeToAchieve}</span>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {analysis.marketDemand.slice(0, 6).map((skill, index) => (
+                      <div key={index} className="border rounded-lg p-6 bg-white">
+                        <h4 className="text-lg font-semibold text-gray-800 mb-3">
+                          <i className="fas fa-briefcase mr-2 text-blue-600"></i>
+                          {skill.name} Specialist
+                        </h4>
+
+                        <div className="mb-4 space-y-2">
+                          <p className="text-sm text-gray-600">
+                            <i className="fas fa-chart-line mr-2"></i>
+                            <strong>Market Demand:</strong> {skill.demandScore.toFixed(1)}% ({skill.demandCount} jobs)
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            <i className="fas fa-building mr-2"></i>
+                            <strong>Companies:</strong> {skill.companies.length} hiring
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            <i className="fas fa-tag mr-2"></i>
+                            <strong>Category:</strong> {skill.category}
+                          </p>
                         </div>
-                        <p className="text-sm text-gray-600 mb-2">{level.salaryRange}</p>
-                        <div className="text-sm">
-                          <p className="font-medium text-gray-700 mb-1">Typical Roles:</p>
-                          <p className="text-gray-600">{level.roles.join(', ')}</p>
+
+                        <div className="bg-blue-50 rounded-lg p-4 mb-4">
+                          <h5 className="font-medium text-blue-800 mb-2">Career Opportunities:</h5>
+                          <div className="space-y-1">
+                            {skill.jobs.slice(0, 3).map((job, jobIndex) => (
+                              <p key={jobIndex} className="text-sm text-blue-700">
+                                • {job.title} at {job.company}
+                              </p>
+                            ))}
+                            {skill.jobs.length > 3 && (
+                              <p className="text-xs text-blue-600">+{skill.jobs.length - 3} more opportunities</p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="bg-green-50 rounded-lg p-4">
+                          <h5 className="font-medium text-green-800 mb-2">Next Steps:</h5>
+                          <ul className="text-sm text-green-700 space-y-1">
+                            <li className="flex items-center">
+                              <i className="fas fa-arrow-right mr-2 text-green-600"></i>
+                              {analysis.userSkills?.some(us => us.name === skill.name)
+                                ? 'Enhance your existing skills'
+                                : 'Learn this skill through training'}
+                            </li>
+                            <li className="flex items-center">
+                              <i className="fas fa-arrow-right mr-2 text-green-600"></i>
+                              Build portfolio projects
+                            </li>
+                            <li className="flex items-center">
+                              <i className="fas fa-arrow-right mr-2 text-green-600"></i>
+                              Apply to {skill.demandCount} available positions
+                            </li>
+                          </ul>
                         </div>
                       </div>
                     ))}
                   </div>
-
-                  <div className="mt-4 p-4 bg-green-50 rounded-lg">
-                    <h4 className="font-medium text-green-800 mb-2">Recommended Next Steps:</h4>
-                    <ul className="text-sm text-green-700 space-y-1">
-                      {path.recommendedNextSteps.map((step, stepIndex) => (
-                        <li key={stepIndex} className="flex items-center">
-                          <i className="fas fa-arrow-right mr-2 text-green-600"></i>
-                          {step}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
                 </div>
-              ))}
+              ) : (
+                <div className="text-center py-12">
+                  <img
+                    src="assets/logo.png"
+                    alt="Job Match"
+                    className="w-16 h-auto mx-auto opacity-60 mb-4"
+                  />
+                  <h3 className="text-lg font-semibold text-gray-600 mb-2">No Career Data Available</h3>
+                  <p className="text-gray-500 max-w-md mx-auto">
+                    Add more jobs in your selected categories to see career path recommendations.
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
@@ -372,151 +452,70 @@ const SkillsAnalysis = ({ applicantId }) => {
               <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">
                   <i className="fas fa-chart-pie mr-2 text-blue-600"></i>
-                  Skills Overview
+                  Your Skills Overview
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-green-600">
-                      {(analysis.currentSkills.computer || []).length}
-                    </div>
-                    <div className="text-sm text-gray-600">Computer Skills</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">
-                      {(analysis.currentSkills.technical || []).length}
+                      {analysis.userSkills?.filter(s => s.category === 'Technical').length || 0}
                     </div>
                     <div className="text-sm text-gray-600">Technical Skills</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-pink-600">
-                      {(analysis.currentSkills.soft || []).length}
+                    <div className="text-2xl font-bold text-blue-600">
+                      {analysis.userSkills?.filter(s => s.category === 'Soft').length || 0}
                     </div>
                     <div className="text-sm text-gray-600">Soft Skills</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-orange-600">
-                      {(analysis.currentSkills.general || []).length +
-                       (analysis.currentSkills.languages || []).length}
+                    <div className="text-2xl font-bold text-pink-600">
+                      {analysis.userSkills?.filter(s => s.category === 'Language').length || 0}
                     </div>
-                    <div className="text-sm text-gray-600">Other Skills</div>
+                    <div className="text-sm text-gray-600">Languages</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-orange-600">
+                      {analysis.userSkills?.filter(s => s.category === 'Industry-Specific').length || 0}
+                    </div>
+                    <div className="text-sm text-gray-600">Industry Skills</div>
                   </div>
                 </div>
               </div>
-              {/* Computer Skills */}
-              {analysis.currentSkills.computer && analysis.currentSkills.computer.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    <i className="fas fa-desktop mr-2 text-green-600"></i>
-                    Computer Skills
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {analysis.currentSkills.computer.map((skill, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                        <span className="font-medium text-green-800">{skill.name}</span>
-                        <span className="text-sm text-green-600">{skill.proficiency}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              {/* All Skills by Category */}
+              {analysis.userSkills && analysis.userSkills.length > 0 ? (
+                <>
+                  {['Technical', 'Soft', 'Language', 'Industry-Specific'].map(category => {
+                    const categorySkills = analysis.userSkills.filter(skill => skill.category === category);
+                    if (categorySkills.length === 0) return null;
 
-              {/* Technical Skills */}
-              {analysis.currentSkills.technical && analysis.currentSkills.technical.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    <i className="fas fa-laptop-code mr-2 text-blue-600"></i>
-                    Technical Skills
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {analysis.currentSkills.technical.map((skill, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                        <span className="font-medium text-blue-800">{skill.name}</span>
-                        <span className="text-sm text-blue-600">{skill.proficiency}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                    const categoryConfig = {
+                      'Technical': { icon: 'laptop-code', color: 'green' },
+                      'Soft': { icon: 'users', color: 'blue' },
+                      'Language': { icon: 'language', color: 'pink' },
+                      'Industry-Specific': { icon: 'industry', color: 'orange' }
+                    };
 
-              {/* Soft Skills */}
-              {analysis.currentSkills.soft && analysis.currentSkills.soft.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    <i className="fas fa-users mr-2 text-pink-600"></i>
-                    Soft Skills
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {analysis.currentSkills.soft.map((skill, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-pink-50 rounded-lg">
-                        <span className="font-medium text-pink-800">{skill.name}</span>
-                        <span className="text-sm text-pink-600">{skill.proficiency}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                    const config = categoryConfig[category];
 
-              {/* General Skills */}
-              {analysis.currentSkills.general && analysis.currentSkills.general.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    <i className="fas fa-star mr-2 text-orange-600"></i>
-                    Other Skills
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {analysis.currentSkills.general.map((skill, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
-                        <span className="font-medium text-orange-800">{skill.name}</span>
-                        <span className="text-sm text-orange-600">{skill.proficiency}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Categories */}
-              {analysis.currentSkills.categories.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    <i className="fas fa-tags mr-2 text-green-600"></i>
-                    Interest Areas
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {analysis.currentSkills.categories.map((category, index) => (
-                      <span key={index} className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                        {category.name}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Languages */}
-              {analysis.currentSkills.languages.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    <i className="fas fa-language mr-2 text-purple-600"></i>
-                    Languages
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {analysis.currentSkills.languages.map((lang, index) => (
-                      <div key={index} className="p-3 bg-purple-50 rounded-lg">
-                        <h4 className="font-medium text-purple-800">{lang.name}</h4>
-                        <div className="text-sm text-purple-600 mt-1">
-                          Speak: {lang.proficiency.speak} • Read: {lang.proficiency.read} • Write: {lang.proficiency.write}
+                    return (
+                      <div key={category}>
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                          <i className={`fas fa-${config.icon} mr-2 text-${config.color}-600`}></i>
+                          {category} Skills ({categorySkills.length})
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                          {categorySkills.map((skill, index) => (
+                            <div key={index} className={`flex items-center justify-between p-3 bg-${config.color}-50 rounded-lg`}>
+                              <span className={`font-medium text-${config.color}-800`}>{skill.name}</span>
+                              <span className={`text-sm text-${config.color}-600`}>{skill.proficiencyLevel || 'Intermediate'}</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* No Skills Message */}
-              {(!analysis.currentSkills.computer || analysis.currentSkills.computer.length === 0) &&
-               (!analysis.currentSkills.technical || analysis.currentSkills.technical.length === 0) &&
-               (!analysis.currentSkills.soft || analysis.currentSkills.soft.length === 0) &&
-               (!analysis.currentSkills.general || analysis.currentSkills.general.length === 0) &&
-               (!analysis.currentSkills.languages || analysis.currentSkills.languages.length === 0) && (
+                    );
+                  })}
+                </>
+              ) : (
                 <div className="text-center py-12">
                   <img
                     src="assets/logo.png"
@@ -524,15 +523,15 @@ const SkillsAnalysis = ({ applicantId }) => {
                     className="w-16 h-auto mx-auto opacity-60 mb-4"
                   />
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">No Skills Added Yet</h3>
-                  <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                    Add your skills in the "My Skills" section to see a comprehensive analysis of your abilities and market alignment.
+                  <p className="text-gray-500 max-w-md mx-auto mb-4">
+                    Add your skills to your profile to see personalized analysis and recommendations.
                   </p>
                   <button
-                    onClick={() => window.location.href = '#skills'}
+                    onClick={() => window.location.href = '/dashboard?tab=skills'}
                     className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
                   >
                     <i className="fas fa-plus mr-2"></i>
-                    Add Your Skills
+                    Add Skills
                   </button>
                 </div>
               )}
@@ -540,22 +539,6 @@ const SkillsAnalysis = ({ applicantId }) => {
           )}
         </div>
       </div>
-
-      {/* Bias Analysis Alert */}
-      {analysis.biasAnalysis && analysis.biasAnalysis.overallBiasScore > 20 && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <div className="flex items-start">
-            <i className="fas fa-exclamation-triangle text-yellow-500 mr-3 mt-1"></i>
-            <div>
-              <h3 className="font-medium text-yellow-800">Bias Detection Alert</h3>
-              <p className="text-yellow-700 text-sm mt-1">
-                Our analysis detected potential bias in recommendations (Score: {analysis.biasAnalysis.overallBiasScore.toFixed(1)}).
-                We're working to improve fairness and transparency.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

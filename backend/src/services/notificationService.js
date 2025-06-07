@@ -56,7 +56,7 @@ class NotificationService {
     const config = emailConfig[provider];
 
     if (config && config.auth.user && config.auth.pass) {
-      this.emailTransporter = nodemailer.createTransporter(config);
+      this.emailTransporter = nodemailer.createTransport(config);
       console.log(`✅ Email service initialized with ${provider}`);
     } else {
       console.log(`⚠️ Email service not configured. Set EMAIL_PROVIDER and credentials in .env`);
@@ -65,11 +65,20 @@ class NotificationService {
   }
 
   initializeSMSClient() {
-    if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
-      this.smsClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-      console.log('✅ SMS service initialized with Twilio');
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+
+    // Validate Twilio credentials format
+    if (accountSid && authToken && accountSid.startsWith('AC') && authToken.length > 10) {
+      try {
+        this.smsClient = twilio(accountSid, authToken);
+        console.log('✅ SMS service initialized with Twilio');
+      } catch (error) {
+        console.log('❌ SMS service initialization failed:', error.message);
+        this.smsClient = null;
+      }
     } else {
-      console.log('⚠️ SMS service not configured. Set TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN in .env');
+      console.log('⚠️ SMS service not configured. Set valid TWILIO_ACCOUNT_SID (starts with AC) and TWILIO_AUTH_TOKEN in .env');
       this.smsClient = null;
     }
   }

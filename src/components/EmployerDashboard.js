@@ -233,7 +233,7 @@ const EmployerDashboard = () => {
                   { label: 'Candidates', icon: 'users', view: 'candidates' },
                   { label: 'Analytics', icon: 'chart-bar', view: 'analytics' },
                   { label: 'Market Insights', icon: 'chart-line', view: 'market-analytics' },
-                  { label: 'Employment Trends', icon: 'chart-area', view: 'employment-forecasting' },
+                  // { label: 'Employment Trends', icon: 'chart-area', view: 'employment-forecasting' },
                   { label: 'Settings', icon: 'cog', view: 'settings' },
                   { label: 'Logout', icon: 'sign-out-alt', action: 'logout' }
                 ].map((item, i) => (
