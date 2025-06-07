@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import AcademicQualifications from "./SidebarItems/AcademicQualifications"
 import WorkExperience from "./SidebarItems/WorkExperience";
 import LanguageProficiency from "./SidebarItems/LanguageProficiency";
-import ComputerSkills from "./SidebarItems/ComputerSkills";
+
 import Skills from "./SidebarItems/Skills";
 import JobListings from "./JobListings";
 import AppliedJobs from "./SidebarItems/AppliedJobs";
@@ -135,12 +135,7 @@ const ApplicantDashboard = () => {
       icon: "star",
       component: <Skills />,
     },
-    {
-      key: "computer",
-      title: "Computer Skills",
-      icon: "laptop-code",
-      component: <ComputerSkills />,
-    },
+
     {
       key: "cv",
       title: "CV Preview",

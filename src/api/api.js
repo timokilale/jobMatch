@@ -16,6 +16,12 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {
+        // Add Authorization header if token exists
+        const token = getTokenFromStorage();
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+
         // Add cache check for GET requests
         if (config.method === 'get') {
             const cacheKey = `${config.url}?${JSON.stringify(config.params)}`;

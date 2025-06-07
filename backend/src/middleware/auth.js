@@ -5,7 +5,16 @@ const prisma = require('../prisma');
 const auth = (roles = []) => {
   return async (req, res, next) => {
     try {
-      const token = req.cookies?.token;
+      // Check for token in cookies first, then in Authorization header
+      let token = req.cookies?.token;
+
+      if (!token) {
+        const authHeader = req.headers.authorization;
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+          token = authHeader.substring(7);
+        }
+      }
+
       if (!token) {
         throw new Error('No token provided');
       }

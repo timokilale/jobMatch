@@ -5,7 +5,7 @@ const auth = require('../middleware/auth');
 const router = express.Router();
 
 // Get all skills for the authenticated applicant
-router.get('/', auth, async (req, res) => {
+router.get('/', auth(), async (req, res) => {
   try {
     const applicant = await prisma.applicant.findUnique({
       where: { userId: req.user.id }
@@ -15,11 +15,10 @@ router.get('/', auth, async (req, res) => {
       return res.status(404).json({ error: 'Applicant profile not found' });
     }
 
-    const skills = await prisma.skill.findMany({
+    const skills = await prisma.generalSkill.findMany({
       where: { applicantId: applicant.id },
       orderBy: [
-        { category: 'asc' },
-        { name: 'asc' }
+        { skill: 'asc' }
       ]
     });
 
@@ -31,12 +30,27 @@ router.get('/', auth, async (req, res) => {
 });
 
 // Add a new skill
-router.post('/', auth, async (req, res) => {
+router.post('/', auth(), async (req, res) => {
   try {
     const { name, proficiency, category } = req.body;
 
     if (!name || !proficiency) {
       return res.status(400).json({ error: 'Name and proficiency are required' });
+    }
+
+    // Validate proficiency level
+    const validProficiencyLevels = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
+    if (!validProficiencyLevels.includes(proficiency)) {
+      return res.status(400).json({ error: 'Invalid proficiency level' });
+    }
+
+    // Validate skill name length
+    if (name.trim().length < 2) {
+      return res.status(400).json({ error: 'Skill name must be at least 2 characters long' });
+    }
+
+    if (name.trim().length > 100) {
+      return res.status(400).json({ error: 'Skill name must be less than 100 characters' });
     }
 
     const applicant = await prisma.applicant.findUnique({
@@ -47,23 +61,25 @@ router.post('/', auth, async (req, res) => {
       return res.status(404).json({ error: 'Applicant profile not found' });
     }
 
-    // Check if skill already exists
-    const existingSkill = await prisma.skill.findFirst({
-      where: {
-        applicantId: applicant.id,
-        name: { equals: name, mode: 'insensitive' }
-      }
+    // Check if skill already exists (case insensitive by getting all skills and comparing)
+    const allUserSkills = await prisma.generalSkill.findMany({
+      where: { applicantId: applicant.id },
+      select: { skill: true }
     });
 
-    if (existingSkill) {
+    const skillExists = allUserSkills.some(
+      existingSkill => existingSkill.skill.toLowerCase() === name.trim().toLowerCase()
+    );
+
+    if (skillExists) {
       return res.status(400).json({ error: 'Skill already exists' });
     }
 
-    const skill = await prisma.skill.create({
+    const skill = await prisma.generalSkill.create({
       data: {
-        name: name.trim(),
+        skill: name.trim(),
         proficiency,
-        category: category || 'Other',
+        description: category || 'Other',
         applicantId: applicant.id
       }
     });
@@ -76,13 +92,28 @@ router.post('/', auth, async (req, res) => {
 });
 
 // Update a skill
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', auth(), async (req, res) => {
   try {
     const { id } = req.params;
     const { name, proficiency, category } = req.body;
 
     if (!name || !proficiency) {
       return res.status(400).json({ error: 'Name and proficiency are required' });
+    }
+
+    // Validate proficiency level
+    const validProficiencyLevels = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
+    if (!validProficiencyLevels.includes(proficiency)) {
+      return res.status(400).json({ error: 'Invalid proficiency level' });
+    }
+
+    // Validate skill name length
+    if (name.trim().length < 2) {
+      return res.status(400).json({ error: 'Skill name must be at least 2 characters long' });
+    }
+
+    if (name.trim().length > 100) {
+      return res.status(400).json({ error: 'Skill name must be less than 100 characters' });
     }
 
     const applicant = await prisma.applicant.findUnique({
@@ -94,7 +125,7 @@ router.put('/:id', auth, async (req, res) => {
     }
 
     // Check if skill belongs to the user
-    const existingSkill = await prisma.skill.findFirst({
+    const existingSkill = await prisma.generalSkill.findFirst({
       where: {
         id: parseInt(id),
         applicantId: applicant.id
@@ -106,24 +137,28 @@ router.put('/:id', auth, async (req, res) => {
     }
 
     // Check if another skill with the same name exists (excluding current skill)
-    const duplicateSkill = await prisma.skill.findFirst({
+    const allUserSkills = await prisma.generalSkill.findMany({
       where: {
         applicantId: applicant.id,
-        name: { equals: name, mode: 'insensitive' },
         id: { not: parseInt(id) }
-      }
+      },
+      select: { skill: true }
     });
 
-    if (duplicateSkill) {
+    const skillExists = allUserSkills.some(
+      existingSkill => existingSkill.skill.toLowerCase() === name.trim().toLowerCase()
+    );
+
+    if (skillExists) {
       return res.status(400).json({ error: 'A skill with this name already exists' });
     }
 
-    const updatedSkill = await prisma.skill.update({
+    const updatedSkill = await prisma.generalSkill.update({
       where: { id: parseInt(id) },
       data: {
-        name: name.trim(),
+        skill: name.trim(),
         proficiency,
-        category: category || 'Other'
+        description: category || 'Other'
       }
     });
 
@@ -135,7 +170,7 @@ router.put('/:id', auth, async (req, res) => {
 });
 
 // Delete a skill
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', auth(), async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -148,7 +183,7 @@ router.delete('/:id', auth, async (req, res) => {
     }
 
     // Check if skill belongs to the user
-    const existingSkill = await prisma.skill.findFirst({
+    const existingSkill = await prisma.generalSkill.findFirst({
       where: {
         id: parseInt(id),
         applicantId: applicant.id
@@ -159,7 +194,7 @@ router.delete('/:id', auth, async (req, res) => {
       return res.status(404).json({ error: 'Skill not found' });
     }
 
-    await prisma.skill.delete({
+    await prisma.generalSkill.delete({
       where: { id: parseInt(id) }
     });
 
@@ -171,7 +206,7 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 // Get skill statistics
-router.get('/stats', auth, async (req, res) => {
+router.get('/stats', auth(), async (req, res) => {
   try {
     const applicant = await prisma.applicant.findUnique({
       where: { userId: req.user.id }
@@ -181,8 +216,8 @@ router.get('/stats', auth, async (req, res) => {
       return res.status(404).json({ error: 'Applicant profile not found' });
     }
 
-    const stats = await prisma.skill.groupBy({
-      by: ['category', 'proficiency'],
+    const stats = await prisma.generalSkill.groupBy({
+      by: ['description', 'proficiency'],
       where: { applicantId: applicant.id },
       _count: true
     });
@@ -191,11 +226,12 @@ router.get('/stats', auth, async (req, res) => {
     const proficiencyStats = {};
 
     stats.forEach(stat => {
-      // Category stats
-      if (!categoryStats[stat.category]) {
-        categoryStats[stat.category] = 0;
+      // Category stats (using description field)
+      const category = stat.description || 'Other';
+      if (!categoryStats[category]) {
+        categoryStats[category] = 0;
       }
-      categoryStats[stat.category] += stat._count;
+      categoryStats[category] += stat._count;
 
       // Proficiency stats
       if (!proficiencyStats[stat.proficiency]) {
@@ -204,7 +240,7 @@ router.get('/stats', auth, async (req, res) => {
       proficiencyStats[stat.proficiency] += stat._count;
     });
 
-    const totalSkills = await prisma.skill.count({
+    const totalSkills = await prisma.generalSkill.count({
       where: { applicantId: applicant.id }
     });
 

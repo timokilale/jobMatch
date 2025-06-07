@@ -171,11 +171,20 @@ const JobListings = ({ category }) => {
   
   if (!filteredJobs.length || filteredJobs.length === 0) {
     return (
-      <div className="text-center space-y-4">
-        <img src="assets/empty folder.svg" alt="No Jobs" className="w-24 h-auto mx-auto mb-4" />
-        <h2 className="text-xl font-semibold text-gray-600">
-          No matching jobs yet
-        </h2>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 px-4">
+        <div className="flex flex-col items-center space-y-4">
+          <img
+            src="assets/logo.png"
+            alt="Job Match"
+            className="w-32 h-auto mx-auto opacity-60"
+          />
+          <h2 className="text-2xl font-semibold text-gray-600 text-center">
+            No matching jobs yet
+          </h2>
+          <p className="text-gray-500 text-center max-w-md">
+            We're constantly adding new opportunities. Check back soon or adjust your preferences to see more jobs.
+          </p>
+        </div>
       </div>
     );
   }

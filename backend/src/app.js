@@ -51,7 +51,7 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api/qualifications', qualificationRouter);
 app.use('/api/experiences', require('./routes/workExperience'));
 app.use('/api/languages', require('./routes/languageProficiency'));
-app.use('/api/computer-skills', require('./routes/computerSkill'));
+
 app.use('/api/skills', require('./routes/skills')); // New general skills
 app.use('/api/general-skills', require('./routes/generalSkills'));
 app.use('/api/jobs', require('./routes/jobs'));

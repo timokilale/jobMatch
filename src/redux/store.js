@@ -7,7 +7,7 @@ import authReducer from './slices/authSlice'; // relative to store.js
 import qualificationReducer from './slices/qualificationSlice'; 
 import workExperienceReducer from './slices/workSlice';
 import languageReducer from './slices/languageSlice';
-import computerSkillReducer from './slices/computerSlice';
+import skillsReducer from './slices/skillsSlice';
 import jobsReducer from './slices/jobsSlice';
 import applicationsReducer from './slices/applications';
 import cvReducer from './slices/cvSlice'; 
@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
   qualifications: qualificationReducer,
   experience: workExperienceReducer,
   language: languageReducer,
-  computerSkill: computerSkillReducer,
+  skills: skillsReducer,
   jobs: jobsReducer,
   applications: applicationsReducer,
   cv: cvReducer,

@@ -1,137 +1,170 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, X, Edit2, Save, AlertCircle } from 'lucide-react';
+import { Plus, X, Edit2, Save, AlertCircle, Monitor, User, Globe, Palette, Users, MoreHorizontal } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSkills, createSkill, updateSkill, deleteSkill, clearError, clearSuccess } from '../../redux/slices/skillsSlice';
 
 const Skills = () => {
-  const [skills, setSkills] = useState([]);
+  const dispatch = useDispatch();
+  const { skills, loading, error, success } = useSelector(state => state.skills);
+
   const [newSkill, setNewSkill] = useState({ name: '', proficiency: 'Beginner', category: 'Technical' });
   const [editingId, setEditingId] = useState(null);
   const [editingSkill, setEditingSkill] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState('all');
+  const [validationError, setValidationError] = useState('');
 
   const proficiencyLevels = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
-  const categories = ['Technical', 'Soft Skills', 'Language', 'Creative', 'Management', 'Other'];
+  const categories = [
+    'Technical',
+    'Computer Skills',
+    'Soft Skills',
+    'Language',
+    'Creative',
+    'Management',
+    'Other'
+  ];
+
+  // Predefined computer skills for quick selection
+  const computerSkillsOptions = [
+    'Microsoft Excel', 'Microsoft Word', 'Microsoft PowerPoint', 'Microsoft Access',
+    'Google Sheets', 'Google Docs', 'Adobe Photoshop', 'Adobe Illustrator',
+    'AutoCAD', 'QuickBooks', 'SAP', 'Salesforce', 'Typing', 'Data Entry'
+  ];
 
   useEffect(() => {
-    fetchSkills();
-  }, []);
+    dispatch(fetchSkills());
+  }, [dispatch]);
 
-  const fetchSkills = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await fetch('/api/skills', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setSkills(data);
-      }
-    } catch (error) {
-      console.error('Error fetching skills:', error);
-      setError('Failed to load skills');
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (success) {
+      setTimeout(() => dispatch(clearSuccess()), 3000);
     }
-  };
+  }, [success, dispatch]);
 
-  const addSkill = async () => {
-    if (!newSkill.name.trim()) {
-      setError('Skill name is required');
+  // Update category when tab changes
+  useEffect(() => {
+    if (activeTab !== 'all') {
+      const categoryMap = {
+        'computer': 'Computer Skills',
+        'technical': 'Technical',
+        'soft': 'Soft Skills'
+      };
+      setNewSkill(prev => ({
+        ...prev,
+        category: categoryMap[activeTab] || 'Technical'
+      }));
+    }
+  }, [activeTab]);
+
+  const handleAddSkill = async () => {
+    const trimmedName = newSkill.name.trim();
+
+    // Clear previous validation errors
+    setValidationError('');
+
+    // Frontend validation
+    if (!trimmedName) {
+      setValidationError('Skill name is required');
+      return;
+    }
+
+    if (trimmedName.length < 2) {
+      setValidationError('Skill name must be at least 2 characters long');
+      return;
+    }
+
+    if (trimmedName.length > 100) {
+      setValidationError('Skill name must be less than 100 characters');
+      return;
+    }
+
+    // Check for duplicates in current skills list
+    const isDuplicate = skills.some(
+      skill => (skill.skill || skill.name).toLowerCase() === trimmedName.toLowerCase()
+    );
+
+    if (isDuplicate) {
+      setValidationError('This skill already exists');
       return;
     }
 
     try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await fetch('/api/skills', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(newSkill)
-      });
-
-      if (response.ok) {
-        const skill = await response.json();
-        setSkills([...skills, skill]);
-        setNewSkill({ name: '', proficiency: 'Beginner', category: 'Technical' });
-        setError('');
-      } else {
-        setError('Failed to add skill');
-      }
+      await dispatch(createSkill({
+        ...newSkill,
+        name: trimmedName
+      })).unwrap();
+      setNewSkill({ name: '', proficiency: 'Beginner', category: 'Technical' });
+      setValidationError('');
     } catch (error) {
-      console.error('Error adding skill:', error);
-      setError('Failed to add skill');
-    } finally {
-      setLoading(false);
+      // Error is handled by Redux
     }
   };
 
-  const updateSkill = async (id) => {
+  const handleQuickAddComputerSkill = async (skillName) => {
+    // Check for duplicates in current skills list
+    const isDuplicate = skills.some(
+      skill => (skill.skill || skill.name).toLowerCase() === skillName.toLowerCase()
+    );
+
+    if (isDuplicate) {
+      return;
+    }
+
+    const computerSkill = {
+      name: skillName,
+      proficiency: 'Beginner',
+      category: 'Computer Skills'
+    };
+
     try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/skills/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(editingSkill)
-      });
-
-      if (response.ok) {
-        const updatedSkill = await response.json();
-        setSkills(skills.map(skill => skill.id === id ? updatedSkill : skill));
-        setEditingId(null);
-        setEditingSkill({});
-      } else {
-        setError('Failed to update skill');
-      }
+      await dispatch(createSkill(computerSkill)).unwrap();
     } catch (error) {
-      console.error('Error updating skill:', error);
-      setError('Failed to update skill');
-    } finally {
-      setLoading(false);
+      // Error is handled by Redux
     }
   };
 
-  const deleteSkill = async (id) => {
+  const handleUpdateSkill = async (id) => {
+    try {
+      await dispatch(updateSkill({ id, ...editingSkill })).unwrap();
+      setEditingId(null);
+      setEditingSkill({});
+    } catch (error) {
+      // Error is handled by Redux
+    }
+  };
+
+  const handleDeleteSkill = async (id) => {
     if (!window.confirm('Are you sure you want to delete this skill?')) return;
 
     try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/skills/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (response.ok) {
-        setSkills(skills.filter(skill => skill.id !== id));
-      } else {
-        setError('Failed to delete skill');
-      }
+      await dispatch(deleteSkill(id)).unwrap();
     } catch (error) {
-      console.error('Error deleting skill:', error);
-      setError('Failed to delete skill');
-    } finally {
-      setLoading(false);
+      // Error is handled by Redux
     }
   };
 
   const startEditing = (skill) => {
     setEditingId(skill.id);
-    setEditingSkill({ ...skill });
+    setEditingSkill({
+      name: skill.skill || skill.name,
+      proficiency: skill.proficiency,
+      category: skill.description || skill.category || 'Technical'
+    });
   };
 
   const cancelEditing = () => {
     setEditingId(null);
     setEditingSkill({});
   };
+
+  // Filter skills based on active tab
+  const filteredSkills = skills.filter(skill => {
+    if (activeTab === 'all') return true;
+    if (activeTab === 'computer') return skill.category === 'Computer Skills' || skill.description === 'Computer Skills';
+    if (activeTab === 'technical') return skill.category === 'Technical' || skill.description === 'Technical';
+    if (activeTab === 'soft') return skill.category === 'Soft Skills' || skill.description === 'Soft Skills';
+    return true;
+  });
 
   const getProficiencyColor = (proficiency) => {
     const colors = {
@@ -155,96 +188,227 @@ const Skills = () => {
     return colors[category] || 'bg-gray-100 text-gray-800';
   };
 
+  const getCategoryIcon = (category) => {
+    switch (category) {
+      case 'Computer Skills': return <Monitor className="w-4 h-4" />;
+      case 'Technical': return <Monitor className="w-4 h-4" />;
+      case 'Soft Skills': return <User className="w-4 h-4" />;
+      case 'Language': return <Globe className="w-4 h-4" />;
+      case 'Creative': return <Palette className="w-4 h-4" />;
+      case 'Management': return <Users className="w-4 h-4" />;
+      default: return <MoreHorizontal className="w-4 h-4" />;
+    }
+  };
+
   return (
     <div className="p-6 min-h-screen overflow-y-auto">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">My Skills</h2>
-        
+
         {error && (
           <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded flex items-center">
             <AlertCircle className="w-4 h-4 mr-2" />
             {error}
+            <button
+              onClick={() => dispatch(clearError())}
+              className="ml-auto text-red-600 hover:text-red-800"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
         )}
 
-        {/* Add New Skill */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Add New Skill</h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Skill Name</label>
-              <input
-                type="text"
-                value={newSkill.name}
-                onChange={(e) => setNewSkill({ ...newSkill, name: e.target.value })}
-                placeholder="e.g., JavaScript, Project Management"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Proficiency</label>
-              <select
-                value={newSkill.proficiency}
-                onChange={(e) => setNewSkill({ ...newSkill, proficiency: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {proficiencyLevels.map(level => (
-                  <option key={level} value={level}>{level}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-              <select
-                value={newSkill.category}
-                onChange={(e) => setNewSkill({ ...newSkill, category: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
-            </div>
-            <div className="flex items-end">
-              <button
-                onClick={addSkill}
-                disabled={loading}
-                className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Skill
-              </button>
-            </div>
+        {success && (
+          <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded flex items-center">
+            <AlertCircle className="w-4 h-4 mr-2" />
+            {success}
+            <button
+              onClick={() => dispatch(clearSuccess())}
+              className="ml-auto text-green-600 hover:text-green-800"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+        {/* Skill Category Tabs */}
+        <div className="bg-white rounded-lg shadow-md mb-6">
+          <div className="border-b border-gray-200">
+            <nav className="flex space-x-8 px-6">
+              {[
+                { key: 'all', label: 'All Skills', icon: <MoreHorizontal className="w-4 h-4" /> },
+                { key: 'computer', label: 'Computer Skills', icon: <Monitor className="w-4 h-4" /> },
+                { key: 'technical', label: 'Technical', icon: <Monitor className="w-4 h-4" /> },
+                { key: 'soft', label: 'Soft Skills', icon: <User className="w-4 h-4" /> }
+              ].map(tab => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
+                    activeTab === tab.key
+                      ? 'border-green-500 text-green-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  {tab.icon}
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+            </nav>
           </div>
         </div>
+
+        {/* Quick Add Computer Skills */}
+        {activeTab === 'computer' && (
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Quick Add Computer Skills</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {computerSkillsOptions.map(skill => (
+                <button
+                  key={skill}
+                  onClick={() => handleQuickAddComputerSkill(skill)}
+                  disabled={loading || skills.some(s => s.skill === skill || s.name === skill)}
+                  className="p-3 text-left border border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <div className="flex items-center space-x-2">
+                    <Monitor className="w-4 h-4 text-green-600" />
+                    <span className="text-sm font-medium">{skill}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Add New Skill - Only show when not on "All Skills" tab */}
+        {activeTab !== 'all' && (
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Add New {activeTab === 'computer' ? 'Computer Skill' :
+                       activeTab === 'technical' ? 'Technical Skill' :
+                       activeTab === 'soft' ? 'Soft Skill' : 'Skill'}
+            </h3>
+
+            {validationError && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded flex items-center">
+                <AlertCircle className="w-4 h-4 mr-2" />
+                {validationError}
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Skill Name</label>
+                <input
+                  type="text"
+                  value={newSkill.name}
+                  onChange={(e) => {
+                    setNewSkill({ ...newSkill, name: e.target.value });
+                    if (validationError) setValidationError('');
+                  }}
+                  placeholder={`e.g., ${
+                    activeTab === 'computer' ? 'Microsoft Excel, Photoshop' :
+                    activeTab === 'technical' ? 'JavaScript, Python' :
+                    activeTab === 'soft' ? 'Leadership, Communication' :
+                    'Enter skill name'
+                  }`}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Proficiency</label>
+                <select
+                  value={newSkill.proficiency}
+                  onChange={(e) => setNewSkill({ ...newSkill, proficiency: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
+                  {proficiencyLevels.map(level => (
+                    <option key={level} value={level}>{level}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex items-end">
+                <button
+                  onClick={handleAddSkill}
+                  disabled={loading || !newSkill.name.trim()}
+                  className="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 disabled:opacity-50 flex items-center justify-center"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add {activeTab === 'computer' ? 'Computer Skill' :
+                       activeTab === 'technical' ? 'Technical Skill' :
+                       activeTab === 'soft' ? 'Soft Skill' : 'Skill'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Information message for "All Skills" tab */}
+        {activeTab === 'all' && skills.length > 0 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div className="flex items-center space-x-2">
+              <AlertCircle className="w-5 h-5 text-blue-600" />
+              <div>
+                <h3 className="text-sm font-medium text-blue-800">Add New Skills</h3>
+                <p className="text-sm text-blue-700 mt-1">
+                  To add new skills, navigate to a specific category tab (Computer Skills, Technical, or Soft Skills) above.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Skills List */}
         <div className="bg-white rounded-lg shadow-md">
           <div className="p-6 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-800">Your Skills ({skills.length})</h3>
+            <h3 className="text-lg font-semibold text-gray-800">
+              {activeTab === 'all' ? 'All Skills' :
+               activeTab === 'computer' ? 'Computer Skills' :
+               activeTab === 'technical' ? 'Technical Skills' :
+               activeTab === 'soft' ? 'Soft Skills' : 'Skills'}
+              ({filteredSkills.length})
+            </h3>
           </div>
-          
+
           {loading && skills.length === 0 ? (
-            <div className="p-6 text-center text-gray-500">Loading skills...</div>
-          ) : skills.length === 0 ? (
-            <div className="p-6 text-center text-gray-500">
-              No skills added yet. Add your first skill above!
+            <div className="flex flex-col items-center justify-center py-12 space-y-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-700"></div>
+              <p className="text-gray-500">Loading skills...</p>
+            </div>
+          ) : filteredSkills.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 space-y-4">
+              <img
+                src="assets/logo.png"
+                alt="Job Match"
+                className="w-16 h-auto opacity-60"
+              />
+              <h3 className="text-lg font-semibold text-gray-600">
+                {activeTab === 'all' ? 'No skills added yet' :
+                 `No ${activeTab === 'computer' ? 'computer' : activeTab} skills added yet`}
+              </h3>
+              <p className="text-gray-500 text-center max-w-md">
+                {activeTab === 'computer'
+                  ? 'Use the quick add buttons above or add a custom computer skill!'
+                  : 'Add your first skill above to showcase your abilities to potential employers!'
+                }
+              </p>
             </div>
           ) : (
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {skills.map(skill => (
+                {filteredSkills.map(skill => (
                   <div key={skill.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                     {editingId === skill.id ? (
                       <div className="space-y-3">
                         <input
                           type="text"
-                          value={editingSkill.name}
+                          value={editingSkill.name || ''}
                           onChange={(e) => setEditingSkill({ ...editingSkill, name: e.target.value })}
                           className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                          placeholder="Skill name"
                         />
                         <select
-                          value={editingSkill.proficiency}
+                          value={editingSkill.proficiency || ''}
                           onChange={(e) => setEditingSkill({ ...editingSkill, proficiency: e.target.value })}
                           className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
                         >
@@ -253,7 +417,7 @@ const Skills = () => {
                           ))}
                         </select>
                         <select
-                          value={editingSkill.category}
+                          value={editingSkill.category || ''}
                           onChange={(e) => setEditingSkill({ ...editingSkill, category: e.target.value })}
                           className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
                         >
@@ -263,8 +427,9 @@ const Skills = () => {
                         </select>
                         <div className="flex space-x-2">
                           <button
-                            onClick={() => updateSkill(skill.id)}
-                            className="flex-1 bg-green-600 text-white px-2 py-1 rounded text-sm hover:bg-green-700"
+                            onClick={() => handleUpdateSkill(skill.id)}
+                            disabled={loading}
+                            className="flex-1 bg-green-600 text-white px-2 py-1 rounded text-sm hover:bg-green-700 disabled:opacity-50"
                           >
                             <Save className="w-3 h-3 inline mr-1" />
                             Save
@@ -279,17 +444,20 @@ const Skills = () => {
                       </div>
                     ) : (
                       <div>
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-medium text-gray-800 text-sm">{skill.name}</h4>
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex items-center space-x-2">
+                            {getCategoryIcon(skill.description || skill.category)}
+                            <h4 className="font-medium text-gray-800 text-sm">{skill.skill || skill.name}</h4>
+                          </div>
                           <div className="flex space-x-1">
                             <button
                               onClick={() => startEditing(skill)}
-                              className="text-blue-600 hover:text-blue-800"
+                              className="text-green-600 hover:text-green-800"
                             >
                               <Edit2 className="w-3 h-3" />
                             </button>
                             <button
-                              onClick={() => deleteSkill(skill.id)}
+                              onClick={() => handleDeleteSkill(skill.id)}
                               className="text-red-600 hover:text-red-800"
                             >
                               <X className="w-3 h-3" />
@@ -300,8 +468,8 @@ const Skills = () => {
                           <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getProficiencyColor(skill.proficiency)}`}>
                             {skill.proficiency}
                           </span>
-                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ml-2 ${getCategoryColor(skill.category)}`}>
-                            {skill.category}
+                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ml-2 ${getCategoryColor(skill.description || skill.category || 'Other')}`}>
+                            {skill.description || skill.category || 'Other'}
                           </span>
                         </div>
                       </div>
