@@ -229,8 +229,8 @@ exports.getDataUsageStats = async (userId) => {
             applications: true,
             _count: {
               select: {
-                academicQualifications: true,
-                workExperiences: true,
+                qualifications: true,
+                experiences: true,
                 computerSkills: true
               }
             }
@@ -278,9 +278,9 @@ exports.calculateProfileCompleteness = (user) => {
     if (user.email) completeness++;
     if (user.applicant.firstName && user.applicant.lastName) completeness++;
     if (user.applicant.computerSkills?.length > 0) completeness++;
-    if (user.applicant.workExperiences?.length > 0) completeness++;
-    if (user.applicant.academicQualifications?.length > 0) completeness++;
-    if (user.applicant.languageProficiencies?.length > 0) completeness++;
+    if (user.applicant.experiences?.length > 0) completeness++;
+    if (user.applicant.qualifications?.length > 0) completeness++;
+    if (user.applicant.languages?.length > 0) completeness++;
   } else if (user.employer) {
     totalFields = 3; // email, company info, jobs posted
     
@@ -296,8 +296,8 @@ exports.countDataPoints = (user) => {
   let count = 1; // email
 
   if (user.applicant) {
-    count += user.applicant._count?.academicQualifications || 0;
-    count += user.applicant._count?.workExperiences || 0;
+    count += user.applicant._count?.qualifications || 0;
+    count += user.applicant._count?.experiences || 0;
     count += user.applicant._count?.computerSkills || 0;
     count += user.applicant.applications?.length || 0;
   } else if (user.employer) {

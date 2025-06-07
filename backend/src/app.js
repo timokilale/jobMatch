@@ -64,6 +64,7 @@ app.use('/api/privacy', require('./routes/privacy'));
 app.use('/api/interviews', require('./routes/interviews'));
 app.use('/api/emails', require('./routes/emails'));
 app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/forecasting', require('./routes/forecasting'));
 
 
 // Error Handling

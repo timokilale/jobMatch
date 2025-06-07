@@ -73,28 +73,45 @@ class MarketAnalyticsService {
 
   async storeTrendData(trends) {
     for (const trend of trends) {
-      await prisma.marketTrend.upsert({
-        where: {
-          industry_month: {
-            industry: trend.industry,
-            month: trend.month
-          }
-        },
-        update: {
-          jobPostings: trend.jobPostings,
-          averageSalary: trend.averageSalary,
-          demandScore: trend.demandScore,
-          updatedAt: new Date()
-        },
-        create: {
+      // Store job postings metric
+      await prisma.marketTrend.create({
+        data: {
           industry: trend.industry,
-          month: trend.month,
-          jobPostings: trend.jobPostings,
-          averageSalary: trend.averageSalary,
-          demandScore: trend.demandScore,
-          source: trend.source
+          metric: 'job_postings',
+          value: trend.jobPostings || 0,
+          period: 'monthly',
+          date: new Date(trend.month || new Date()),
+          source: trend.source || 'market_analytics'
         }
       });
+
+      // Store average salary metric if available
+      if (trend.averageSalary) {
+        await prisma.marketTrend.create({
+          data: {
+            industry: trend.industry,
+            metric: 'salary_avg',
+            value: trend.averageSalary,
+            period: 'monthly',
+            date: new Date(trend.month || new Date()),
+            source: trend.source || 'market_analytics'
+          }
+        });
+      }
+
+      // Store demand score metric if available
+      if (trend.demandScore) {
+        await prisma.marketTrend.create({
+          data: {
+            industry: trend.industry,
+            metric: 'demand_score',
+            value: trend.demandScore,
+            period: 'monthly',
+            date: new Date(trend.month || new Date()),
+            source: trend.source || 'market_analytics'
+          }
+        });
+      }
     }
   }
 
@@ -212,13 +229,13 @@ class MarketAnalyticsService {
     // Get recent trend data from database
     const trends = await prisma.marketTrend.findMany({
       where: {
-        month: {
+        date: {
           gte: new Date(Date.now() - 6 * 30 * 24 * 60 * 60 * 1000) // Last 6 months
         }
       },
-      orderBy: { month: 'desc' }
+      orderBy: { date: 'desc' }
     });
-    
+
     return trends;
   }
 

@@ -6,7 +6,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "seed:categories": "node prisma/seed.js"
+    "seed:categories": "node prisma/seed.js",
+    "python-forecast": "python python_services/trend_forecasting.py",
+    "setup-python": "pip install -r python_services/requirements.txt",
+    "forecast-trends": "node src/scripts/runPythonForecasting.js"
   },
   "keywords": [],
   "author": "",

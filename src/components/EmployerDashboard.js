@@ -7,6 +7,7 @@ import Candidates from './EmployerSidebar/Candidates';
 import Analytics from './EmployerSidebar/Analytics';
 import Settings from './EmployerSidebar/Settings';
 import MarketAnalytics from './MarketAnalytics';
+import EmploymentTrendForecasting from './EmploymentTrendForecasting';
 import EmployerNotifications from './EmployerNotifications';
 import { fetchEmployerApplications } from '../redux/slices/applications';
 import { logout } from '../redux/slices/authSlice';
@@ -195,6 +196,7 @@ const EmployerDashboard = () => {
                   { label: 'Candidates', icon: 'users', view: 'candidates' },
                   { label: 'Analytics', icon: 'chart-bar', view: 'analytics' },
                   { label: 'Market Insights', icon: 'chart-line', view: 'market-analytics' },
+                  { label: 'Employment Trends', icon: 'chart-area', view: 'employment-forecasting' },
                   { label: 'Settings', icon: 'cog', view: 'settings' },
                   { label: 'Logout', icon: 'sign-out-alt', action: 'logout' }
                 ].map((item, i) => (
@@ -318,6 +320,8 @@ const EmployerDashboard = () => {
               <Analytics />
             ) : activeView === 'market-analytics' ? (
               <MarketAnalytics />
+            ) : activeView === 'employment-forecasting' ? (
+              <EmploymentTrendForecasting />
             ) : activeView === 'settings' ? (
               <Settings />
             ) : null}
