@@ -122,7 +122,11 @@ class SkillsAnalysisService {
       });
     }
 
-    // Legacy ApplicantSkill table
+    // Legacy ApplicantSkill table - DISABLED for consistency with My Skills
+    // Note: Legacy skills are no longer included to maintain consistency between
+    // Skills Analysis and My Skills sections. All skills should be managed through
+    // the current GeneralSkill table via the My Skills interface.
+    /*
     if (applicant.skills && applicant.skills.length > 0) {
       const legacySkills = applicant.skills.map(skill => {
         return {
@@ -134,6 +138,7 @@ class SkillsAnalysisService {
 
       skills.technical.push(...legacySkills);
     }
+    */
 
     // Combine all skills for easier processing
     skills.allSkills = [
@@ -243,14 +248,7 @@ class SkillsAnalysisService {
       });
     });
 
-    // Get existing skill demand data from normalized database
-    const existingSkillDemand = await prisma.skillDemand.findMany({
-      include: {
-        skillMaster: true
-      },
-      orderBy: { demandScore: 'desc' },
-      take: 50
-    });
+    // Skip existing skill demand data - use only real job requirements
 
     // Calculate demand scores based on frequency and importance
     const skillDemandMap = {};
@@ -291,25 +289,7 @@ class SkillsAnalysisService {
       skillDemandMap[skill].demandScore += importanceWeight;
     });
 
-    // Add existing skill demand data
-    existingSkillDemand.forEach(skillData => {
-      const skill = skillData.skillMaster.name.toLowerCase();
-      if (!skillDemandMap[skill]) {
-        skillDemandMap[skill] = {
-          skillName: skillData.skillMaster.name,
-          skillCategory: skillData.skillMaster.category,
-          demandScore: skillData.demandScore,
-          jobCount: Math.round(skillData.demandScore / 10),
-          importance: { required: 1, preferred: 2, nice_to_have: 1 },
-          avgYearsRequired: 2,
-          growth: skillData.growth
-        };
-      } else {
-        // Enhance existing data with market demand info
-        skillDemandMap[skill].marketDemandScore = skillData.demandScore;
-        skillDemandMap[skill].growth = skillData.growth;
-      }
-    });
+    // Skip adding existing skill demand data - use only real job requirements
 
     // Convert to array and normalize scores
     const highDemandSkills = Object.values(skillDemandMap)
@@ -532,11 +512,13 @@ class SkillsAnalysisService {
   }
 
   calculateOverallScore(currentSkills, marketDemand) {
-    // Job-based market alignment scoring
+    // Job-based market alignment scoring - using only current skills for consistency
     const currentSkillNames = [
       ...currentSkills.technical.map(s => s.name.toLowerCase()),
-      ...currentSkills.categories.map(s => s.name.toLowerCase()),
-      ...(currentSkills.general || []).map(s => s.name.toLowerCase())
+      ...currentSkills.computer.map(s => s.name.toLowerCase()),
+      ...currentSkills.soft.map(s => s.name.toLowerCase()),
+      ...currentSkills.general.map(s => s.name.toLowerCase())
+      // Removed categories and legacy skills for consistency with My Skills
     ];
 
     console.log('Calculating job-based market alignment score:');

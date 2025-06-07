@@ -86,15 +86,28 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
         <div className="space-y-6">
           <section>
             <h3 className="flex items-center text-lg font-semibold text-green-600 mb-2">
-              <i className="fas fa-laptop-code mr-2"></i> Computer Skills
+              <i className="fas fa-star mr-2"></i> Skills
             </h3>
             {cv?.generalSkills?.length ? (
-              <ul className="list-disc list-inside text-sm text-gray-700">
-                {cv.generalSkills.map((s, idx) => (
-                  <li key={s?.id}>{safeRender(s?.skill)} - <span className="text-gray-500">{safeRender(s?.proficiency)}</span></li>
-                ))}
-              </ul>
-            ) : <p className="text-gray-500 text-sm">No computer skills found</p>}
+              <div className="space-y-3">
+                {/* Group skills by category */}
+                {['Computer Skills', 'Technical', 'Soft Skills', 'Other'].map(category => {
+                  const categorySkills = cv.generalSkills.filter(s => s.description === category || (!s.description && category === 'Other'));
+                  if (categorySkills.length === 0) return null;
+
+                  return (
+                    <div key={category}>
+                      <h4 className="text-sm font-medium text-green-700 mb-1">{category}</h4>
+                      <ul className="list-disc list-inside text-sm text-gray-700 ml-2">
+                        {categorySkills.map((s, idx) => (
+                          <li key={s?.id}>{safeRender(s?.skill)} - <span className="text-gray-500">{safeRender(s?.proficiency)}</span></li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : <p className="text-gray-500 text-sm">No skills found</p>}
           </section>
 
           <section>

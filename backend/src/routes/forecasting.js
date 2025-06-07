@@ -62,76 +62,13 @@ router.get('/trends', async (req, res) => {
     }
 
     if (!forecastingService || (trends && trends.error)) {
-      // Provide fallback trend data
-      const fallbackTrends = {
-        analysis_date: new Date().toISOString(),
-        data_period: `Last ${days} days`,
-        category_trends: {
-          'Technology': {
-            total_jobs: 245,
-            growth_rate: 15.3,
-            trend_direction: 'increasing',
-            recent_activity: 8.2
-          },
-          'Healthcare': {
-            total_jobs: 189,
-            growth_rate: 12.7,
-            trend_direction: 'increasing',
-            recent_activity: 6.5
-          },
-          'Education': {
-            total_jobs: 156,
-            growth_rate: 8.9,
-            trend_direction: 'increasing',
-            recent_activity: 5.1
-          },
-          'Finance': {
-            total_jobs: 134,
-            growth_rate: 6.2,
-            trend_direction: 'increasing',
-            recent_activity: 4.3
-          },
-          'Manufacturing': {
-            total_jobs: 98,
-            growth_rate: 4.1,
-            trend_direction: 'increasing',
-            recent_activity: 3.2
-          },
-          'Retail': {
-            total_jobs: 87,
-            growth_rate: -2.1,
-            trend_direction: 'decreasing',
-            recent_activity: 2.8
-          }
-        },
-        skill_trends: {
-          'Python': {
-            total_demand: 45,
-            trend_direction: 'increasing',
-            skill_category: 'Technical'
-          },
-          'React': {
-            total_demand: 38,
-            trend_direction: 'increasing',
-            skill_category: 'Technical'
-          },
-          'Data Analysis': {
-            total_demand: 32,
-            trend_direction: 'increasing',
-            skill_category: 'Technical'
-          }
-        },
-        dataSource: 'fallback'
-      };
-
-      return res.json({
-        success: true,
-        data: fallbackTrends,
+      return res.status(503).json({
+        success: false,
+        error: 'Forecasting service unavailable',
+        message: 'Real-time forecasting data is not available. Please try again later.',
         metadata: {
           requestedDays: parseInt(days),
-          includeForecasts: forecasts.toLowerCase() === 'true',
-          generatedAt: new Date().toISOString(),
-          note: 'Fallback data - forecasting service unavailable'
+          generatedAt: new Date().toISOString()
         }
       });
     }
@@ -346,30 +283,13 @@ router.get('/summary', async (req, res) => {
   } catch (error) {
     console.error('Error in /summary endpoint:', error);
 
-    // Provide fallback data even on error
-    const fallbackSummary = {
-      totalCategories: 8,
-      growingCategories: [
-        { category: 'Technology', growthRate: 15.3, totalJobs: 245 },
-        { category: 'Healthcare', growthRate: 12.7, totalJobs: 189 },
-        { category: 'Education', growthRate: 8.9, totalJobs: 156 }
-      ],
-      hotSkills: [
-        { skill: 'Python', demand: 45, category: 'Technical' },
-        { skill: 'React', demand: 38, category: 'Technical' },
-        { skill: 'Data Analysis', demand: 32, category: 'Technical' }
-      ],
-      dataPeriod: 'Last 90 days',
-      lastUpdated: new Date().toISOString(),
-      dataSource: 'fallback'
-    };
-
-    res.json({
-      success: true,
-      data: fallbackSummary,
+    // Return error instead of fallback data
+    res.status(503).json({
+      success: false,
+      error: 'Forecasting service unavailable',
+      message: 'Real-time forecasting data is not available. Please try again later.',
       metadata: {
-        generatedAt: new Date().toISOString(),
-        note: 'Fallback data - service error'
+        generatedAt: new Date().toISOString()
       }
     });
   }

@@ -37,38 +37,95 @@ class MarketAnalyticsService {
   }
 
   async fetchLaborStatistics(industry, timeframe) {
-    // Mock implementation - replace with actual API calls
-    const mockData = [
-      {
-        industry: industry || 'Technology',
-        month: new Date().toISOString().slice(0, 7),
-        jobPostings: Math.floor(Math.random() * 10000) + 5000,
-        averageSalary: Math.floor(Math.random() * 50000) + 50000,
-        demandScore: Math.random() * 100,
-        source: 'government'
+    // Get real data from database instead of mock data
+    const whereClause = industry ? {
+      categories: {
+        some: {
+          name: { contains: industry, mode: 'insensitive' }
+        }
       }
-    ];
-    
-    return mockData;
+    } : {};
+
+    // Get job posting statistics from actual database
+    const jobs = await prisma.job.findMany({
+      where: {
+        ...whereClause,
+        status: 'ACTIVE',
+        createdAt: {
+          gte: new Date(Date.now() - (timeframe === '12months' ? 365 : 180) * 24 * 60 * 60 * 1000)
+        }
+      },
+      include: {
+        categories: true
+      }
+    });
+
+    // Group by month and calculate real statistics
+    const monthlyStats = {};
+    jobs.forEach(job => {
+      const month = job.createdAt.toISOString().slice(0, 7);
+      if (!monthlyStats[month]) {
+        monthlyStats[month] = {
+          industry: industry || 'All Industries',
+          month,
+          jobPostings: 0,
+          averageSalary: 0,
+          salaryCount: 0,
+          demandScore: 0,
+          source: 'database'
+        };
+      }
+      monthlyStats[month].jobPostings++;
+      if (job.salary) {
+        monthlyStats[month].averageSalary += job.salary;
+        monthlyStats[month].salaryCount++;
+      }
+    });
+
+    // Calculate averages and demand scores
+    return Object.values(monthlyStats).map(stat => ({
+      ...stat,
+      averageSalary: stat.salaryCount > 0 ? Math.round(stat.averageSalary / stat.salaryCount) : 0,
+      demandScore: Math.min((stat.jobPostings / 100) * 100, 100) // Normalize to 0-100
+    }));
   }
 
   async fetchJobBoardTrends(industry, timeframe) {
-    // Mock job board data - implement actual API integration
-    const categories = await prisma.jobCategory.findMany();
-    const trends = [];
-    
-    for (const category of categories) {
-      trends.push({
-        industry: category.name,
-        month: new Date().toISOString().slice(0, 7),
-        jobPostings: Math.floor(Math.random() * 5000) + 1000,
-        averageSalary: Math.floor(Math.random() * 40000) + 40000,
-        demandScore: Math.random() * 100,
-        source: 'job_boards'
-      });
-    }
-    
-    return trends;
+    // Get real job board trends from our database
+    // This represents jobs posted through our platform
+    const whereClause = industry ? {
+      categories: {
+        some: {
+          name: { contains: industry, mode: 'insensitive' }
+        }
+      }
+    } : {};
+
+    const jobs = await prisma.job.findMany({
+      where: {
+        ...whereClause,
+        createdAt: {
+          gte: new Date(Date.now() - (timeframe === '12months' ? 365 : 180) * 24 * 60 * 60 * 1000)
+        }
+      },
+      include: {
+        categories: true,
+        applications: true
+      }
+    });
+
+    // Calculate real demand score based on application-to-job ratio
+    const totalApplications = jobs.reduce((sum, job) => sum + job.applications.length, 0);
+    const demandScore = jobs.length > 0 ? Math.min((totalApplications / jobs.length) * 10, 100) : 0;
+
+    return [{
+      industry: industry || 'All Industries',
+      month: new Date().toISOString().slice(0, 7),
+      jobPostings: jobs.length,
+      averageSalary: jobs.filter(j => j.salary).reduce((sum, j) => sum + j.salary, 0) / Math.max(jobs.filter(j => j.salary).length, 1),
+      demandScore: demandScore,
+      source: 'job_board'
+    }];
   }
 
   async storeTrendData(trends) {
@@ -151,49 +208,130 @@ class MarketAnalyticsService {
   }
 
   generateDemandForecast(trends) {
-    // Simple forecasting using linear regression
+    // Real forecasting based on historical trend analysis
     const forecast = {};
-    
+
     trends.forEach(trend => {
       if (!forecast[trend.industry]) {
+        // Calculate growth rate based on actual data
+        const currentDemand = trend.demandScore;
+        const historicalAverage = trends
+          .filter(t => t.industry === trend.industry)
+          .reduce((sum, t) => sum + t.demandScore, 0) /
+          Math.max(trends.filter(t => t.industry === trend.industry).length, 1);
+
+        const growthRate = currentDemand > historicalAverage ?
+          ((currentDemand - historicalAverage) / historicalAverage) : 0;
+
         forecast[trend.industry] = {
-          current: trend.demandScore,
-          predicted: trend.demandScore * (1 + Math.random() * 0.2 - 0.1), // ±10% variation
-          confidence: Math.random() * 0.3 + 0.7 // 70-100% confidence
+          current: currentDemand,
+          predicted: Math.max(currentDemand * (1 + growthRate * 0.5), currentDemand * 0.9), // Conservative growth
+          confidence: growthRate > 0 ? 0.8 : 0.6, // Higher confidence for growing trends
+          growthRate: growthRate * 100
         };
       }
     });
-    
+
     return forecast;
   }
 
   analyzeSalaryTrends(trends) {
     const salaryAnalysis = {};
-    
+
     trends.forEach(trend => {
-      if (!salaryAnalysis[trend.industry]) {
+      if (!salaryAnalysis[trend.industry] && trend.averageSalary > 0) {
+        // Get historical salary data for comparison
+        const industryTrends = trends.filter(t => t.industry === trend.industry && t.averageSalary > 0);
+        const avgSalary = industryTrends.reduce((sum, t) => sum + t.averageSalary, 0) / industryTrends.length;
+
+        const changePercent = avgSalary > 0 ?
+          ((trend.averageSalary - avgSalary) / avgSalary) * 100 : 0;
+
         salaryAnalysis[trend.industry] = {
-          current: trend.averageSalary,
-          trend: Math.random() > 0.5 ? 'increasing' : 'stable',
-          changePercent: Math.round((Math.random() * 10 - 5) * 100) / 100
+          current: Math.round(trend.averageSalary),
+          trend: changePercent > 2 ? 'increasing' : changePercent < -2 ? 'decreasing' : 'stable',
+          changePercent: Math.round(changePercent * 100) / 100
         };
       }
     });
-    
+
     return salaryAnalysis;
   }
 
   async identifyEmergingSkills(trends) {
-    // Mock emerging skills identification
-    const emergingSkills = [
-      { skill: 'AI/Machine Learning', demand: 95, growth: 45 },
-      { skill: 'Cloud Computing', demand: 88, growth: 32 },
-      { skill: 'Data Analysis', demand: 82, growth: 28 },
-      { skill: 'Cybersecurity', demand: 79, growth: 35 },
-      { skill: 'Digital Marketing', demand: 75, growth: 22 }
-    ];
-    
-    return emergingSkills;
+    // Identify emerging skills based on recent job posting frequency
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+
+    // Get recent job requirements
+    const recentJobs = await prisma.job.findMany({
+      where: {
+        status: 'ACTIVE',
+        createdAt: { gte: thirtyDaysAgo }
+      },
+      include: {
+        requirements: {
+          include: { skillMaster: true }
+        }
+      }
+    });
+
+    // Get older job requirements for comparison
+    const olderJobs = await prisma.job.findMany({
+      where: {
+        status: 'ACTIVE',
+        createdAt: { gte: sixtyDaysAgo, lt: thirtyDaysAgo }
+      },
+      include: {
+        requirements: {
+          include: { skillMaster: true }
+        }
+      }
+    });
+
+    // Calculate skill frequency in both periods
+    const recentSkills = {};
+    const olderSkills = {};
+
+    recentJobs.forEach(job => {
+      job.requirements.forEach(req => {
+        const skill = req.skillMaster.name;
+        recentSkills[skill] = (recentSkills[skill] || 0) + 1;
+      });
+    });
+
+    olderJobs.forEach(job => {
+      job.requirements.forEach(req => {
+        const skill = req.skillMaster.name;
+        olderSkills[skill] = (olderSkills[skill] || 0) + 1;
+      });
+    });
+
+    // Calculate growth rates
+    const emergingSkills = [];
+    Object.keys(recentSkills).forEach(skill => {
+      const recentCount = recentSkills[skill];
+      const olderCount = olderSkills[skill] || 0;
+
+      if (recentCount >= 2) { // Only consider skills with meaningful data
+        const growth = olderCount > 0 ?
+          ((recentCount - olderCount) / olderCount) * 100 :
+          100; // New skills get 100% growth
+
+        if (growth > 20) { // Only skills with >20% growth
+          emergingSkills.push({
+            skill,
+            growth: Math.round(growth),
+            demand: recentCount,
+            category: 'Emerging'
+          });
+        }
+      }
+    });
+
+    return emergingSkills
+      .sort((a, b) => b.growth - a.growth)
+      .slice(0, 10); // Top 10 emerging skills
   }
 
   // Get market insights for dashboard
@@ -240,20 +378,94 @@ class MarketAnalyticsService {
   }
 
   async getSkillDemandAnalysis() {
-    // Analyze skill demand based on job categories
-    const categories = await prisma.jobCategory.findMany({
+    console.log('🔍 Analyzing skill demand from actual job requirements...');
+
+    // Get all active jobs with their requirements (3NF normalized structure)
+    const jobs = await prisma.job.findMany({
+      where: { status: 'ACTIVE' },
       include: {
-        jobs: {
-          where: { status: 'ACTIVE' }
-        }
+        requirements: {
+          include: {
+            skillMaster: true
+          }
+        },
+        categories: true,
+        employer: true
       }
     });
-    
-    return categories.map(category => ({
-      skill: category.name,
-      demand: category.jobs.length,
-      trend: Math.random() > 0.5 ? 'increasing' : 'stable'
-    }));
+
+    console.log(`📊 Found ${jobs.length} active jobs for analysis`);
+
+    // Extract skill requirements and calculate demand
+    const skillDemandMap = {};
+    let totalRequirements = 0;
+
+    jobs.forEach(job => {
+      job.requirements.forEach(req => {
+        totalRequirements++;
+        const skillName = req.skillMaster.name;
+        const skillCategory = req.skillMaster.category;
+
+        if (!skillDemandMap[skillName]) {
+          skillDemandMap[skillName] = {
+            skill: skillName,
+            skillName: skillName,
+            category: skillCategory,
+            demand: 0,
+            jobCount: 0,
+            importance: { required: 0, preferred: 0, nice_to_have: 0 },
+            avgYearsRequired: 0,
+            totalYears: 0,
+            demandScore: 0,
+            growth: 0,
+            jobTitles: new Set(),
+            employers: new Set()
+          };
+        }
+
+        const skill = skillDemandMap[skillName];
+        skill.demand++;
+        skill.jobCount++;
+        skill.importance[req.importance.toLowerCase()]++;
+
+        if (req.yearsRequired) {
+          skill.totalYears += req.yearsRequired;
+          skill.avgYearsRequired = skill.totalYears / skill.demand;
+        }
+
+        skill.jobTitles.add(job.title);
+        skill.employers.add(job.employer.companyName);
+      });
+    });
+
+    // Calculate demand scores and convert sets to arrays
+    const skillDemandArray = Object.values(skillDemandMap).map(skill => {
+      // Calculate demand score as percentage of total jobs
+      skill.demandScore = jobs.length > 0 ? (skill.jobCount / jobs.length) * 100 : 0;
+
+      // Convert sets to arrays for JSON serialization
+      skill.jobTitles = Array.from(skill.jobTitles);
+      skill.employers = Array.from(skill.employers);
+
+      // Calculate growth trend based on importance distribution
+      const totalImportance = skill.importance.required + skill.importance.preferred + skill.importance.nice_to_have;
+      const requiredRatio = totalImportance > 0 ? skill.importance.required / totalImportance : 0;
+      skill.growth = requiredRatio > 0.6 ? 15 : requiredRatio > 0.3 ? 5 : 0;
+      skill.trend = requiredRatio > 0.5 ? 'increasing' : 'stable';
+
+      return skill;
+    }).sort((a, b) => b.demandScore - a.demandScore);
+
+    console.log(`✅ Analyzed ${totalRequirements} skill requirements from ${jobs.length} jobs`);
+    console.log(`🔥 Top 5 skills: ${skillDemandArray.slice(0, 5).map(s => `${s.skillName} (${s.demand} mentions)`).join(', ')}`);
+
+    return {
+      skills: skillDemandArray.slice(0, 20), // Top 20 skills
+      totalJobs: jobs.length,
+      totalRequirements: totalRequirements,
+      analysisDate: new Date(),
+      dataSource: 'Real Job Requirements (3NF Database)'
+    };
   }
 
   async getPersonalizedRecommendations(userId) {

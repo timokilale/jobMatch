@@ -29,8 +29,19 @@ exports.getEmploymentTrends = async (req, res) => {
 // Get skill demand analysis
 exports.getSkillDemand = async (req, res) => {
   try {
-    const skillDemand = await marketService.getSkillDemandAnalysis();
-    res.json(skillDemand);
+    console.log('🔍 Market Analytics: Getting skill demand analysis...');
+    const skillDemandData = await marketService.getSkillDemandAnalysis();
+
+    // Return the skills array for compatibility with frontend
+    res.json({
+      skills: skillDemandData.skills || [],
+      metadata: {
+        totalJobs: skillDemandData.totalJobs || 0,
+        totalRequirements: skillDemandData.totalRequirements || 0,
+        analysisDate: skillDemandData.analysisDate || new Date(),
+        dataSource: skillDemandData.dataSource || 'Real Job Requirements'
+      }
+    });
   } catch (error) {
     console.error('Error fetching skill demand:', error);
     res.status(500).json({ error: 'Failed to fetch skill demand data' });
@@ -174,15 +185,34 @@ function generateSimpleForecast(historicalData, months) {
 // Get emerging skills
 exports.getEmergingSkills = async (req, res) => {
   try {
-    const emergingSkills = await prisma.skillDemand.findMany({
-      where: {
-        growth: { gt: 10 } // Skills with >10% growth
-      },
-      orderBy: { growth: 'desc' },
-      take: 10
+    console.log('🔍 Getting emerging skills from real job requirements...');
+
+    // Get skill demand analysis from real job requirements
+    const skillDemandData = await marketService.getSkillDemandAnalysis();
+
+    // Filter for skills that appear to be "emerging" (high demand, newer requirements)
+    const emergingSkills = (skillDemandData.skills || [])
+      .filter(skill => skill.demandScore > 20) // Skills with significant demand
+      .slice(0, 10) // Top 10 emerging skills
+      .map(skill => ({
+        skillName: skill.skillName,
+        category: skill.category,
+        demandScore: skill.demandScore,
+        growth: skill.growth || 0,
+        jobCount: skill.jobCount || 0,
+        trend: skill.trend || 'stable'
+      }));
+
+    console.log(`✅ Found ${emergingSkills.length} emerging skills from real data`);
+
+    res.json({
+      skills: emergingSkills,
+      metadata: {
+        totalAnalyzed: skillDemandData.skills?.length || 0,
+        dataSource: 'Real Job Requirements',
+        lastUpdated: new Date()
+      }
     });
-    
-    res.json(emergingSkills);
   } catch (error) {
     console.error('Error fetching emerging skills:', error);
     res.status(500).json({ error: 'Failed to fetch emerging skills' });

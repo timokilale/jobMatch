@@ -114,35 +114,72 @@ exports.getCareerPathSuggestions = async (req, res) => {
 exports.getSkillDemandAnalysis = async (req, res) => {
   try {
     const { category, timeframe = '6months' } = req.query;
-    
-    // Get skill demand data
-    const skillDemand = await prisma.skillDemand.findMany({
-      where: category ? {
-        OR: [
-          { skillName: { contains: category } },
-          { industry: { contains: category } }
-        ]
-      } : {},
-      orderBy: { demandScore: 'desc' },
-      take: 20
+    console.log('🔍 Getting skill demand analysis from real job requirements...');
+
+    // Calculate skill demand from actual job requirements only
+    const whereClause = category ? {
+      categories: {
+        some: {
+          name: { contains: category, mode: 'insensitive' }
+        }
+      }
+    } : {};
+
+    const jobs = await prisma.job.findMany({
+      where: {
+        ...whereClause,
+        status: 'ACTIVE'
+      },
+      include: {
+        requirements: {
+          include: {
+            skillMaster: true
+          }
+        },
+        categories: true
+      }
     });
 
-    // Get market trends
-    const marketTrends = await prisma.marketTrend.findMany({
-      where: {
-        industry: category || undefined,
-        date: {
-          gte: new Date(Date.now() - 6 * 30 * 24 * 60 * 60 * 1000) // Last 6 months
+    // Calculate skill demand from job requirements
+    const skillDemandMap = {};
+    let totalRequirements = 0;
+
+    jobs.forEach(job => {
+      job.requirements.forEach(req => {
+        totalRequirements++;
+        const skillName = req.skillMaster.name;
+
+        if (!skillDemandMap[skillName]) {
+          skillDemandMap[skillName] = {
+            skillName: skillName,
+            demandScore: 0,
+            jobCount: 0,
+            category: req.skillMaster.category,
+            importance: { required: 0, preferred: 0, nice_to_have: 0 }
+          };
         }
-      },
-      orderBy: { date: 'desc' }
+
+        skillDemandMap[skillName].jobCount++;
+        skillDemandMap[skillName].importance[req.importance.toLowerCase()]++;
+      });
     });
+
+    // Calculate demand scores and sort
+    const skillDemand = Object.values(skillDemandMap).map(skill => {
+      skill.demandScore = jobs.length > 0 ? (skill.jobCount / jobs.length) * 100 : 0;
+      return skill;
+    }).sort((a, b) => b.demandScore - a.demandScore).slice(0, 20);
+
+    console.log(`✅ Analyzed ${jobs.length} jobs with ${totalRequirements} skill requirements`);
 
     res.json({
       skillDemand,
-      marketTrends,
+      marketTrends: [], // No sample market trends
       category: category || 'All Categories',
       timeframe,
+      totalJobs: jobs.length,
+      totalRequirements,
+      dataSource: 'Real Job Requirements',
       lastUpdated: new Date()
     });
   } catch (error) {

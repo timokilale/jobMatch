@@ -158,7 +158,7 @@ model Applicant {
   qualifications AcademicQualification[]
   experiences    WorkExperience[]
   languages      LanguageProficiency[]
-  computerSkills ComputerSkill[]
+  computerSkills ComputerSkill[] // Legacy - to be migrated to ApplicantSkill
   skills         ApplicantSkill[]
   generalSkills  GeneralSkill[]
   notifications  Notification[]
