@@ -213,7 +213,7 @@ const AcademicQualifications = () => {
                 {qualifications.map((qualification, index) => (
                   <tr key={index} className="hover:bg-green-50">
                     <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.level}</td>
-                    <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.country}</td>
+                    <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.country?.name || qualification.country}</td>
                     <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.institution}</td>
                     <td className="p-3 text-sm text-green-800 border border-green-200">{qualification.fieldOfStudy}</td>
                     <td className="p-3 text-sm text-green-800 border border-green-200 whitespace-nowrap">
@@ -221,10 +221,10 @@ const AcademicQualifications = () => {
                       {qualification.endDate ? new Date(qualification.endDate).toDateString() : 'Present'}
                     </td>
                     <td className="p-3 text-sm text-green-800 border border-green-200" >
-                      <a 
-                        href={qualification.certificate} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                      <a
+                        href={qualification.certificateUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-green-600 hover:underline"
                       >
                         View Certificate

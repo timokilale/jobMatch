@@ -22,14 +22,7 @@ router.get('/', auth(), async (req, res) => {
       ]
     });
 
-    // Transform the data to match frontend expectations
-    const transformedSkills = skills.map(skill => ({
-      ...skill,
-      name: skill.skill, // Map skill to name
-      category: skill.description // Map description to category
-    }));
-
-    res.json(transformedSkills);
+    res.json(skills);
   } catch (error) {
     console.error('Error fetching skills:', error);
     res.status(500).json({ error: 'Failed to fetch skills' });
@@ -91,14 +84,7 @@ router.post('/', auth(), async (req, res) => {
       }
     });
 
-    // Transform the response to match frontend expectations
-    const transformedSkill = {
-      ...skill,
-      name: skill.skill, // Map skill to name
-      category: skill.description // Map description to category
-    };
-
-    res.status(201).json(transformedSkill);
+    res.status(201).json(skill);
   } catch (error) {
     console.error('Error adding skill:', error);
     res.status(500).json({ error: 'Failed to add skill' });
@@ -176,14 +162,7 @@ router.put('/:id', auth(), async (req, res) => {
       }
     });
 
-    // Transform the response to match frontend expectations
-    const transformedSkill = {
-      ...updatedSkill,
-      name: updatedSkill.skill, // Map skill to name
-      category: updatedSkill.description // Map description to category
-    };
-
-    res.json(transformedSkill);
+    res.json(updatedSkill);
   } catch (error) {
     console.error('Error updating skill:', error);
     res.status(500).json({ error: 'Failed to update skill' });

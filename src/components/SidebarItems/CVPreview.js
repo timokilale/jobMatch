@@ -88,9 +88,9 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
             <h3 className="flex items-center text-lg font-semibold text-green-600 mb-2">
               <i className="fas fa-laptop-code mr-2"></i> Computer Skills
             </h3>
-            {cv?.skills?.length ? (
+            {cv?.generalSkills?.length ? (
               <ul className="list-disc list-inside text-sm text-gray-700">
-                {cv.skills.map((s, idx) => (
+                {cv.generalSkills.map((s, idx) => (
                   <li key={s?.id}>{safeRender(s?.skill)} - <span className="text-gray-500">{safeRender(s?.proficiency)}</span></li>
                 ))}
               </ul>
@@ -105,8 +105,8 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
               <ul className="text-sm text-gray-700 space-y-1">
                 {cv.languages.map((l, idx) => (
                   <li key={l?.id}>
-                    {safeRender(l?.language)} - 
-                    <span className="text-gray-500 ml-1">Speak: {safeRender(l?.speak)}, Read: {safeRender(l?.read)}, Write: {safeRender(l?.write)}</span>
+                    {safeRender(l?.language)} -
+                    <span className="text-gray-500 ml-1">Speak: {safeRender(l?.speakLevel)}, Read: {safeRender(l?.readLevel)}, Write: {safeRender(l?.writeLevel)}</span>
                   </li>
                 ))}
               </ul>
@@ -145,13 +145,13 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
               <div className="space-y-4 text-sm text-gray-700">
                 {cv.experiences.map((e, idx) => (
                   <div key={e?.id} className="p-3 bg-white rounded shadow-sm border">
-                    <p className="font-medium">{safeRender(e?.jobTitle)} at {safeRender(e?.institution)}</p>
+                    <p className="font-medium">{safeRender(e?.jobTitle)} at {safeRender(e?.companyName)}</p>
                     {e.startDate && e.endDate && (
                       <p className="text-xs text-gray-400 italic">
                         {formatDateRange(e.startDate, e.endDate)}
                       </p>
                     )}
-                    <p className="text-gray-500 text-xs mt-1">{safeRender(e?.duties)}</p>
+                    <p className="text-gray-500 text-xs mt-1">{safeRender(e?.responsibilities)}</p>
                   </div>
                ))}
               </div>

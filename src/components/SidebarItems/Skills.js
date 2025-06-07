@@ -90,8 +90,9 @@ const Skills = () => {
 
     try {
       await dispatch(createSkill({
-        ...newSkill,
-        name: trimmedName
+        skill: trimmedName,
+        proficiency: newSkill.proficiency,
+        description: newSkill.category
       })).unwrap();
       setNewSkill({ name: '', proficiency: 'Beginner', category: 'Technical' });
       setValidationError('');
@@ -103,10 +104,7 @@ const Skills = () => {
   const handleQuickAddComputerSkill = async (skillName) => {
     // Check for duplicates in current skills list
     const isDuplicate = skills.some(
-      skill => {
-        const skillNameToCheck = skill.name || skill.skill; // Handle both possible field names
-        return skillNameToCheck && skillNameToCheck.toLowerCase() === skillName.toLowerCase();
-      }
+      skill => skill.skill && skill.skill.toLowerCase() === skillName.toLowerCase()
     );
 
     if (isDuplicate) {
@@ -114,9 +112,9 @@ const Skills = () => {
     }
 
     const computerSkill = {
-      name: skillName,
+      skill: skillName,
       proficiency: 'Beginner',
-      category: 'Computer Skills'
+      description: 'Computer Skills'
     };
 
     try {
@@ -128,7 +126,12 @@ const Skills = () => {
 
   const handleUpdateSkill = async (id) => {
     try {
-      await dispatch(updateSkill({ id, ...editingSkill })).unwrap();
+      await dispatch(updateSkill({
+        id,
+        skill: editingSkill.name,
+        proficiency: editingSkill.proficiency,
+        description: editingSkill.category
+      })).unwrap();
       setEditingId(null);
       setEditingSkill({});
     } catch (error) {
@@ -149,9 +152,9 @@ const Skills = () => {
   const startEditing = (skill) => {
     setEditingId(skill.id);
     setEditingSkill({
-      name: skill.name || skill.skill, // Handle both possible field names
+      name: skill.skill,
       proficiency: skill.proficiency,
-      category: skill.category || skill.description // Handle both possible field names
+      category: skill.description
     });
   };
 
@@ -163,10 +166,9 @@ const Skills = () => {
   // Filter skills based on active tab
   const filteredSkills = skills.filter(skill => {
     if (activeTab === 'all') return true;
-    const skillCategory = skill.category || skill.description; // Handle both possible field names
-    if (activeTab === 'computer') return skillCategory === 'Computer Skills';
-    if (activeTab === 'technical') return skillCategory === 'Technical';
-    if (activeTab === 'soft') return skillCategory === 'Soft Skills';
+    if (activeTab === 'computer') return skill.description === 'Computer Skills';
+    if (activeTab === 'technical') return skill.description === 'Technical';
+    if (activeTab === 'soft') return skill.description === 'Soft Skills';
     return true;
   });
 
@@ -271,7 +273,7 @@ const Skills = () => {
                 <button
                   key={skill}
                   onClick={() => handleQuickAddComputerSkill(skill)}
-                  disabled={loading || skills.some(s => (s.name || s.skill) === skill)}
+                  disabled={loading || skills.some(s => s.skill === skill)}
                   className="p-3 text-left border border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <div className="flex items-center space-x-2">
@@ -450,8 +452,8 @@ const Skills = () => {
                       <div>
                         <div className="flex justify-between items-start mb-3">
                           <div className="flex items-center space-x-2">
-                            {getCategoryIcon(skill.category || skill.description)}
-                            <h4 className="font-medium text-gray-800 text-sm">{skill.name || skill.skill}</h4>
+                            {getCategoryIcon(skill.description)}
+                            <h4 className="font-medium text-gray-800 text-sm">{skill.skill}</h4>
                           </div>
                           <div className="flex space-x-1">
                             <button
@@ -472,8 +474,8 @@ const Skills = () => {
                           <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getProficiencyColor(skill.proficiency)}`}>
                             {skill.proficiency}
                           </span>
-                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ml-2 ${getCategoryColor(skill.category || skill.description)}`}>
-                            {skill.category || skill.description}
+                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ml-2 ${getCategoryColor(skill.description)}`}>
+                            {skill.description}
                           </span>
                         </div>
                       </div>

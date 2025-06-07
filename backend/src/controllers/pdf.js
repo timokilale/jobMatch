@@ -83,7 +83,7 @@ exports.generatePdf = async (req, res) => {
     doc.moveDown().fontSize(14).text('Work Experience:', { underline: true });
     if (applicant.experiences && applicant.experiences.length > 0) {
       applicant.experiences.forEach(e => {
-        doc.text(`${e.jobTitle || 'N/A'} at ${e.institution || 'N/A'}`);
+        doc.text(`${e.jobTitle || 'N/A'} at ${e.companyName || 'N/A'}`);
         if (e.duties) doc.text(`  Duties: ${e.duties}`);
       });
     } else {

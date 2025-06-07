@@ -68,18 +68,22 @@ const LanguageProficiency = () => {
 
             {/* Proficiency Levels */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {['Speak', 'Read', 'Write'].map((skill) => (
-                <div key={skill} className="space-y-3">
-                  <h3 className="font-semibold text-green-800">{skill}</h3>
+              {[
+                { label: 'Speak', field: 'speakLevel' },
+                { label: 'Read', field: 'readLevel' },
+                { label: 'Write', field: 'writeLevel' }
+              ].map((skill) => (
+                <div key={skill.field} className="space-y-3">
+                  <h3 className="font-semibold text-green-800">{skill.label}</h3>
                   <div className="space-y-2">
                     {['Native', 'Fluent', 'Conversational', 'Basic'].map((level) => (
-                      <label key={`${skill}-${level}`} className="flex items-center space-x-2 cursor-pointer">
+                      <label key={`${skill.field}-${level}`} className="flex items-center space-x-2 cursor-pointer">
                         <input
                           type="radio"
-                          name={skill.toLowerCase()}
+                          name={skill.field}
                           value={level}
-                          checked={proficiencies[skill.toLowerCase()] === level}
-                          onChange={() => handleProficiencyChange(skill.toLowerCase(), level)}
+                          checked={proficiencies[skill.field] === level}
+                          onChange={() => handleProficiencyChange(skill.field, level)}
                           required
                           className="h-4 w-4 text-green-600 focus:ring-green-500" />
                         <span className="text-sm text-gray-700">{level}</span>
@@ -127,9 +131,9 @@ const LanguageProficiency = () => {
               {savedLanguages.map((lang, index) => (
                   <tr key={index} className="even:bg-green-50 hover:bg-green-100">
                     <td className="p-3 border border-green-200 font-medium">{lang.language}</td>
-                    <td className="p-3 border border-green-200">{lang.speakLevel || lang.speak}</td>
-                    <td className="p-3 border border-green-200">{lang.readLevel || lang.read}</td>
-                    <td className="p-3 border border-green-200">{lang.writeLevel || lang.write}</td>
+                    <td className="p-3 border border-green-200">{lang.speakLevel}</td>
+                    <td className="p-3 border border-green-200">{lang.readLevel}</td>
+                    <td className="p-3 border border-green-200">{lang.writeLevel}</td>
                     <td className="p-3 border border-green-200 text-center">
                       <div className="flex justify-center items-center space-x-3">
                         <button

@@ -19,13 +19,12 @@ const useWork = () => {
     const [editingId, setEditingId] = useState(null);
 
     const [formData, setFormData] = useState({
-        institution: '',
+        companyName: '',
         jobTitle: '',
         supervisorName: '',
-        supervisorTel: '',
-        supervisorAddress: '',
-        institutionAddress: '',
-        duties: '',
+        supervisorContact: '',
+        location: '',
+        responsibilities: '',
         startDate: '',
         endDate: ''
       });
@@ -44,7 +43,7 @@ const useWork = () => {
         e.preventDefault();
 
         // Validate required fields
-        if (!formData.institution || !formData.jobTitle || !formData.startDate) {
+        if (!formData.companyName || !formData.jobTitle || !formData.startDate) {
           alert("Please fill all required fields");
           return;
         }
@@ -71,13 +70,12 @@ const useWork = () => {
           });
         }
         setFormData({
-            institution: '',
+            companyName: '',
             jobTitle: '',
             supervisorName: '',
-            supervisorTel: '',
-            supervisorAddress: '',
-            institutionAddress: '',
-            duties: '',
+            supervisorContact: '',
+            location: '',
+            responsibilities: '',
             startDate: '',
             endDate: '',
         });
@@ -85,13 +83,12 @@ const useWork = () => {
 
     const handleEdit = (exp) => {
         setFormData({
-          institution: exp.institution,
+          companyName: exp.companyName,
           jobTitle: exp.jobTitle,
           supervisorName: exp.supervisorName,
-          supervisorTel: exp.supervisorTel,
-          supervisorAddress: exp.supervisorAddress,
-          institutionAddress: exp.institutionAddress,
-          duties: exp.duties,
+          supervisorContact: exp.supervisorContact,
+          location: exp.location,
+          responsibilities: exp.responsibilities,
           startDate: exp.startDate,
           endDate: exp.endDate,
         });

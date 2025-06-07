@@ -13,7 +13,7 @@ const LanguageProficiencyLogic = () => {
   const applicantId = useSelector((state) => state.auth?.user?.id);
 
   const [currentLanguage, setCurrentLanguage] = useState('');
-  const [proficiencies, setProficiencies] = useState({ speak: '', read: '', write: '' });
+  const [proficiencies, setProficiencies] = useState({ speakLevel: '', readLevel: '', writeLevel: '' });
   const [editId, setEditId] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
@@ -34,7 +34,7 @@ const LanguageProficiencyLogic = () => {
       alert ('Applicant ID missing');
       return;
     }
-    if (!currentLanguage || !proficiencies.speak || !proficiencies.read || !proficiencies.write) {
+    if (!currentLanguage || !proficiencies.speakLevel || !proficiencies.readLevel || !proficiencies.writeLevel) {
       alert('All fields are required');
       return;
     }
@@ -59,9 +59,9 @@ const LanguageProficiencyLogic = () => {
   const handleEdit = (lang) => {
     setCurrentLanguage(lang.language);
     setProficiencies({
-      speak: lang.speakLevel || lang.speak,
-      read: lang.readLevel || lang.read,
-      write: lang.writeLevel || lang.write
+      speakLevel: lang.speakLevel,
+      readLevel: lang.readLevel,
+      writeLevel: lang.writeLevel
     });
     setEditId(lang.id);
     setShowForm(true);
@@ -75,7 +75,7 @@ const LanguageProficiencyLogic = () => {
 
   const clearForm = () => {
     setCurrentLanguage('');
-    setProficiencies({ speak: '', read: '', write: '' });
+    setProficiencies({ speakLevel: '', readLevel: '', writeLevel: '' });
     setEditId(null);
     setShowForm(false);
   };

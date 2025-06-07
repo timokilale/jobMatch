@@ -70,13 +70,7 @@ const getAcademicQualifications = async (req, res) => {
       }
     });
 
-    // Transform the response to include country name for frontend compatibility
-    const transformedQualifications = qualifications.map(qual => ({
-      ...qual,
-      country: qual.country.name // Add country name for frontend
-    }));
-
-    res.json(transformedQualifications);
+    res.json(qualifications);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to fetch qualifications' });

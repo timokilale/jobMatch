@@ -55,10 +55,10 @@ const formatDate = (isoDate) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Institution/Organization */}
           <div className="space-y-4">
-          <label className="block text-sm font-medium text-green-800">Institution/ Organization*</label>
+          <label className="block text-sm font-medium text-green-800">Company Name*</label>
             <input
-              name="institution"
-              value={formData.institution}
+              name="companyName"
+              value={formData.companyName}
               onChange={handleChange}
               type="text"
               className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
@@ -87,45 +87,35 @@ const formatDate = (isoDate) => {
               />
             </div>
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-green-800">Supervisor Telephone Number *</label>
+              <label className="block text-sm font-medium text-green-800">Supervisor Contact *</label>
               <input
-                name="supervisorTel"
-                value={formData.supervisorTel}
+                name="supervisorContact"
+                value={formData.supervisorContact}
                 onChange={handleChange}
                 type="text"
                 className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
                 required
               />
             </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-green-800">Supervisor Address *</label>
-              <textarea
-                name="supervisorAddress"
-                value={formData.supervisorAddress}
-                onChange={handleChange}
-                rows="2"
-                className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
-                required
-              />
-            </div>
+
           </div>
 
           {/* Institution Address */}
           <div className="space-y-4">
-          <label className="block text-sm font-medium text-green-800">Institution Address *</label>
+          <label className="block text-sm font-medium text-green-800">Location *</label>
             <textarea
-              name="institutionAddress"
-              value={formData.institutionAddress}
+              name="location"
+              value={formData.location}
               onChange={handleChange}
               rows="2"
               className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
               required
             />
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-green-800">Duties Responsibilities *</label>
+              <label className="block text-sm font-medium text-green-800">Responsibilities *</label>
               <textarea
-                name="duties"
-                value={formData.duties}
+                name="responsibilities"
+                value={formData.responsibilities}
                 onChange={handleChange}
                 rows="4"
                 className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
@@ -178,13 +168,12 @@ const formatDate = (isoDate) => {
             onClick={() => {
             setShowForm(false);
             setFormData({
-              institution: '',
+              companyName: '',
               jobTitle: '',
               supervisorName: '',
-              supervisorTel: '',
-              supervisorAddress: '',
-              institutionAddress: '',
-              duties: '',
+              supervisorContact: '',
+              location: '',
+              responsibilities: '',
               startDate: '',
               endDate: '',
             });
@@ -204,30 +193,28 @@ const formatDate = (isoDate) => {
                 <table className="w-full bg-transparent shadow-md">
                   <thead className="bg-green-50">
                     <tr>
-                      <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Institution</th>
-                      <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Address</th>
+                      <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Company</th>
+                      <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Location</th>
                       <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Job Title</th>
-                      <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Duties</th>
+                      <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Responsibilities</th>
                       <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Duration</th>
                       <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Supervisor</th>
                       <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Supervisor Contact</th>
-                      <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Supervisor Adress</th>
                       <th className="p-3 text-sm font-semibold text-green-800 border border-green-200">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {savedWorkExperience.map((exp, index) => (
                       <tr key={index} className="hover:bg-green-50">
-                        <td className="p-3 text-sm text-green-800 border border-green-200">{exp.institution}</td>
-                        <td className="p-3 text-sm text-green-800 border border-green-200">{exp.institutionAddress}</td>
+                        <td className="p-3 text-sm text-green-800 border border-green-200">{exp.companyName}</td>
+                        <td className="p-3 text-sm text-green-800 border border-green-200">{exp.location}</td>
                         <td className="p-3 text-sm text-green-800 border border-green-200">{exp.jobTitle}</td>
-                        <td className="p-3 text-sm text-green-800 border border-green-200">{exp.duties}</td>
+                        <td className="p-3 text-sm text-green-800 border border-green-200">{exp.responsibilities}</td>
                         <td className="p-3 text-sm text-green-800 border border-green-200">
                             {`${formatDate(exp.startDate)} - ${formatDate(exp.endDate)}`}
                         </td>
                         <td className="p-3 text-sm text-green-800 border border-green-200">{exp.supervisorName}</td>
-                        <td className="p-3 text-sm text-green-800 border border-green-200">{exp.supervisorTel}</td>
-                        <td className="p-3 text-sm text-green-800 border border-green-200">{exp.supervisorAddress}</td>
+                        <td className="p-3 text-sm text-green-800 border border-green-200">{exp.supervisorContact}</td>
                         <td className="p-3 text-sm text-green-800 border border-green-200 text-center">
                           <button
                             onClick={() => handleEdit(exp)}

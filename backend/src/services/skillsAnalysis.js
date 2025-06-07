@@ -165,7 +165,7 @@ class SkillsAnalysisService {
     // Work experience
     skills.experience = applicant.experiences.map(exp => ({
       title: exp.jobTitle,
-      institution: exp.institution,
+      institution: exp.companyName,
       duration: this.calculateDuration(exp.startDate, exp.endDate),
       type: 'experience'
     }));

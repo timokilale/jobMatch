@@ -143,7 +143,7 @@ const AcademicQualificationsLogic = (setShowForm) => {
     
     setFormData({
       educationLevel: qualification.level,
-      country: qualification.country,
+      country: qualification.country?.name || qualification.country,
       institution: qualification.institution,
       program: qualification.fieldOfStudy,
       startDate: formatDate(qualification.startDate),
