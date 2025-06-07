@@ -395,4 +395,203 @@ code {
       padding: 0.5rem !important;
     }
   }
+
+  /* Market Insights Mobile Utilities */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  /* Market Insights specific mobile improvements */
+  @media (max-width: 640px) {
+    .market-insights-tab {
+      font-size: 0.75rem !important;
+      padding: 0.5rem 0.75rem !important;
+    }
+
+    .market-insights-card {
+      padding: 0.75rem !important;
+      margin-bottom: 0.75rem !important;
+    }
+
+    .market-insights-grid {
+      grid-template-columns: 1fr !important;
+      gap: 0.75rem !important;
+    }
+
+    .market-insights-stats {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 0.5rem !important;
+    }
+
+    .market-insights-forecast {
+      padding: 0.75rem !important;
+    }
+
+    .market-insights-skill-card {
+      padding: 0.75rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+  }
+
+  /* Text wrapping utilities for all cards */
+  .card-text-wrap {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  .card-content {
+    overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Ensure all text in cards wraps properly */
+  .bg-white p,
+  .bg-gray-50 p,
+  .bg-green-50 p,
+  .bg-blue-50 p,
+  .bg-purple-50 p,
+  .bg-orange-50 p,
+  .rounded-lg p,
+  .border p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Specific fixes for long text in cards */
+  .market-card-title {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.4;
+  }
+
+  .market-card-description {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.5;
+  }
+
+  /* Prevent text overflow in flex containers */
+  .flex-text-container {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .flex-text-container p,
+  .flex-text-container span,
+  .flex-text-container h1,
+  .flex-text-container h2,
+  .flex-text-container h3,
+  .flex-text-container h4,
+  .flex-text-container h5,
+  .flex-text-container h6 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Tablet specific improvements for Market Insights */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .market-insights-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .market-insights-stats {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+
+  /* Mobile Drawer Improvements */
+  @media (max-width: 767px) {
+    /* Ensure mobile drawer covers entire screen */
+    .mobile-drawer {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100vh !important;
+      z-index: 50 !important;
+    }
+
+    /* Smooth drawer animation */
+    .drawer-transition {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    /* Prevent body scroll when drawer is open */
+    .drawer-open {
+      overflow: hidden !important;
+    }
+
+    /* Mobile drawer overlay */
+    .drawer-overlay {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      background-color: rgba(0, 0, 0, 0.5) !important;
+      z-index: 40 !important;
+    }
+
+    /* Mobile drawer header styling */
+    .drawer-header {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* Mobile drawer content */
+    .drawer-content {
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+  }
+
+  /* Touch improvements for mobile */
+  @media (max-width: 767px) {
+    .touch-target {
+      min-height: 44px !important;
+      min-width: 44px !important;
+    }
+
+    .mobile-menu-item {
+      padding: 1rem !important;
+      font-size: 1rem !important;
+      border-bottom: 1px solid #f3f4f6 !important;
+    }
+
+    .mobile-menu-item:last-child {
+      border-bottom: none !important;
+    }
+
+    .mobile-menu-item:active {
+      background-color: #f9fafb !important;
+    }
+  }
 }

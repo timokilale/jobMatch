@@ -48,6 +48,20 @@ const EmployerDashboard = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Prevent body scroll when mobile drawer is open
+  useEffect(() => {
+    if (isMobile && sidebarOpen) {
+      document.body.classList.add('drawer-open');
+    } else {
+      document.body.classList.remove('drawer-open');
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('drawer-open');
+    };
+  }, [isMobile, sidebarOpen]);
+
   useEffect(() => {
     if (user?.id) {
       dispatch(fetchEmployerApplications(user.id));
@@ -103,7 +117,7 @@ const EmployerDashboard = () => {
       {/* Mobile Overlay */}
       {isMobile && sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="drawer-overlay"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -149,14 +163,36 @@ const EmployerDashboard = () => {
           <div
             className={`${
               isMobile
-                ? 'fixed top-16 left-0 bottom-0 bg-white shadow-xl z-50 w-80 transform transition-transform duration-300'
+                ? 'mobile-drawer drawer-transition bg-white shadow-xl z-50 transform'
                 : 'w-64 bg-white border-r border-gray-200 flex-shrink-0'
             } ${
               sidebarOpen ? "translate-x-0" : "-translate-x-full"
             } flex flex-col`}
           >
+            {/* Mobile Drawer Header */}
+            {isMobile && (
+              <div className="drawer-header flex-shrink-0 h-16 flex items-center justify-between px-4">
+                <div className="flex items-center">
+                  <img
+                    src="/assets/logo.png"
+                    alt="Logo"
+                    className="h-10 w-auto object-contain"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                </div>
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="text-white hover:text-gray-200 p-2 rounded-lg transition-colors"
+                >
+                  <i className="fas fa-times text-xl"></i>
+                </button>
+              </div>
+            )}
+
             {/* Profile Section */}
-            <div className="flex-shrink-0 p-4 flex flex-col items-center border-b border-gray-200">
+            <div className={`flex-shrink-0 p-4 flex flex-col items-center border-b border-gray-200 ${isMobile ? 'pt-6' : ''}`}>
               <div className="relative group">
                 <label htmlFor="avatar-upload" className="cursor-pointer relative">
                   {avatar ? (

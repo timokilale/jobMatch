@@ -305,4 +305,4 @@ Log levels: DEBUG, INFO, WARNING, ERROR
 
 ## 📄 License
 
-This forecasting service is part of the Tembeko Job Matching System.
+This forecasting service is part of the Job Match System.

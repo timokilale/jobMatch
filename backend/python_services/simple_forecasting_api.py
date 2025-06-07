@@ -38,18 +38,20 @@ def get_employment_trends():
     try:
         days_back = int(request.args.get('days', 90))
         
-        # Get job posting data - simplified query without categories first
+        # Get job posting data with actual categories
         query = """
         SELECT
             DATE(j.createdAt) as posting_date,
-            'General' as category,
+            COALESCE(jc.name, 'Uncategorized') as category,
             j.employmentType,
             j.experienceLevel,
             COUNT(*) as job_count
         FROM Job j
+        LEFT JOIN _JobCategories jcr ON j.id = jcr.A
+        LEFT JOIN JobCategory jc ON jcr.B = jc.id AND jc.isActive = 1
         WHERE j.createdAt >= DATE_SUB(NOW(), INTERVAL %s DAY)
             AND j.status IN ('ACTIVE', 'CLOSED', 'DRAFT')
-        GROUP BY DATE(j.createdAt), j.employmentType, j.experienceLevel
+        GROUP BY DATE(j.createdAt), jc.name, j.employmentType, j.experienceLevel
         ORDER BY posting_date DESC
         """
         
