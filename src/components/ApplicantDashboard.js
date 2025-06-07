@@ -14,7 +14,7 @@ import TutorialSystem, { useTutorial } from "./TutorialSystem";
 import AccessibilitySettings from "./AccessibilitySettings";
 import SkillsAnalysis from "./SkillsAnalysis";
 import MarketAnalytics from "./MarketAnalytics";
-import EmploymentTrendForecasting from "./EmploymentTrendForecasting";
+
 import PrivacySettings from "./PrivacySettings";
 import ChatWidget from "./ChatWidget";
 import { getApplicantApplications } from "../redux/slices/applications";
@@ -105,12 +105,7 @@ const ApplicantDashboard = () => {
       icon: "chart-line",
       component: <MarketAnalytics />,
     },
-    {
-      key: "employment-forecasting",
-      title: "Employment Trends",
-      icon: "chart-area",
-      component: <EmploymentTrendForecasting />,
-    },
+
     {
       key: "academic",
       title: "Academic Qualifications",

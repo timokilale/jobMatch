@@ -33,10 +33,23 @@ const formatDate = (isoDate) => {
 
 
   return (
-    <div className="p-8 min-h-screen flex flex-col overflow-y-auto">
-      <h1 className="text-xl font-bold text-green-800 mt-14">Work Experience</h1>
+    <div className="p-6 flex flex-col min-h-screen overflow-y-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-green-800">Work Experience</h1>
+        {!showForm && (
+          <button
+            onClick={() => setShowForm(true)}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors flex items-center gap-2"
+          >
+            <i className="fas fa-plus"></i>
+            Add Experience
+          </button>
+        )}
+      </div>
 
       {showForm ? (
+      <div className="bg-white border border-green-200 rounded-lg p-6 mb-6">
+        <h2 className="text-xl font-bold text-green-800 mb-6">Add Work Experience</h2>
       <form onSubmit={handleSave} className="space-y-6 flex-1">
         {/* Institution Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -182,12 +195,11 @@ const formatDate = (isoDate) => {
          </button>
         </div>
       </form>
+      </div>
       ) : (
         <>
-          {savedWorkExperience.length > 0 && (
-            <div className="flex-1">
-              <div className="flex justify-between items-center mb-4">
-              </div>
+        {savedWorkExperience.length > 0 ? (
+          <div className="mb-6">
               <div className="overflow-x-auto">
                 <table className="w-full bg-transparent shadow-md">
                   <thead className="bg-green-50">
@@ -235,14 +247,16 @@ const formatDate = (isoDate) => {
                   </tbody>
                 </table>
               </div>
+          </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="mb-4">
+                <img src="/logo.png" alt="Job Match" className="mx-auto h-16 w-16 opacity-50" />
+              </div>
+              <p className="text-gray-500 text-lg">No work experience added yet</p>
+              <p className="text-gray-400 text-sm mt-2">Click "Add Experience" to get started</p>
             </div>
           )}
-          <button
-            onClick={() => setShowForm(true)}
-            className="fixed bottom-8 right-8 w-14 h-14 bg-green-600 text-white rounded-full hover:bg-green-700 transition shadow-lg flex items-center justify-center text-2xl"
-          >
-            <i className="fas fa-plus"></i>
-          </button>
         </>
       )}
     </div>

@@ -83,10 +83,15 @@ exports.getCareerPathSuggestions = async (req, res) => {
       where: { id: parseInt(applicantId) },
       include: {
         categories: true,
-        computerSkills: true,
-        languageProficiencies: true,
-        academicQualifications: true,
-        workExperiences: true
+        generalSkills: true, // Include unified skills
+        skills: {
+          include: {
+            skillMaster: true
+          }
+        },
+        languages: true,
+        qualifications: true,
+        experiences: true
       }
     });
 

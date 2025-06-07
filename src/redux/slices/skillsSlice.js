@@ -9,7 +9,7 @@ export const fetchSkills = createAsyncThunk(
       const response = await api.get('/skills');
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to fetch skills');
+      return rejectWithValue(error.response?.data?.error);
     }
   }
 );
@@ -21,7 +21,7 @@ export const createSkill = createAsyncThunk(
       const response = await api.post('/skills', skillData);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to create skill');
+      return rejectWithValue(error.response?.data?.error);
     }
   }
 );
@@ -33,7 +33,7 @@ export const updateSkill = createAsyncThunk(
       const response = await api.put(`/skills/${id}`, skillData);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to update skill');
+      return rejectWithValue(error.response?.data?.error);
     }
   }
 );
@@ -45,7 +45,7 @@ export const deleteSkill = createAsyncThunk(
       await api.delete(`/skills/${id}`);
       return id;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to delete skill');
+      return rejectWithValue(error.response?.data?.error);
     }
   }
 );

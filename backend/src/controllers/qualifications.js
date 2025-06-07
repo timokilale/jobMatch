@@ -11,25 +11,40 @@ const createAcademicQualification = async (req, res) => {
       return res.status(400).json({ error: 'Invalid applicant ID' });
     }
 
-    const { 
-      educationLevel, 
-      country, 
-      institution, 
-      program, 
-      startDate, 
+    const {
+      educationLevel,
+      country,
+      institution,
+      program,
+      startDate,
       endDate,
     } = req.body;
-   
+
+    // Find or create the country
+    let countryRecord = await prisma.country.findFirst({
+      where: { name: country }
+    });
+
+    if (!countryRecord) {
+      // Create new country if it doesn't exist
+      countryRecord = await prisma.country.create({
+        data: {
+          name: country,
+          code: country.substring(0, 2).toUpperCase() // Simple code generation
+        }
+      });
+    }
+
     const qualification = await prisma.academicQualification.create({
       data: {
         level: educationLevel,
-        country,
+        countryId: countryRecord.id,
         institution,
         fieldOfStudy: program,
         startDate: new Date(startDate),
         endDate: endDate ? new Date(endDate) : null,
         applicantId: applicantId,
-        certificateUrl: req.file ? `uploads/${req.file.filename}` : null,  
+        certificateUrl: req.file ? `uploads/${req.file.filename}` : null,
       }
     });
 
@@ -50,9 +65,18 @@ const getAcademicQualifications = async (req, res) => {
 
     const qualifications = await prisma.academicQualification.findMany({
       where: { applicantId },
+      include: {
+        country: true // Include country details
+      }
     });
-    
-    res.json(qualifications);
+
+    // Transform the response to include country name for frontend compatibility
+    const transformedQualifications = qualifications.map(qual => ({
+      ...qual,
+      country: qual.country.name // Add country name for frontend
+    }));
+
+    res.json(transformedQualifications);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to fetch qualifications' });
@@ -92,11 +116,26 @@ const updateAcademicQualification = async (req, res) => {
       endDate
     } = req.body;
 
+    // Find or create the country
+    let countryRecord = await prisma.country.findFirst({
+      where: { name: country }
+    });
+
+    if (!countryRecord) {
+      // Create new country if it doesn't exist
+      countryRecord = await prisma.country.create({
+        data: {
+          name: country,
+          code: country.substring(0, 2).toUpperCase() // Simple code generation
+        }
+      });
+    }
+
     const updatedQualification = await prisma.academicQualification.update({
       where: { id },
       data: {
         level: educationLevel,
-        country,
+        countryId: countryRecord.id,
         institution,
         fieldOfStudy: program,
         startDate: new Date(startDate),

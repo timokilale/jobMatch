@@ -85,55 +85,71 @@ class SkillsAnalysisService {
   extractCurrentSkills(applicant) {
     const skills = {
       technical: [],
+      computer: [],
+      soft: [],
+      general: [],
       languages: [],
       education: [],
       experience: [],
       categories: []
     };
 
-    // Technical skills from normalized ApplicantSkill table
-    skills.technical = applicant.skills.map(skill => {
-      let skillName = 'Unknown Skill';
+    // Primary source: GeneralSkill table (unified skills system)
+    if (applicant.generalSkills && applicant.generalSkills.length > 0) {
+      applicant.generalSkills.forEach(skill => {
+        const skillData = {
+          name: skill.skill,
+          proficiency: skill.proficiency,
+          description: skill.description,
+          category: skill.description,
+          type: 'general'
+        };
 
-      // Try to get skill name from skillMaster relation first
-      if (skill.skillMaster && skill.skillMaster.name) {
-        skillName = skill.skillMaster.name;
-      }
-      // Fallback to direct skill field if available
-      else if (skill.skill) {
-        skillName = skill.skill;
-      }
-      // Last resort: use skill ID as identifier
-      else if (skill.skillMasterId) {
-        skillName = `Skill ID: ${skill.skillMasterId}`;
-      }
-
-      return {
-        name: skillName,
-        proficiency: skill.proficiency || 'Not specified',
-        type: 'technical'
-      };
-    });
-
-    // Add general skills if available
-    if (applicant.generalSkills) {
-      skills.general = applicant.generalSkills.map(skill => ({
-        name: skill.skill,
-        proficiency: skill.proficiency,
-        description: skill.description,
-        type: 'general'
-      }));
-    } else {
-      skills.general = [];
+        // Categorize skills based on their description/category
+        switch (skill.description) {
+          case 'Computer Skills':
+            skills.computer.push(skillData);
+            break;
+          case 'Technical':
+            skills.technical.push(skillData);
+            break;
+          case 'Soft Skills':
+            skills.soft.push(skillData);
+            break;
+          default:
+            skills.general.push(skillData);
+        }
+      });
     }
+
+    // Legacy ApplicantSkill table
+    if (applicant.skills && applicant.skills.length > 0) {
+      const legacySkills = applicant.skills.map(skill => {
+        return {
+          name: skill.skillMaster?.name || skill.skill,
+          proficiency: skill.proficiency,
+          type: 'technical'
+        };
+      }).filter(skill => skill.name); // Only include skills with valid names
+
+      skills.technical.push(...legacySkills);
+    }
+
+    // Combine all skills for easier processing
+    skills.allSkills = [
+      ...skills.technical,
+      ...skills.computer,
+      ...skills.soft,
+      ...skills.general
+    ];
 
     // Language skills
     skills.languages = applicant.languages.map(lang => ({
       name: lang.language,
       proficiency: {
-        speak: lang.speakLevel || lang.speak,
-        read: lang.readLevel || lang.read,
-        write: lang.writeLevel || lang.write
+        speak: lang.speakLevel,
+        read: lang.readLevel,
+        write: lang.writeLevel
       },
       type: 'language'
     }));
@@ -275,7 +291,7 @@ class SkillsAnalysisService {
       skillDemandMap[skill].demandScore += importanceWeight;
     });
 
-    // Add existing skill demand data as fallback
+    // Add existing skill demand data
     existingSkillDemand.forEach(skillData => {
       const skill = skillData.skillMaster.name.toLowerCase();
       if (!skillDemandMap[skill]) {
@@ -283,10 +299,10 @@ class SkillsAnalysisService {
           skillName: skillData.skillMaster.name,
           skillCategory: skillData.skillMaster.category,
           demandScore: skillData.demandScore,
-          jobCount: Math.round(skillData.demandScore / 10), // Estimate job count
+          jobCount: Math.round(skillData.demandScore / 10),
           importance: { required: 1, preferred: 2, nice_to_have: 1 },
-          avgYearsRequired: 2, // Default estimate
-          growth: skillData.growth || 0
+          avgYearsRequired: 2,
+          growth: skillData.growth
         };
       } else {
         // Enhance existing data with market demand info
@@ -305,13 +321,13 @@ class SkillsAnalysisService {
         // Combine job-based score with market demand score if available
         const finalScore = skill.marketDemandScore ?
           (jobBasedScore * 0.7 + skill.marketDemandScore * 0.3) :
-          jobBasedScore || skill.demandScore;
+          jobBasedScore;
 
         return {
           ...skill,
           demandScore: finalScore,
           jobBasedScore: jobBasedScore,
-          marketDemandScore: skill.marketDemandScore || 0,
+          marketDemandScore: skill.marketDemandScore,
           demandLevel: finalScore > 70 ? 'High' : finalScore > 40 ? 'Medium' : 'Low'
         };
       })
@@ -348,11 +364,13 @@ class SkillsAnalysisService {
       nice_to_have: [] // Skills that would be beneficial
     };
 
-    // Get current skill names from all sources
+    // Get current skill names from actual skills only (exclude categories as fallback)
     const currentSkillNames = [
       ...currentSkills.technical.map(s => s.name.toLowerCase()),
-      ...currentSkills.categories.map(s => s.name.toLowerCase()),
-      ...(currentSkills.general || []).map(s => s.name.toLowerCase())
+      ...currentSkills.computer.map(s => s.name.toLowerCase()),
+      ...currentSkills.soft.map(s => s.name.toLowerCase()),
+      ...currentSkills.general.map(s => s.name.toLowerCase())
+      // Removed categories from skill matching - they are interests, not skills
     ];
 
     console.log('Current user skills:', currentSkillNames);
@@ -361,12 +379,8 @@ class SkillsAnalysisService {
     marketDemand.highDemandSkills.forEach(skill => {
       const skillName = skill.skillName.toLowerCase();
 
-      // Check if user has this skill (flexible matching)
-      const hasSkill = currentSkillNames.some(current =>
-        current.includes(skillName) ||
-        skillName.includes(current) ||
-        this.isSkillSimilar(current, skillName)
-      );
+      // Check if user has this skill (exact matching only)
+      const hasSkill = currentSkillNames.includes(skillName);
 
       if (!hasSkill) {
         const gap = {
@@ -379,9 +393,9 @@ class SkillsAnalysisService {
         };
 
         // Categorize based on demand score and job frequency
-        if (skill.demandScore > 70 || skill.importance.required > 2) {
+        if (skill.demandScore > 70 && skill.importance.required > 2) {
           gaps.critical.push(gap);
-        } else if (skill.demandScore > 40 || skill.importance.preferred > 1) {
+        } else if (skill.demandScore > 40 && skill.importance.preferred > 1) {
           gaps.important.push(gap);
         } else {
           gaps.nice_to_have.push(gap);
@@ -409,13 +423,8 @@ class SkillsAnalysisService {
       'project management': ['scrum', 'agile', 'kanban']
     };
 
-    for (const [key, values] of Object.entries(synonyms)) {
-      if ((userSkill.includes(key) || values.some(v => userSkill.includes(v))) &&
-          (jobSkill.includes(key) || values.some(v => jobSkill.includes(v)))) {
-        return true;
-      }
-    }
-    return false;
+    // Remove flexible skill matching - use exact matching only
+    return userSkill === jobSkill;
   }
 
   // Generate training recommendations for identified skill gaps
@@ -453,38 +462,8 @@ class SkillsAnalysisService {
 
   // Find training courses for a specific skill
   async findTrainingCourses(skillName) {
-    // Mock course data - in production, integrate with actual course APIs
-    const mockCourses = [
-      {
-        title: `Complete ${skillName} Course`,
-        provider: 'Coursera',
-        duration: '6 weeks',
-        rating: 4.5,
-        price: 49,
-        url: `https://www.coursera.org/search?query=${encodeURIComponent(skillName)}`,
-        level: 'Beginner to Advanced'
-      },
-      {
-        title: `${skillName} Masterclass`,
-        provider: 'Udemy',
-        duration: '12 hours',
-        rating: 4.3,
-        price: 89,
-        url: `https://www.udemy.com/courses/search/?q=${encodeURIComponent(skillName)}`,
-        level: 'Intermediate'
-      },
-      {
-        title: `Professional ${skillName} Certification`,
-        provider: 'LinkedIn Learning',
-        duration: '4 weeks',
-        rating: 4.4,
-        price: 29,
-        url: `https://www.linkedin.com/learning/search?keywords=${encodeURIComponent(skillName)}`,
-        level: 'Professional'
-      }
-    ];
-
-    return mockCourses;
+    // Return empty array - no mock data
+    return [];
   }
 
   // Generate career path suggestions
@@ -501,36 +480,12 @@ class SkillsAnalysisService {
   }
 
   async generateCareerPathForCategory(categoryName, currentSkills, marketDemand) {
-    // Mock career path data - in production, use ML models and real career data
-    const careerLevels = [
-      {
-        level: 'Entry Level',
-        roles: [`Junior ${categoryName} Specialist`, `${categoryName} Assistant`],
-        requiredSkills: ['Basic knowledge', 'Communication skills'],
-        salaryRange: '$30,000 - $45,000',
-        timeToAchieve: '0-2 years'
-      },
-      {
-        level: 'Mid Level',
-        roles: [`${categoryName} Specialist`, `Senior ${categoryName} Associate`],
-        requiredSkills: ['Advanced technical skills', 'Project management'],
-        salaryRange: '$45,000 - $70,000',
-        timeToAchieve: '2-5 years'
-      },
-      {
-        level: 'Senior Level',
-        roles: [`Senior ${categoryName} Manager`, `${categoryName} Lead`],
-        requiredSkills: ['Leadership', 'Strategic thinking', 'Team management'],
-        salaryRange: '$70,000 - $100,000',
-        timeToAchieve: '5-8 years'
-      }
-    ];
-
+    // Return empty career path - no mock data
     return {
       category: categoryName,
       currentLevel: this.assessCurrentLevel(currentSkills, categoryName),
-      careerLevels,
-      recommendedNextSteps: this.getRecommendedNextSteps(categoryName),
+      careerLevels: [],
+      recommendedNextSteps: [],
       marketOutlook: this.getMarketOutlook(categoryName, marketDemand)
     };
   }
@@ -561,26 +516,13 @@ class SkillsAnalysisService {
   }
 
   estimateLearningTime(skillName) {
-    // Mock estimation - in production, use ML models
-    const timeEstimates = {
-      'programming': '3-6 months',
-      'data analysis': '2-4 months',
-      'digital marketing': '1-3 months',
-      'project management': '2-3 months'
-    };
-    
-    const lowerSkill = skillName.toLowerCase();
-    for (const [key, time] of Object.entries(timeEstimates)) {
-      if (lowerSkill.includes(key)) return time;
-    }
-    
-    return '2-4 months';
+    // Return null - no estimation without real data
+    return null;
   }
 
   estimateSkillDifficulty(skillName) {
-    // Mock difficulty assessment
-    const difficulties = ['Beginner', 'Intermediate', 'Advanced'];
-    return difficulties[Math.floor(Math.random() * difficulties.length)];
+    // Return null - no estimation without real data
+    return null;
   }
 
   estimateTrainingCost(courses) {
@@ -608,11 +550,10 @@ class SkillsAnalysisService {
       return 0;
     }
 
-    // If no job market data, provide a baseline score
+    // If no job market data, return 0
     if (!marketDemand.highDemandSkills || marketDemand.highDemandSkills.length === 0) {
-      const baselineScore = Math.min(currentSkillNames.length * 15, 60);
-      console.log('No job market data, returning baseline score:', baselineScore);
-      return baselineScore;
+      console.log('No job market data, returning 0');
+      return 0;
     }
 
     // Calculate job-based skill matching
@@ -678,9 +619,9 @@ class SkillsAnalysisService {
       console.log('Skill diversity bonus:', skillDiversityBonus);
       console.log('Combined score:', alignmentScore);
     } else {
-      // No skills match job requirements, but give some credit for having skills
-      alignmentScore = Math.min(currentSkillNames.length * 8, 25);
-      console.log('No skills matched job requirements, giving baseline score:', alignmentScore);
+      // No skills match job requirements
+      alignmentScore = 0;
+      console.log('No skills matched job requirements, score: 0');
     }
 
     const finalScore = Math.round(Math.min(alignmentScore, 100));
@@ -698,12 +639,7 @@ class SkillsAnalysisService {
   }
 
   getRecommendedNextSteps(categoryName) {
-    return [
-      `Develop advanced ${categoryName} skills`,
-      'Gain relevant certifications',
-      'Build a portfolio of projects',
-      'Network with industry professionals'
-    ];
+    return [];
   }
 
   getMarketOutlook(categoryName, marketDemand) {
@@ -715,15 +651,7 @@ class SkillsAnalysisService {
       return trend ? 'Growing' : 'Stable';
     }
 
-    // Fallback: check if there are high demand skills in this category
-    if (marketDemand.highDemandSkills && marketDemand.highDemandSkills.length > 0) {
-      const categorySkills = marketDemand.highDemandSkills.filter(skill =>
-        skill.skillCategory && skill.skillCategory.toLowerCase().includes(categoryName.toLowerCase())
-      );
-      return categorySkills.length > 3 ? 'Growing' : 'Stable';
-    }
-
-    return 'Stable';
+    return 'Unknown';
   }
 }
 

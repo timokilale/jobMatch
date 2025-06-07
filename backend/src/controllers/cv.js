@@ -9,11 +9,16 @@ exports.getCVData = async (req, res) => {
       where: { id: id },
       include: {
         user: true,
-        qualifications: true,
+        qualifications: {
+          include: {
+            country: true
+          }
+        },
         experiences: true,
         languages: true,
         skills: true,
         categories: true,
+        generalSkills: true,
       },
     });
 
@@ -23,11 +28,16 @@ exports.getCVData = async (req, res) => {
         where: { userId: id },
         include: {
           user: true,
-          qualifications: true,
+          qualifications: {
+            include: {
+              country: true
+            }
+          },
           experiences: true,
           languages: true,
           skills: true,
           categories: true,
+          generalSkills: true,
         },
       });
     }

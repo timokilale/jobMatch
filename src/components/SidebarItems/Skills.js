@@ -51,7 +51,7 @@ const Skills = () => {
       };
       setNewSkill(prev => ({
         ...prev,
-        category: categoryMap[activeTab] || 'Technical'
+        category: categoryMap[activeTab]
       }));
     }
   }, [activeTab]);
@@ -80,7 +80,7 @@ const Skills = () => {
 
     // Check for duplicates in current skills list
     const isDuplicate = skills.some(
-      skill => (skill.skill || skill.name).toLowerCase() === trimmedName.toLowerCase()
+      skill => skill.name.toLowerCase() === trimmedName.toLowerCase()
     );
 
     if (isDuplicate) {
@@ -103,7 +103,10 @@ const Skills = () => {
   const handleQuickAddComputerSkill = async (skillName) => {
     // Check for duplicates in current skills list
     const isDuplicate = skills.some(
-      skill => (skill.skill || skill.name).toLowerCase() === skillName.toLowerCase()
+      skill => {
+        const skillNameToCheck = skill.name || skill.skill; // Handle both possible field names
+        return skillNameToCheck && skillNameToCheck.toLowerCase() === skillName.toLowerCase();
+      }
     );
 
     if (isDuplicate) {
@@ -146,9 +149,9 @@ const Skills = () => {
   const startEditing = (skill) => {
     setEditingId(skill.id);
     setEditingSkill({
-      name: skill.skill || skill.name,
+      name: skill.name || skill.skill, // Handle both possible field names
       proficiency: skill.proficiency,
-      category: skill.description || skill.category || 'Technical'
+      category: skill.category || skill.description // Handle both possible field names
     });
   };
 
@@ -160,9 +163,10 @@ const Skills = () => {
   // Filter skills based on active tab
   const filteredSkills = skills.filter(skill => {
     if (activeTab === 'all') return true;
-    if (activeTab === 'computer') return skill.category === 'Computer Skills' || skill.description === 'Computer Skills';
-    if (activeTab === 'technical') return skill.category === 'Technical' || skill.description === 'Technical';
-    if (activeTab === 'soft') return skill.category === 'Soft Skills' || skill.description === 'Soft Skills';
+    const skillCategory = skill.category || skill.description; // Handle both possible field names
+    if (activeTab === 'computer') return skillCategory === 'Computer Skills';
+    if (activeTab === 'technical') return skillCategory === 'Technical';
+    if (activeTab === 'soft') return skillCategory === 'Soft Skills';
     return true;
   });
 
@@ -173,7 +177,7 @@ const Skills = () => {
       'Advanced': 'bg-blue-100 text-blue-800',
       'Expert': 'bg-green-100 text-green-800'
     };
-    return colors[proficiency] || 'bg-gray-100 text-gray-800';
+    return colors[proficiency];
   };
 
   const getCategoryColor = (category) => {
@@ -185,7 +189,7 @@ const Skills = () => {
       'Management': 'bg-teal-100 text-teal-800',
       'Other': 'bg-gray-100 text-gray-800'
     };
-    return colors[category] || 'bg-gray-100 text-gray-800';
+    return colors[category];
   };
 
   const getCategoryIcon = (category) => {
@@ -267,7 +271,7 @@ const Skills = () => {
                 <button
                   key={skill}
                   onClick={() => handleQuickAddComputerSkill(skill)}
-                  disabled={loading || skills.some(s => s.skill === skill || s.name === skill)}
+                  disabled={loading || skills.some(s => (s.name || s.skill) === skill)}
                   className="p-3 text-left border border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <div className="flex items-center space-x-2">
@@ -402,13 +406,13 @@ const Skills = () => {
                       <div className="space-y-3">
                         <input
                           type="text"
-                          value={editingSkill.name || ''}
+                          value={editingSkill.name}
                           onChange={(e) => setEditingSkill({ ...editingSkill, name: e.target.value })}
                           className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
                           placeholder="Skill name"
                         />
                         <select
-                          value={editingSkill.proficiency || ''}
+                          value={editingSkill.proficiency}
                           onChange={(e) => setEditingSkill({ ...editingSkill, proficiency: e.target.value })}
                           className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
                         >
@@ -417,7 +421,7 @@ const Skills = () => {
                           ))}
                         </select>
                         <select
-                          value={editingSkill.category || ''}
+                          value={editingSkill.category}
                           onChange={(e) => setEditingSkill({ ...editingSkill, category: e.target.value })}
                           className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
                         >
@@ -446,8 +450,8 @@ const Skills = () => {
                       <div>
                         <div className="flex justify-between items-start mb-3">
                           <div className="flex items-center space-x-2">
-                            {getCategoryIcon(skill.description || skill.category)}
-                            <h4 className="font-medium text-gray-800 text-sm">{skill.skill || skill.name}</h4>
+                            {getCategoryIcon(skill.category || skill.description)}
+                            <h4 className="font-medium text-gray-800 text-sm">{skill.name || skill.skill}</h4>
                           </div>
                           <div className="flex space-x-1">
                             <button
@@ -468,8 +472,8 @@ const Skills = () => {
                           <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getProficiencyColor(skill.proficiency)}`}>
                             {skill.proficiency}
                           </span>
-                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ml-2 ${getCategoryColor(skill.description || skill.category || 'Other')}`}>
-                            {skill.description || skill.category || 'Other'}
+                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ml-2 ${getCategoryColor(skill.category || skill.description)}`}>
+                            {skill.category || skill.description}
                           </span>
                         </div>
                       </div>

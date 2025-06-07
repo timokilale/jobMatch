@@ -58,7 +58,11 @@ const LanguageProficiencyLogic = () => {
 
   const handleEdit = (lang) => {
     setCurrentLanguage(lang.language);
-    setProficiencies({ speak: lang.speak, read: lang.read, write: lang.write });
+    setProficiencies({
+      speak: lang.speakLevel || lang.speak,
+      read: lang.readLevel || lang.read,
+      write: lang.writeLevel || lang.write
+    });
     setEditId(lang.id);
     setShowForm(true);
   };

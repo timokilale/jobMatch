@@ -26,11 +26,11 @@ const JobDetailsModal = ({ job, isOpen, onClose }) => {
             <div className="flex flex-wrap items-center gap-4 text-gray-600">
               <span className="flex items-center">
                 <i className="fas fa-building mr-2"></i>
-                {job.employer?.companyName || 'Company'}
+                {job.employer?.companyName}
               </span>
               <span className="flex items-center">
                 <i className="fas fa-map-marker-alt mr-2"></i>
-                {job.location || 'Location not specified'}
+                {job.location}
               </span>
               {job.salary && (
                 <span className="flex items-center">
@@ -45,7 +45,7 @@ const JobDetailsModal = ({ job, isOpen, onClose }) => {
           <div className="mb-6">
             <h4 className="text-lg font-semibold text-gray-800 mb-3">Job Description</h4>
             <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-              {job.description || 'No description available'}
+              {job.description}
             </p>
           </div>
 
@@ -71,7 +71,7 @@ const JobDetailsModal = ({ job, isOpen, onClose }) => {
                 <div className="flex justify-between">
                   <span className="text-gray-600">Status:</span>
                   <span className={`font-medium ${job.status === 'ACTIVE' ? 'text-green-600' : 'text-gray-600'}`}>
-                    {job.status || 'Not specified'}
+                    {job.status}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -100,7 +100,7 @@ const JobDetailsModal = ({ job, isOpen, onClose }) => {
                       key={index}
                       className="bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full"
                     >
-                      {category.name || category}
+                      {category.name}
                     </span>
                   ))}
                 </div>
@@ -309,32 +309,32 @@ const AppliedJobs = () => {
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <h3 className="text-xl font-semibold text-gray-800">
-                          {application.job?.title || 'Job Title Not Available'}
+                          {application.job?.title}
                         </h3>
                         <p className="text-gray-600 mt-1">
-                          {application.job?.employer?.companyName || 'Company'} • {application.job?.location || 'Location'}
+                          {application.job?.employer?.companyName} • {application.job?.location}
                         </p>
                       </div>
                       <div className="flex flex-col items-end space-y-2">
                         <span className={`text-sm font-medium px-3 py-1 rounded-full flex items-center ${getStatusColor(application.status)}`}>
                           <i className={`${getStatusIcon(application.status)} mr-1`}></i>
-                          {application.status || 'Applied'}
+                          {application.status}
                         </span>
                         <span className="text-gray-500 text-sm">
-                          Applied {calculateTimeAgo(application.appliedAt || application.createdAt)} ago
+                          Applied {calculateTimeAgo(application.appliedAt)} ago
                         </span>
                       </div>
                     </div>
 
                     <p className="text-gray-700 mb-4">
-                      {application.job?.description || 'Job description not available'}
+                      {application.job?.description}
                     </p>
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4 text-sm text-gray-600">
                         <span className="flex items-center">
                           <i className="fas fa-calendar-alt mr-1"></i>
-                          Applied on {new Date(application.appliedAt || application.createdAt).toLocaleDateString()}
+                          Applied on {new Date(application.appliedAt).toLocaleDateString()}
                         </span>
                         {application.job?.salary && (
                           <span className="flex items-center">

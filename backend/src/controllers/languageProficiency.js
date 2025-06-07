@@ -2,24 +2,24 @@ const prisma = require('../prisma');
 
 exports.createLanguage = async (req, res) => {
   const { applicantId, language, speak, read, write } = req.body;
-  
+
   if (!applicantId || isNaN(parseInt(applicantId))) {
     return res.status(400).json({ error: 'Invalid applicant ID' });
   }
 
   try {
     const lang = await prisma.languageProficiency.create({
-      data: { 
-        applicantId: parseInt(applicantId), 
-        language, 
-        speak, 
-        read, 
-        write
+      data: {
+        applicantId: parseInt(applicantId),
+        language,
+        speakLevel: speak,
+        readLevel: read,
+        writeLevel: write
       }
     });
     res.status(201).json(lang);
   } catch (error) {
-    console.error('Error creating language:', err);
+    console.error('Error creating language:', error);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -49,7 +49,7 @@ exports.updateLanguage = async (req, res) => {
   try {
     const updated = await prisma.languageProficiency.update({
       where: { id: parseInt(id) },
-      data: { language, speak, read, write },
+      data: { language, speakLevel: speak, readLevel: read, writeLevel: write },
     });
     res.json(updated);
   } catch (error) {

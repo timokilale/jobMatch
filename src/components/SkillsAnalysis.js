@@ -208,56 +208,105 @@ const SkillsAnalysis = ({ applicantId }) => {
 
           {/* Training Recommendations Tab */}
           {activeTab === 'training' && (
-            <div className="space-y-6">
-              {analysis.trainingRecommendations.map((recommendation, index) => (
-                <div key={index} className="border rounded-lg p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-800">
-                      {recommendation.skill}
-                    </h3>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getPriorityColor(recommendation.priority)}`}>
-                      {recommendation.priority}
-                    </span>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div className="text-center p-3 bg-gray-50 rounded-lg">
-                      <i className="fas fa-clock text-blue-600 mb-2"></i>
-                      <p className="text-sm font-medium text-gray-800">{recommendation.estimatedTime}</p>
-                      <p className="text-xs text-gray-600">Estimated Time</p>
-                    </div>
-                    <div className="text-center p-3 bg-gray-50 rounded-lg">
-                      <i className="fas fa-dollar-sign text-green-600 mb-2"></i>
-                      <p className="text-sm font-medium text-gray-800">${recommendation.estimatedCost}</p>
-                      <p className="text-xs text-gray-600">Average Cost</p>
-                    </div>
-                    <div className="text-center p-3 bg-gray-50 rounded-lg">
-                      <i className={getDifficultyIcon(recommendation.difficulty)}></i>
-                      <p className="text-sm font-medium text-gray-800">{recommendation.difficulty}</p>
-                      <p className="text-xs text-gray-600">Difficulty</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h4 className="font-medium text-gray-700">Recommended Courses:</h4>
-                    {recommendation.courses.map((course, courseIndex) => (
-                      <div key={courseIndex} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                          <h5 className="font-medium text-gray-800">{course.title}</h5>
-                          <p className="text-sm text-gray-600">{course.provider} • {course.duration} • {course.level}</p>
+            <div className="space-y-4">
+              {/* Critical Skills */}
+              {analysis.skillGaps && analysis.skillGaps.critical && analysis.skillGaps.critical.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-red-700 mb-4">
+                    <i className="fas fa-exclamation-circle mr-2"></i>
+                    Critical Skills to Learn ({analysis.skillGaps.critical.length})
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {analysis.skillGaps.critical.map((skill, index) => (
+                      <div key={index} className="border border-red-200 rounded-lg p-4 bg-red-50">
+                        <div className="flex justify-between items-start mb-3">
+                          <h4 className="font-medium text-red-800">{skill.skillName}</h4>
+                          <span className="text-xs bg-red-200 text-red-800 px-2 py-1 rounded">
+                            Critical
+                          </span>
                         </div>
-                        <div className="text-right">
-                          <p className="font-medium text-gray-800">${course.price}</p>
-                          <div className="flex items-center text-sm text-yellow-600">
-                            <i className="fas fa-star mr-1"></i>
-                            {course.rating}
-                          </div>
+                        <div className="mb-3">
+                          <p className="text-sm text-red-600 mb-1">
+                            <i className="fas fa-chart-line mr-1"></i>
+                            {skill.demandScore.toFixed(0)}% market demand
+                          </p>
+                          <p className="text-sm text-red-600">
+                            <i className="fas fa-clock mr-1"></i>
+                            {skill.estimatedLearningTime}
+                          </p>
                         </div>
+                        <a
+                          href={`https://www.coursera.org/search?query=${encodeURIComponent(skill.skillName)}&index=prod_all_launched_products_term_optimization`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center"
+                        >
+                          <i className="fas fa-external-link-alt mr-2"></i>
+                          Learn on Coursera
+                        </a>
                       </div>
                     ))}
                   </div>
                 </div>
-              ))}
+              )}
+
+              {/* Important Skills */}
+              {analysis.skillGaps && analysis.skillGaps.important && analysis.skillGaps.important.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-yellow-700 mb-4">
+                    <i className="fas fa-exclamation-triangle mr-2"></i>
+                    Important Skills to Learn ({analysis.skillGaps.important.length})
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {analysis.skillGaps.important.map((skill, index) => (
+                      <div key={index} className="border border-yellow-200 rounded-lg p-4 bg-yellow-50">
+                        <div className="flex justify-between items-start mb-3">
+                          <h4 className="font-medium text-yellow-800">{skill.skillName}</h4>
+                          <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
+                            Important
+                          </span>
+                        </div>
+                        <div className="mb-3">
+                          <p className="text-sm text-yellow-600 mb-1">
+                            <i className="fas fa-chart-line mr-1"></i>
+                            {skill.demandScore.toFixed(0)}% market demand
+                          </p>
+                          <p className="text-sm text-yellow-600">
+                            <i className="fas fa-clock mr-1"></i>
+                            {skill.estimatedLearningTime}
+                          </p>
+                        </div>
+                        <a
+                          href={`https://www.coursera.org/search?query=${encodeURIComponent(skill.skillName)}&index=prod_all_launched_products_term_optimization`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors flex items-center justify-center"
+                        >
+                          <i className="fas fa-external-link-alt mr-2"></i>
+                          Learn on Coursera
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* No Skills Gap Message */}
+              {(!analysis.skillGaps ||
+                (!analysis.skillGaps.critical || analysis.skillGaps.critical.length === 0) &&
+                (!analysis.skillGaps.important || analysis.skillGaps.important.length === 0)) && (
+                <div className="text-center py-12">
+                  <img
+                    src="assets/logo.png"
+                    alt="Job Match"
+                    className="w-16 h-auto mx-auto opacity-60 mb-4"
+                  />
+                  <h3 className="text-lg font-semibold text-gray-600 mb-2">No Skill Gaps Found</h3>
+                  <p className="text-gray-500 max-w-md mx-auto">
+                    Great! Your skills are well-aligned with market demand. Keep updating your skills to stay competitive.
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
@@ -319,8 +368,60 @@ const SkillsAnalysis = ({ applicantId }) => {
           {/* Current Skills Tab */}
           {activeTab === 'current' && (
             <div className="space-y-6">
+              {/* Skills Summary */}
+              <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  <i className="fas fa-chart-pie mr-2 text-blue-600"></i>
+                  Skills Overview
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-600">
+                      {(analysis.currentSkills.computer || []).length}
+                    </div>
+                    <div className="text-sm text-gray-600">Computer Skills</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">
+                      {(analysis.currentSkills.technical || []).length}
+                    </div>
+                    <div className="text-sm text-gray-600">Technical Skills</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-pink-600">
+                      {(analysis.currentSkills.soft || []).length}
+                    </div>
+                    <div className="text-sm text-gray-600">Soft Skills</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-orange-600">
+                      {(analysis.currentSkills.general || []).length +
+                       (analysis.currentSkills.languages || []).length}
+                    </div>
+                    <div className="text-sm text-gray-600">Other Skills</div>
+                  </div>
+                </div>
+              </div>
+              {/* Computer Skills */}
+              {analysis.currentSkills.computer && analysis.currentSkills.computer.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                    <i className="fas fa-desktop mr-2 text-green-600"></i>
+                    Computer Skills
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {analysis.currentSkills.computer.map((skill, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                        <span className="font-medium text-green-800">{skill.name}</span>
+                        <span className="text-sm text-green-600">{skill.proficiency}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Technical Skills */}
-              {analysis.currentSkills.technical.length > 0 && (
+              {analysis.currentSkills.technical && analysis.currentSkills.technical.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-4">
                     <i className="fas fa-laptop-code mr-2 text-blue-600"></i>
@@ -331,6 +432,42 @@ const SkillsAnalysis = ({ applicantId }) => {
                       <div key={index} className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
                         <span className="font-medium text-blue-800">{skill.name}</span>
                         <span className="text-sm text-blue-600">{skill.proficiency}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Soft Skills */}
+              {analysis.currentSkills.soft && analysis.currentSkills.soft.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                    <i className="fas fa-users mr-2 text-pink-600"></i>
+                    Soft Skills
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {analysis.currentSkills.soft.map((skill, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-pink-50 rounded-lg">
+                        <span className="font-medium text-pink-800">{skill.name}</span>
+                        <span className="text-sm text-pink-600">{skill.proficiency}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* General Skills */}
+              {analysis.currentSkills.general && analysis.currentSkills.general.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                    <i className="fas fa-star mr-2 text-orange-600"></i>
+                    Other Skills
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {analysis.currentSkills.general.map((skill, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                        <span className="font-medium text-orange-800">{skill.name}</span>
+                        <span className="text-sm text-orange-600">{skill.proficiency}</span>
                       </div>
                     ))}
                   </div>
@@ -371,6 +508,32 @@ const SkillsAnalysis = ({ applicantId }) => {
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* No Skills Message */}
+              {(!analysis.currentSkills.computer || analysis.currentSkills.computer.length === 0) &&
+               (!analysis.currentSkills.technical || analysis.currentSkills.technical.length === 0) &&
+               (!analysis.currentSkills.soft || analysis.currentSkills.soft.length === 0) &&
+               (!analysis.currentSkills.general || analysis.currentSkills.general.length === 0) &&
+               (!analysis.currentSkills.languages || analysis.currentSkills.languages.length === 0) && (
+                <div className="text-center py-12">
+                  <img
+                    src="assets/logo.png"
+                    alt="Job Match"
+                    className="w-16 h-auto mx-auto opacity-60 mb-4"
+                  />
+                  <h3 className="text-lg font-semibold text-gray-600 mb-2">No Skills Added Yet</h3>
+                  <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                    Add your skills in the "My Skills" section to see a comprehensive analysis of your abilities and market alignment.
+                  </p>
+                  <button
+                    onClick={() => window.location.href = '#skills'}
+                    className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    <i className="fas fa-plus mr-2"></i>
+                    Add Your Skills
+                  </button>
                 </div>
               )}
             </div>

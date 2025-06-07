@@ -8,6 +8,7 @@ import Analytics from './EmployerSidebar/Analytics';
 import Settings from './EmployerSidebar/Settings';
 import MarketAnalytics from './MarketAnalytics';
 import EmploymentTrendForecasting from './EmploymentTrendForecasting';
+
 import EmployerNotifications from './EmployerNotifications';
 import { fetchEmployerApplications } from '../redux/slices/applications';
 import { logout } from '../redux/slices/authSlice';

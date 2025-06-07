@@ -16,16 +16,11 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
   }, [dispatch, applicantId]);
 
   const safeRender = (value) => {
-    if (value === null || value === undefined) return 'N/A';
-    if (typeof value === 'object') return Object.keys(value).length ? JSON.stringify(value) : 'N/A';
-    return String(value);
+    return value;
   };
 
   const safeRenderError = (error) => {
-    if (!error) return '';
-    if (typeof error === 'string') return error;
-    if (typeof error === 'object') return error.message || error.error || JSON.stringify(error);
-    return String(error);
+    return error;
   };
 
   const formatDateRange = (start, end) => {
@@ -54,7 +49,7 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
   };
 
   const handleDecision = (decision) => {
-    const appId = applicationId || cv?.applicationId;
+    const appId = applicationId;
     if (!appId) {
       console.error('Missing application ID for decision. ApplicationId prop:', applicationId, 'CV applicationId:', cv?.applicationId);
       return;
@@ -82,7 +77,7 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
         <div>
           <h2 className="text-3xl font-bold text-green-800">{safeRender(cv?.fullName)}</h2>
           <p className="text-gray-600 text-sm mt-1">
-            {safeRender(cv?.user?.email || cv?.email)} | NIDA: {safeRender(cv?.nida)}
+            {safeRender(cv?.user?.email)} | NIDA: {safeRender(cv?.nida)}
           </p>
         </div>
       </div>
@@ -96,7 +91,7 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
             {cv?.skills?.length ? (
               <ul className="list-disc list-inside text-sm text-gray-700">
                 {cv.skills.map((s, idx) => (
-                  <li key={s?.id || idx}>{safeRender(s?.skill)} - <span className="text-gray-500">{safeRender(s?.proficiency)}</span></li>
+                  <li key={s?.id}>{safeRender(s?.skill)} - <span className="text-gray-500">{safeRender(s?.proficiency)}</span></li>
                 ))}
               </ul>
             ) : <p className="text-gray-500 text-sm">No computer skills found</p>}
@@ -109,7 +104,7 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
             {cv?.languages?.length ? (
               <ul className="text-sm text-gray-700 space-y-1">
                 {cv.languages.map((l, idx) => (
-                  <li key={l?.id || idx}>
+                  <li key={l?.id}>
                     {safeRender(l?.language)} - 
                     <span className="text-gray-500 ml-1">Speak: {safeRender(l?.speak)}, Read: {safeRender(l?.read)}, Write: {safeRender(l?.write)}</span>
                   </li>
@@ -127,7 +122,7 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
             {cv?.qualifications?.length ? (
               <div className="space-y-2 text-sm text-gray-700">
                 {cv.qualifications.map((q, idx) => (
-                  <div key={q?.id || idx} className="border-l-4 pl-3 border-green-300">
+                  <div key={q?.id} className="border-l-4 pl-3 border-green-300">
                   <p><strong>{safeRender(q?.level)}</strong> in {safeRender(q?.fieldOfStudy)}</p>
                   <p className="text-gray-500">{safeRender(q?.institution)}</p>
                   {q.startDate && q.endDate && (
@@ -149,7 +144,7 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
             {cv?.experiences?.length ? (
               <div className="space-y-4 text-sm text-gray-700">
                 {cv.experiences.map((e, idx) => (
-                  <div key={e?.id || idx} className="p-3 bg-white rounded shadow-sm border">
+                  <div key={e?.id} className="p-3 bg-white rounded shadow-sm border">
                     <p className="font-medium">{safeRender(e?.jobTitle)} at {safeRender(e?.institution)}</p>
                     {e.startDate && e.endDate && (
                       <p className="text-xs text-gray-400 italic">
@@ -167,7 +162,7 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
     </div>
     {!isEmployerView && (
       <div className="mb-4 md:mt-4">
-        <DownloadButton applicantId={cv?.id || applicantId} />
+        <DownloadButton applicantId={cv?.id} />
       </div>
     )}
     {isEmployerView && cv && (
