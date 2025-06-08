@@ -70,13 +70,6 @@ Job Match is a full-stack web application that facilitates employment connection
 - Multer for file upload handling
 - WebSocket support for real-time features
 
-### Python Services
-- Flask-based microservice for ML operations
-- Prophet library for time series forecasting
-- Pandas and NumPy for data analysis
-- Employment trend analysis and prediction
-- Skills demand forecasting
-
 ### Database Schema
 The system uses a normalized MySQL database with the following key entities:
 - Users (authentication and role management)
