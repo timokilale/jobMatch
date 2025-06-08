@@ -7,7 +7,7 @@ import {
   deleteQualification,
   clearErrors
 } from '../redux/slices/qualificationSlice';
-import { validateHistoricalDateRange } from '../utils/dateValidation';
+import { validateAcademicDateRange } from '../utils/dateValidation';
 
 const AcademicQualificationsLogic = (setShowForm) => {
   const dispatch = useDispatch();
@@ -59,7 +59,7 @@ const AcademicQualificationsLogic = (setShowForm) => {
   // Handle input changes
   const handleChange = (e) => {
     const { name, type, files, value } = e.target;
-    
+
     // For file inputs
     if (type === 'file' && files && files.length > 0) {
       // Check file size (max 2MB)
@@ -72,10 +72,14 @@ const AcademicQualificationsLogic = (setShowForm) => {
         [name]: files[0]
       });
     } else {
-      // For all other inputs
+      // For all other inputs, trim whitespace for text inputs
+      const processedValue = (type === 'text' || name === 'country' || name === 'institution' || name === 'program')
+        ? value.trim()
+        : value;
+
       setFormData({
         ...formData,
-        [name]: value
+        [name]: processedValue
       });
     }
   };
@@ -90,15 +94,31 @@ const AcademicQualificationsLogic = (setShowForm) => {
       return false;
     }
     
-    // Ensure required fields are filled
-    if (!formData.educationLevel || !formData.country || !formData.institution || 
-        !formData.program || !formData.startDate) {
-      alert("Please fill all required fields");
+    // Ensure required fields are filled and not just whitespace
+    const requiredFields = {
+      educationLevel: 'Education Level',
+      country: 'Country',
+      institution: 'Institution Name',
+      program: 'Programme Name',
+      startDate: 'Start Date',
+      endDate: 'End Date'
+    };
+
+    for (const [field, label] of Object.entries(requiredFields)) {
+      if (!formData[field] || formData[field].toString().trim() === '') {
+        alert(`${label} is required and cannot be empty`);
+        return false;
+      }
+    }
+
+    // Check for certificate requirement (required for all submissions)
+    if (!formData.certificate) {
+      alert("Please attach your certificate");
       return false;
     }
     
     // Validate dates using utility function
-    const dateValidation = validateHistoricalDateRange(formData.startDate, formData.endDate);
+    const dateValidation = validateAcademicDateRange(formData.startDate, formData.endDate);
     if (!dateValidation.isValid) {
       alert(dateValidation.error);
       return false;
@@ -142,10 +162,10 @@ const AcademicQualificationsLogic = (setShowForm) => {
     };
     
     setFormData({
-      educationLevel: qualification.level,
-      country: qualification.country?.name || qualification.country,
-      institution: qualification.institution,
-      program: qualification.fieldOfStudy,
+      educationLevel: qualification.level || '',
+      country: qualification.country?.name || qualification.country || '',
+      institution: qualification.institution || '',
+      program: qualification.fieldOfStudy || '',
       startDate: formatDate(qualification.startDate),
       endDate: formatDate(qualification.endDate),
       certificate: null, // Can't pre-fill file inputs

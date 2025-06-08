@@ -1,7 +1,7 @@
 // controllers/qualifications.js
 const path = require('path');
 const prisma = require('../prisma');
-const { validateHistoricalDateRange } = require('../utils/dateValidation');
+const { validateAcademicDateRange } = require('../utils/dateValidation');
 
 const createAcademicQualification = async (req, res) => {
   try {
@@ -42,7 +42,7 @@ const createAcademicQualification = async (req, res) => {
         institution,
         fieldOfStudy: program,
         startDate: new Date(startDate),
-        endDate: endDate ? new Date(endDate) : null,
+        endDate: new Date(endDate), // endDate is now required
         applicantId: applicantId,
         certificateUrl: req.file ? `uploads/${req.file.filename}` : null,
       }
@@ -78,18 +78,39 @@ const getAcademicQualifications = async (req, res) => {
 };
 
 const validateQualification = (req, res, next) => {
-  const { educationLevel, startDate, endDate } = req.body;
+  const { educationLevel, country, institution, program, startDate, endDate } = req.body;
 
-  if (!educationLevel || !startDate) {
-    return res.status(400).json({ error: "Missing required fields" });
+  // Check all required fields and ensure they're not just whitespace
+  const requiredFields = {
+    educationLevel: 'Education Level',
+    country: 'Country',
+    institution: 'Institution',
+    program: 'Program',
+    startDate: 'Start Date',
+    endDate: 'End Date'
+  };
+
+  for (const [field, label] of Object.entries(requiredFields)) {
+    const value = req.body[field];
+    if (!value || value.toString().trim() === '') {
+      return res.status(400).json({ error: `${label} is required and cannot be empty` });
+    }
   }
 
-  // Use the utility function for date validation
-  const dateValidation = validateHistoricalDateRange(startDate, endDate);
+  // Use the utility function for date validation (academic requires both dates)
+  const dateValidation = validateAcademicDateRange(startDate, endDate);
   if (!dateValidation.isValid) {
     return res.status(400).json({ error: dateValidation.error });
   }
 
+  next();
+};
+
+const validateCertificateRequired = (req, res, next) => {
+  // Require certificate for all operations (POST and PUT)
+  if (!req.file) {
+    return res.status(400).json({ error: "Certificate attachment is required" });
+  }
   next();
 };
 
@@ -133,7 +154,7 @@ const updateAcademicQualification = async (req, res) => {
         institution,
         fieldOfStudy: program,
         startDate: new Date(startDate),
-        endDate: endDate ? new Date(endDate) : null,
+        endDate: new Date(endDate), // endDate is now required
         applicantId,
         ...(req.file && { certificateUrl: `uploads/${req.file.filename}` }),
       },
@@ -166,10 +187,11 @@ const deleteAcademicQualification = async (req, res) => {
 };
 
 
-module.exports = { 
-  createAcademicQualification, 
+module.exports = {
+  createAcademicQualification,
   getAcademicQualifications,
   validateQualification,
+  validateCertificateRequired,
   updateAcademicQualification,
   deleteAcademicQualification
 };

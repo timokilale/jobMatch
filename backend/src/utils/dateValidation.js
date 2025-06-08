@@ -104,6 +104,31 @@ const validateHistoricalDateRange = (startDate, endDate) => {
 };
 
 /**
+ * Validate date range for academic qualifications (requires both start and end dates)
+ * @param {string|Date} startDate - The start date
+ * @param {string|Date} endDate - The end date (required)
+ * @returns {object} Validation result with isValid and error message
+ */
+const validateAcademicDateRange = (startDate, endDate) => {
+  const startValidation = validateStartDate(startDate);
+  if (!startValidation.isValid) {
+    return startValidation;
+  }
+
+  // For academic qualifications, end date is required
+  if (!endDate) {
+    return { isValid: false, error: "End date is required" };
+  }
+
+  const endValidation = validateEndDate(endDate, startDate);
+  if (!endValidation.isValid) {
+    return endValidation;
+  }
+
+  return { isValid: true, error: null };
+};
+
+/**
  * Express middleware to validate historical date ranges
  * @param {string} startDateField - Name of the start date field in req.body
  * @param {string} endDateField - Name of the end date field in req.body
@@ -184,6 +209,7 @@ module.exports = {
   validateEndDate,
   validateFutureDate,
   validateHistoricalDateRange,
+  validateAcademicDateRange,
   validateHistoricalDatesMiddleware,
   validateFutureDateMiddleware,
   validateBirthDate

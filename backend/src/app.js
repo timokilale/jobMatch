@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
+const path = require('path');
 const prisma = require('./prisma');
 const routes = require('./routes');
 const cookieParser = require('cookie-parser');
@@ -47,7 +48,16 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api', routes);
-app.use('/uploads', express.static('uploads'));
+// Serve uploaded files with proper headers
+app.use('/uploads', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+}, express.static(path.join(__dirname, 'uploads')));
+
+
+
 app.use('/api/qualifications', qualificationRouter);
 app.use('/api/experiences', require('./routes/workExperience'));
 app.use('/api/languages', require('./routes/languageProficiency'));

@@ -16,10 +16,12 @@ const AcademicQualifications = () => {
   } = AcademicQualificationsLogic(setShowForm)
 
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    handleSubmit(e);
-    setShowForm(false);
+    const success = await handleSubmit(e);
+    if (success) {
+      setShowForm(false);
+    }
   };
 
   useEffect(() => {
@@ -88,6 +90,9 @@ const AcademicQualifications = () => {
               onChange={withUppercase(handleChange)}
               className="w-full p-2 border border-green-300 rounded-md  focus:border-green-500 focus:outline-none"
               required
+              minLength="1"
+              pattern=".*\S+.*"
+              title="Country is required and cannot be empty"
             />
           </div>
 
@@ -103,6 +108,9 @@ const AcademicQualifications = () => {
               onChange={withUppercase(handleChange)}
               className="w-full p-2 border border-green-300 rounded-md  focus:border-green-500 focus:outline-none"
               required
+              minLength="1"
+              pattern=".*\S+.*"
+              title="Institution name is required and cannot be empty"
             />
          </div>
 
@@ -115,6 +123,9 @@ const AcademicQualifications = () => {
               onChange={withUppercase(handleChange)}
               className="w-full p-2 border border-green-300 rounded-md  focus:border-green-500 focus:outline-none"
               required
+              minLength="1"
+              pattern=".*\S+.*"
+              title="Programme name is required and cannot be empty"
             />
           </div>
         </div>
@@ -138,10 +149,10 @@ const AcademicQualifications = () => {
             value={formData.endDate}
             onChange={handleChange}
             label="End Date"
-            required={false}
+            required={true}
             min="1970-01-01"
             max={new Date().toISOString().split('T')[0]}
-            placeholder="Select end date (leave empty if ongoing)"
+            placeholder="Select end date"
             className="w-full p-2 border border-green-300 rounded-md focus:border-green-500 focus:outline-none"
           />
         </div>
@@ -149,23 +160,24 @@ const AcademicQualifications = () => {
         {/* File Upload */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-green-800">
-            Attach your certificate (optional, max size 2MB) *
+            Attach your certificate (max size 2MB) *
           </label>
           <div className="relative">
-            <input 
+            <input
               type="file"
               className="absolute opacity-0 w-full h-full cursor-pointer"
               id="certificate-upload"
               accept=".pdf,.doc,.docx"
               onChange={handleChange}
               name="certificate"
+              required
             />
             <div className="flex items-center gap-2 p-2 border border-green-300 rounded-md">
               <span className="px-4 py-2  bg-green-100 text-green-800 rounded-md">
                 Choose File
               </span>
               <span className="text-gray-500">
-                {formData.certificate?.name}</span>
+                {formData.certificate?.name || "No file selected"}</span>
             </div>
           </div>
         </div>
@@ -219,14 +231,19 @@ const AcademicQualifications = () => {
                       {qualification.endDate ? new Date(qualification.endDate).toDateString() : 'Present'}
                     </td>
                     <td className="p-3 text-sm text-green-800 border border-green-200" >
-                      <a
-                        href={qualification.certificateUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-green-600 hover:underline"
-                      >
-                        View Certificate
-                      </a>
+                      {qualification.certificateUrl ? (
+                        <a
+                          href={`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/${qualification.certificateUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-600 hover:underline"
+
+                        >
+                          View Certificate
+                        </a>
+                      ) : (
+                        <span className="text-gray-400">No certificate</span>
+                      )}
                     </td>
                     <td className="p-3 text-sm text-green-800 border border-green-200">
                       <button 

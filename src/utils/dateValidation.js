@@ -39,11 +39,14 @@ export const validateStartDate = (startDate) => {
  * Validate that an end date is not in the future and is after start date
  * @param {string|Date} endDate - The end date to validate
  * @param {string|Date} startDate - The start date to compare against
+ * @param {boolean} required - Whether end date is required (default: false)
  * @returns {object} Validation result with isValid and error message
  */
-export const validateEndDate = (endDate, startDate) => {
+export const validateEndDate = (endDate, startDate, required = false) => {
   if (!endDate) {
-    return { isValid: true, error: null }; // End date is optional
+    return required
+      ? { isValid: false, error: "End date is required" }
+      : { isValid: true, error: null };
   }
 
   const endDateObj = new Date(endDate);
@@ -104,6 +107,26 @@ export const validateHistoricalDateRange = (startDate, endDate) => {
   }
 
   const endValidation = validateEndDate(endDate, startDate);
+  if (!endValidation.isValid) {
+    return endValidation;
+  }
+
+  return { isValid: true, error: null };
+};
+
+/**
+ * Validate date range for academic qualifications (requires both start and end dates)
+ * @param {string|Date} startDate - The start date
+ * @param {string|Date} endDate - The end date (required)
+ * @returns {object} Validation result with isValid and error message
+ */
+export const validateAcademicDateRange = (startDate, endDate) => {
+  const startValidation = validateStartDate(startDate);
+  if (!startValidation.isValid) {
+    return startValidation;
+  }
+
+  const endValidation = validateEndDate(endDate, startDate, true); // true = required
   if (!endValidation.isValid) {
     return endValidation;
   }
