@@ -11,6 +11,7 @@ const RegisterPage = () => {
     password, setPassword,
     selectedCategories, setSelectedCategories,
     categoryOptions,
+    validationErrors,
     handleRegister,
     loading,
     error
@@ -116,14 +117,30 @@ const RegisterPage = () => {
                   required
                 />
 
-                <input
-                  type="text"
-                  placeholder="NIDA Number"
-                  className="w-full px-4 py-3 sm:py-2 border border-green-700 rounded-lg placeholder:text-green-700 placeholder:font-light focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent text-base"
-                  value={nida}
-                  onChange={(e) => setNida(e.target.value)}
-                  required
-                />
+                <div className="w-full">
+                  <input
+                    type="text"
+                    placeholder="NIDA Number (20 digits)"
+                    className={`w-full px-4 py-3 sm:py-2 border rounded-lg placeholder:text-green-700 placeholder:font-light focus:outline-none focus:ring-2 focus:border-transparent text-base ${
+                      validationErrors.nida
+                        ? 'border-red-500 focus:ring-red-500'
+                        : 'border-green-700 focus:ring-green-700'
+                    }`}
+                    value={nida}
+                    onChange={(e) => setNida(e.target.value)}
+                    maxLength="23" // 20 digits + 3 spaces for formatting
+                    required
+                  />
+                  {validationErrors.nida && (
+                    <p className="text-red-600 text-sm mt-1 flex items-center">
+                      <i className="fas fa-exclamation-circle mr-1"></i>
+                      {validationErrors.nida}
+                    </p>
+                  )}
+                  <p className="text-gray-500 text-xs mt-1">
+                    Enter your 20-digit National ID number
+                  </p>
+                </div>
 
                 <input
                   type="email"

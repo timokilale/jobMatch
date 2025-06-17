@@ -9,7 +9,24 @@ const privacyManager = new PrivacyManager();
 const registerApplicant = async (req, res) => {
   try {
     const { email, password, fullName, nida, categoryIds } = req.body;
-    
+
+    // Validate NIDA number
+    if (!nida || typeof nida !== 'string') {
+      return res.status(400).json({
+        error: 'NIDA number is required'
+      });
+    }
+
+    // Remove any spaces or dashes and validate format
+    const cleanNida = nida.replace(/[\s-]/g, '');
+
+    // NIDA should be exactly 20 digits
+    if (!/^\d{20}$/.test(cleanNida)) {
+      return res.status(400).json({
+        error: 'NIDA number must be exactly 20 digits'
+      });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     
     const user = await prisma.user.create({
@@ -20,7 +37,7 @@ const registerApplicant = async (req, res) => {
         applicant: {
           create: {
             fullName,
-            nida,
+            nida: cleanNida, // Use the cleaned NIDA number
             categories: {
               connect: categoryIds.map(id => ({ id }))
             }
@@ -65,11 +82,23 @@ const registerApplicant = async (req, res) => {
   } catch (error) {
     console.error('Registration error:', error);
     if (error.code === 'P2002') {
-      return res.status(400).json({ 
-        error: `${error.meta.target.join(', ')} already exists` 
-      });
+      // Handle unique constraint violations
+      const target = error.meta?.target;
+      if (target && target.includes('nida')) {
+        return res.status(400).json({
+          error: 'This NIDA number is already registered'
+        });
+      } else if (target && target.includes('email')) {
+        return res.status(400).json({
+          error: 'This email address is already registered'
+        });
+      } else {
+        return res.status(400).json({
+          error: `${target ? target.join(', ') : 'Field'} already exists`
+        });
+      }
     }
-    res.status(400).json({ 
+    res.status(400).json({
       error: error.message || 'Registration failed' });
   }
 };

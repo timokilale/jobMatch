@@ -112,20 +112,20 @@ const employers = [
   { companyName: 'Elite Law Firm', address: '963 Justice Avenue, Legal District, DC' }
 ];
 
-// Sample applicants data
+// Sample applicants data with proper 20-digit NIDA numbers
 const applicants = [
-  { fullName: 'John Doe', nida: '19900101001' },
-  { fullName: 'Jane Smith', nida: '19920215002' },
-  { fullName: 'Mike Johnson', nida: '19880330003' },
-  { fullName: 'Sarah Wilson', nida: '19950712004' },
-  { fullName: 'David Brown', nida: '19870925005' },
-  { fullName: 'Lisa Davis', nida: '19930418006' },
-  { fullName: 'Robert Miller', nida: '19910806007' },
-  { fullName: 'Emily Garcia', nida: '19940123008' },
-  { fullName: 'James Martinez', nida: '19890517009' },
-  { fullName: 'Amanda Rodriguez', nida: '19960829010' },
-  { fullName: 'Chris Anderson', nida: '19860304011' },
-  { fullName: 'Nicole Taylor', nida: '19970611012' }
+  { fullName: 'John Doe', nida: '19900101001234567890' },
+  { fullName: 'Jane Smith', nida: '19920215002345678901' },
+  { fullName: 'Mike Johnson', nida: '19880330003456789012' },
+  { fullName: 'Sarah Wilson', nida: '19950712004567890123' },
+  { fullName: 'David Brown', nida: '19870925005678901234' },
+  { fullName: 'Lisa Davis', nida: '19930418006789012345' },
+  { fullName: 'Robert Miller', nida: '19910806007890123456' },
+  { fullName: 'Emily Garcia', nida: '19940123008901234567' },
+  { fullName: 'James Martinez', nida: '19890517009012345678' },
+  { fullName: 'Amanda Rodriguez', nida: '19960829010123456789' },
+  { fullName: 'Chris Anderson', nida: '19860304011234567890' },
+  { fullName: 'Nicole Taylor', nida: '19970611012345678901' }
 ];
 
 // Seeding functions

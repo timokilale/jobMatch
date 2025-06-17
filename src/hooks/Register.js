@@ -19,6 +19,7 @@ const useRegister = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -33,8 +34,35 @@ const useRegister = () => {
     fetchCategories();
   }, []);
 
+  // Validate NIDA number
+  const validateNida = (nida) => {
+    if (!nida) {
+      return 'NIDA number is required';
+    }
+
+    // Remove spaces and dashes for validation
+    const cleanNida = nida.replace(/[\s-]/g, '');
+
+    if (!/^\d{20}$/.test(cleanNida)) {
+      return 'NIDA number must be exactly 20 digits';
+    }
+
+    return null;
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    // Clear previous validation errors
+    setValidationErrors({});
+
+    // Validate NIDA
+    const nidaError = validateNida(formData.nida);
+    if (nidaError) {
+      setValidationErrors({ nida: nidaError });
+      return;
+    }
+
     try {
       const result = await dispatch(registerApplicant({
         email: formData.email,
@@ -67,6 +95,25 @@ const useRegister = () => {
     }
   };
 
+  // Handle NIDA input with formatting
+  const handleNidaChange = (value) => {
+    // Remove all non-digits
+    const digitsOnly = value.replace(/\D/g, '');
+
+    // Limit to 20 digits
+    const limitedDigits = digitsOnly.slice(0, 20);
+
+    // Format with spaces every 4 digits for better readability
+    const formatted = limitedDigits.replace(/(\d{4})(?=\d)/g, '$1 ');
+
+    setFormData({ ...formData, nida: formatted });
+
+    // Clear validation error when user starts typing
+    if (validationErrors.nida) {
+      setValidationErrors({ ...validationErrors, nida: null });
+    }
+  };
+
   return {
     fullname: formData.fullname,
     nida: formData.nida,
@@ -75,8 +122,9 @@ const useRegister = () => {
     selectedCategories,
     setSelectedCategories,
     categoryOptions,
+    validationErrors,
     setFullname: (value) => setFormData({ ...formData, fullname: toUpperCase(value) }),
-    setNida: (value) => setFormData({ ...formData, nida: value }),
+    setNida: handleNidaChange,
     setEmail: (value) => setFormData({ ...formData, email: value }),
     setPassword: (value) => setFormData({ ...formData, password: value }),
     handleRegister,

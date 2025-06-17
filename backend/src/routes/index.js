@@ -5,6 +5,7 @@ const { registerApplicant, registerEmployer, login } = require('../controllers/a
 const qualificationsRoutes = require('./qualifications');
 const notificationsController = require('../controllers/notifications');
 const cvRoutes = require('./cv');
+const employerAnalyticsRoutes = require('./employerAnalytics');
 
 // Auth Routes
 router.post('/auth/login', login);
@@ -37,4 +38,8 @@ router.get('/me', auth(), async (req, res) => {
 // Qualifications Routes
 router.use('/qualifications', qualificationsRoutes);
 router.use('/cv', cvRoutes);
+
+// Employer Analytics Routes
+router.use('/employer/analytics', employerAnalyticsRoutes);
+
 module.exports = router;
