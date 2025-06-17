@@ -143,7 +143,7 @@ const MarketAnalytics = () => {
             <div>
               <h3 className="text-red-800 font-medium text-sm sm:text-base">Forecasting Service Unavailable</h3>
               <p className="text-red-600 text-xs sm:text-sm mt-1">
-                {forecastingError}. Showing basic market data instead.
+                {typeof forecastingError === 'string' ? forecastingError : forecastingError?.message || forecastingError?.error || 'Service unavailable'}. Showing basic market data instead.
               </p>
             </div>
           </div>

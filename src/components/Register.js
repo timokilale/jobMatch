@@ -102,7 +102,7 @@ const RegisterPage = () => {
                   <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                     <p className="text-red-700 text-sm flex items-center">
                       <i className="fas fa-exclamation-circle mr-2"></i>
-                      {error}
+                      {typeof error === 'string' ? error : error?.message || error?.error || 'Registration failed'}
                     </p>
                   </div>
                 )}

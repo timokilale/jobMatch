@@ -77,11 +77,12 @@ const Candidates = () => {
   }
 
   if (error) {
+    const errorMessage = typeof error === 'string' ? error : error?.message || error?.error || 'Failed to load candidates';
     return (
       <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
         <div className="flex flex-col items-center py-12 space-y-4">
           <i className="fas fa-exclamation-triangle text-3xl text-red-600"></i>
-          <p className="text-red-500 font-medium">Error loading candidates: {error}</p>
+          <p className="text-red-500 font-medium">Error loading candidates: {errorMessage}</p>
         </div>
       </div>
     );

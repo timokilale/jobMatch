@@ -86,6 +86,7 @@ const initialState = {
   },
   loading: false,
   error: null,
+  validationErrors: [],
   showJobModal: false,
   newJob: {
     title: '',
@@ -93,6 +94,7 @@ const initialState = {
     location: '',
     status: 'Draft',
     categoryId: '',
+    requirements: [], // Array of {skillId, skillName, importance, proficiencyLevel, yearsRequired}
   }
 };
 
@@ -108,6 +110,12 @@ const jobsSlice = createSlice({
     },
     resetNewJob: (state) => {
       state.newJob = initialState.newJob;
+    },
+    clearValidationErrors: (state) => {
+      state.validationErrors = [];
+    },
+    setValidationErrors: (state, action) => {
+      state.validationErrors = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -164,6 +172,7 @@ const jobsSlice = createSlice({
       .addCase(createJob.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.validationErrors = [];
       })
       .addCase(createJob.fulfilled, (state, action) => {
         state.loading = false;
@@ -173,10 +182,18 @@ const jobsSlice = createSlice({
         });
         state.showJobModal = false;
         state.newJob = initialState.newJob;
+        state.validationErrors = [];
       })
       .addCase(createJob.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        // Handle validation errors vs general errors
+        if (action.payload?.details && Array.isArray(action.payload.details)) {
+          state.validationErrors = action.payload.details;
+          state.error = null;
+        } else {
+          state.error = action.payload?.error || action.payload || 'Failed to create job';
+          state.validationErrors = [];
+        }
       })
       
       // Update Job
@@ -216,5 +233,5 @@ const jobsSlice = createSlice({
   }
 });
 
-export const { setShowJobModal, setNewJob, resetNewJob } = jobsSlice.actions;
+export const { setShowJobModal, setNewJob, resetNewJob, clearValidationErrors, setValidationErrors } = jobsSlice.actions;
 export default jobsSlice.reducer;

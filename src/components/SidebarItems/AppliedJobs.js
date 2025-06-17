@@ -53,9 +53,31 @@ const JobDetailsModal = ({ job, isOpen, onClose }) => {
           <div className="mb-6">
             <h4 className="text-lg font-semibold text-gray-800 mb-3">Requirements</h4>
             {job.requirements && Array.isArray(job.requirements) && job.requirements.length > 0 ? (
-              <ul className="list-disc pl-5 space-y-2 text-gray-700">
+              <ul className="list-disc pl-5 space-y-3 text-gray-700">
                 {job.requirements.map((req, index) => (
-                  <li key={index} className="leading-relaxed">{req}</li>
+                  <li key={index} className="leading-relaxed">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <span className="font-medium">{req.skillMaster?.name || req.skillName}</span>
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        req.importance === 'REQUIRED' ? 'bg-red-100 text-red-800' :
+                        req.importance === 'PREFERRED' ? 'bg-blue-100 text-blue-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {req.importance}
+                      </span>
+                      <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+                        {req.proficiencyLevel}
+                      </span>
+                      {req.yearsRequired && (
+                        <span className="text-xs text-gray-600">
+                          {req.yearsRequired} years
+                        </span>
+                      )}
+                    </div>
+                    {req.description && (
+                      <p className="text-sm text-gray-600">{req.description}</p>
+                    )}
+                  </li>
                 ))}
               </ul>
             ) : (

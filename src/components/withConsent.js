@@ -72,13 +72,14 @@ const withConsent = (WrappedComponent, consentType, options = {}) => {
 
     // Error state
     if (error) {
+      const errorMessage = typeof error === 'string' ? error : error?.message || error?.error || 'Permission check failed';
       return (
         <div className="bg-red-50 border border-red-200 rounded-lg p-6">
           <div className="flex items-center mb-4">
             <i className="fas fa-exclamation-triangle text-red-600 text-xl mr-3"></i>
             <h3 className="text-lg font-semibold text-red-800">Permission Check Failed</h3>
           </div>
-          <p className="text-red-700 mb-4">{error}</p>
+          <p className="text-red-700 mb-4">{errorMessage}</p>
           <button
             onClick={checkConsent}
             className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"

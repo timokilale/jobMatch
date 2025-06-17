@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useJobs } from '../hooks/useJobs';
+import JobRequirements from './JobRequirements';
 
 const JobPostingsSection = ({ employerId }) => {
   const {
@@ -8,6 +9,7 @@ const JobPostingsSection = ({ employerId }) => {
     jobPostings,
     loading,
     error,
+    validationErrors,
     showJobModal,
     newJob,
     selectedJob,
@@ -16,10 +18,24 @@ const JobPostingsSection = ({ employerId }) => {
     handleJobChange,
     handleDeleteJob
   } = useJobs(employerId);
-  
+
   const { applications } = useSelector((state) => state.applications);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [jobToDelete, setJobToDelete] = useState(null);
+
+  // Helper function to safely render error messages
+  const safeRenderError = (error) => {
+    if (!error) return null;
+    if (typeof error === 'string') return error;
+    if (typeof error === 'object') {
+      if (error.message) return error.message;
+      if (error.error) return error.error;
+      const errorStr = JSON.stringify(error);
+      if (errorStr === '{}') return 'An unknown error occurred';
+      return errorStr;
+    }
+    return String(error);
+  };
 
   const openDeleteConfirmation = (jobId) => {
     setJobToDelete(jobId);
@@ -37,7 +53,7 @@ const JobPostingsSection = ({ employerId }) => {
     setJobToDelete(null);
   };
 
- if (loading && jobPostings.length === 0) {
+ if (loading && (!jobPostings || jobPostings.length === 0)) {
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
         <div className="flex flex-col items-center py-12 space-y-4">
@@ -51,7 +67,7 @@ const JobPostingsSection = ({ employerId }) => {
     return (
       <div className="bg-white rounded-lg shadow-sm p-6">
         <div className="flex flex-col items-center py-12 space-y-4">
-          <p className="text-red-600 font-medium">Error: {error}</p>
+          <p className="text-red-600 font-medium">Error: {safeRenderError(error)}</p>
         </div>
       </div>
     );
@@ -69,7 +85,7 @@ const JobPostingsSection = ({ employerId }) => {
         </button>
       </div>
 
-      {jobPostings.length === 0 ? (
+      {!jobPostings || jobPostings.length === 0 ? (
         <div className="flex flex-col items-center py-12 space-y-4">
           <i className="fas fa-file-alt text-6xl text-green-600"></i>
           <p className="text-gray-600 font-medium">No jobs posted yet</p>
@@ -82,12 +98,12 @@ const JobPostingsSection = ({ employerId }) => {
         </div>
       ) : (
         <div className="space-y-4">
-          {jobPostings.map((job) => (
+          {jobPostings && jobPostings.map((job) => (
             <div key={job.id} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded">
               <div>
                 <h4 className="font-medium">{job.title}</h4>
                 <p className="text-sm text-green-600">
-                  {applications.filter(app => app.jobId === job.id).length} applicants</p>
+                  {applications ? applications.filter(app => app.jobId === job.id).length : 0} applicants</p>
               </div>
               <div className="flex items-center space-x-4">
                 <span className={`px-2 py-1 text-sm rounded-full ${job.status === 'Active' ? 'bg-green-200 text-green-800 border border-green-300' : 'bg-gray-200 border border-gray-400 text-gray-800'}`}>
@@ -129,6 +145,18 @@ const JobPostingsSection = ({ employerId }) => {
 
             {/* Form Content */}
             <form onSubmit={handleSubmitJob} className="p-4 sm:p-6">
+              {/* Validation Errors */}
+              {validationErrors && validationErrors.length > 0 && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <h4 className="text-red-800 font-medium mb-2">Please fix the following issues:</h4>
+                  <ul className="list-disc pl-5 text-red-700 text-sm space-y-1">
+                    {validationErrors.map((error, index) => (
+                      <li key={index}>{error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               <div className="space-y-4 sm:space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Job Title</label>
@@ -151,7 +179,7 @@ const JobPostingsSection = ({ employerId }) => {
                     onChange={(e) => handleJobChange('categoryId', e.target.value)}
                   >
                     <option value="">Select Category</option>
-                    {categories.map((category) => (
+                    {categories && categories.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.name}
                       </option>
@@ -192,6 +220,15 @@ const JobPostingsSection = ({ employerId }) => {
                     <option value="Active">Active</option>
                     <option value="Closed">Closed</option>
                   </select>
+                </div>
+
+                {/* Job Requirements Section */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Job Requirements</label>
+                  <JobRequirements
+                    requirements={newJob.requirements || []}
+                    onChange={(requirements) => handleJobChange('requirements', requirements)}
+                  />
                 </div>
 
                 {/* Action Buttons */}

@@ -57,16 +57,17 @@ const SkillsAnalysis = ({ applicantId }) => {
   }
 
   if (error) {
+    const errorMessage = typeof error === 'string' ? error : error?.message || error?.error || 'An unknown error occurred';
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-6">
         <div className="flex items-center">
           <i className="fas fa-exclamation-triangle text-red-500 mr-3"></i>
           <div>
             <h3 className="text-red-800 font-medium">Analysis Error</h3>
-            <p className="text-red-600 text-sm mt-1">{error}</p>
+            <p className="text-red-600 text-sm mt-1">{errorMessage}</p>
           </div>
         </div>
-        <button 
+        <button
           onClick={fetchSkillsAnalysis}
           className="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
         >

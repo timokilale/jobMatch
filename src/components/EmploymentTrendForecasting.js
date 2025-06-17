@@ -250,7 +250,7 @@ const EmploymentTrendForecasting = () => {
             <div>
               <h3 className="text-red-800 font-medium">Forecasting Service Unavailable</h3>
               <p className="text-red-600 text-sm mt-1">
-                {error}. Please try again later or contact support.
+                {typeof error === 'string' ? error : error?.message || error?.error || 'Service unavailable'}. Please try again later or contact support.
               </p>
             </div>
           </div>

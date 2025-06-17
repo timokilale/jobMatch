@@ -3,12 +3,11 @@ import { useState, useEffect } from 'react';
 import useLogin from '../hooks/Login';
 
 const LoginPage = () => {
-  const { email, setEmail, password, setPassword, handleLogin, loading, error } = useLogin();
+  const { email, setEmail, password, setPassword, selectedRole, setSelectedRole, handleLogin, loading, error } = useLogin();
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(true);
-  const [selectedRole, setSelectedRole] = useState('applicant'); // Default to applicant
   
   // Set focused state if fields already have values
   useEffect(() => {

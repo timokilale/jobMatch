@@ -100,7 +100,7 @@ router.post('/', auth(), async (req, res) => {
       where: {
         applicantId: applicant.id,
         skillMaster: {
-          name: { equals: name.trim(), mode: 'insensitive' }
+          name: { equals: name.trim() }
         }
       },
       include: { skillMaster: true }
@@ -113,7 +113,7 @@ router.post('/', auth(), async (req, res) => {
     // Find or create skill in SkillMaster
     let skillMaster = await prisma.skillMaster.findFirst({
       where: {
-        name: { equals: name.trim(), mode: 'insensitive' }
+        name: { equals: name.trim() }
       }
     });
 
@@ -235,7 +235,7 @@ router.put('/:id', auth(), async (req, res) => {
         applicantId: applicant.id,
         id: { not: parseInt(id) },
         skillMaster: {
-          name: { equals: name.trim(), mode: 'insensitive' }
+          name: { equals: name.trim() }
         }
       }
     });
@@ -249,7 +249,7 @@ router.put('/:id', auth(), async (req, res) => {
     if (skillMaster.name.toLowerCase() !== name.trim().toLowerCase()) {
       skillMaster = await prisma.skillMaster.findFirst({
         where: {
-          name: { equals: name.trim(), mode: 'insensitive' }
+          name: { equals: name.trim() }
         }
       });
 
@@ -402,8 +402,7 @@ router.get('/search', auth(), async (req, res) => {
     const whereClause = {
       isActive: true,
       name: {
-        contains: q.trim(),
-        mode: 'insensitive'
+        contains: q.trim()
       }
     };
 

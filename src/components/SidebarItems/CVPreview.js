@@ -20,7 +20,16 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
   };
 
   const safeRenderError = (error) => {
-    return error;
+    if (!error) return null;
+    if (typeof error === 'string') return error;
+    if (typeof error === 'object') {
+      if (error.message) return error.message;
+      if (error.error) return error.error;
+      const errorStr = JSON.stringify(error);
+      if (errorStr === '{}') return 'An unknown error occurred';
+      return errorStr;
+    }
+    return String(error);
   };
 
   const formatDateRange = (start, end) => {

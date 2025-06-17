@@ -159,9 +159,12 @@ const ChatWidget = () => {
     
     newSocket.on('error', (error) => {
       console.error('Chat error:', error);
+      const errorMessage = typeof error === 'string' ? error :
+                          error?.message || error?.error ||
+                          JSON.stringify(error) || 'Unknown error occurred';
       addMessage({
         id: Date.now(),
-        message: `Error: ${error}`,
+        message: `Error: ${errorMessage}`,
         senderId: null,
         senderName: 'System',
         timestamp: new Date(),

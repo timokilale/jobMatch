@@ -141,18 +141,30 @@ const registerEmployer = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    
-    const user = await prisma.user.findUnique({ 
+    const { email, password, selectedRole } = req.body;
+
+    const user = await prisma.user.findUnique({
       where: { email },
-      include: { 
-        applicant: true, 
-        employer: true 
-      } 
+      include: {
+        applicant: true,
+        employer: true
+      }
     });
-    
+
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Validate selected role matches user's actual role
+    if (selectedRole) {
+      const expectedRole = selectedRole === 'applicant' ? 'APPLICANT' : 'EMPLOYER';
+      if (user.role !== expectedRole) {
+        const actualRoleDisplay = user.role === 'APPLICANT' ? 'Job Seeker' : 'Employer';
+        const selectedRoleDisplay = selectedRole === 'applicant' ? 'Job Seeker' : 'Employer';
+        return res.status(401).json({
+          error: `Role mismatch: You selected ${selectedRoleDisplay} but your account is registered as ${actualRoleDisplay}. Please select the correct role or use the appropriate account.`
+        });
+      }
     }
 
     const token = jwt.sign(

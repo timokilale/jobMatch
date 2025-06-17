@@ -7,10 +7,11 @@ const useLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
-  
+
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
+    selectedRole: 'applicant', // Add selectedRole to credentials
   });
 
   const handleLogin = async (e) => {
@@ -47,6 +48,8 @@ const useLogin = () => {
     setEmail: (value) => setCredentials({ ...credentials, email: value }),
     password: credentials.password,
     setPassword: (value) => setCredentials({ ...credentials, password: value }),
+    selectedRole: credentials.selectedRole,
+    setSelectedRole: (value) => setCredentials({ ...credentials, selectedRole: value }),
     handleLogin,
     loading,
     error,

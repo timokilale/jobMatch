@@ -92,7 +92,10 @@ const Skills = () => {
 
     // Check for duplicates in current skills list
     const isDuplicate = skills.some(
-      skill => skill.name.toLowerCase() === trimmedName.toLowerCase()
+      skill => {
+        const skillName = skill.skill || skill.name;
+        return skillName && skillName.toLowerCase() === trimmedName.toLowerCase();
+      }
     );
 
     if (isDuplicate) {
@@ -250,7 +253,7 @@ const Skills = () => {
         {error && (
           <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded flex items-center">
             <AlertCircle className="w-4 h-4 mr-2" />
-            {error}
+            {typeof error === 'string' ? error : error?.message || error?.error || 'An error occurred'}
             <button
               onClick={() => dispatch(clearError())}
               className="ml-auto text-red-600 hover:text-red-800"
@@ -309,7 +312,10 @@ const Skills = () => {
                 <button
                   key={skill}
                   onClick={() => handleQuickAddComputerSkill(skill)}
-                  disabled={loading || skills.some(s => s.skill === skill)}
+                  disabled={loading || skills.some(s => {
+                    const skillName = s.skill || s.name;
+                    return skillName === skill;
+                  })}
                   className="p-3 text-left border border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <div className="flex items-center space-x-2">

@@ -1,7 +1,7 @@
 const prisma = require('../prisma');
 
 exports.createLanguage = async (req, res) => {
-  const { applicantId, language, speak, read, write } = req.body;
+  const { applicantId, language, speakLevel, readLevel, writeLevel } = req.body;
 
   if (!applicantId || isNaN(parseInt(applicantId))) {
     return res.status(400).json({ error: 'Invalid applicant ID' });
@@ -12,9 +12,9 @@ exports.createLanguage = async (req, res) => {
       data: {
         applicantId: parseInt(applicantId),
         language,
-        speakLevel: speak,
-        readLevel: read,
-        writeLevel: write
+        speakLevel,
+        readLevel,
+        writeLevel
       }
     });
     res.status(201).json(lang);
@@ -44,12 +44,12 @@ exports.getLanguages = async (req, res) => {
 
 exports.updateLanguage = async (req, res) => {
   const { id } = req.params;
-  const { language, speak, read, write } = req.body;
+  const { language, speakLevel, readLevel, writeLevel } = req.body;
 
   try {
     const updated = await prisma.languageProficiency.update({
       where: { id: parseInt(id) },
-      data: { language, speakLevel: speak, readLevel: read, writeLevel: write },
+      data: { language, speakLevel, readLevel, writeLevel },
     });
     res.json(updated);
   } catch (error) {
