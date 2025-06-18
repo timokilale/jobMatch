@@ -437,13 +437,30 @@ exports.updateJob = async (req, res) => {
 
 exports.deleteJob = async (req, res) => {
   const jobId = parseInt(req.params.id);
-  
+
   try {
-    await prisma.job.delete({
-      where: { id: jobId }
+    // Use a transaction to ensure all related data is deleted properly
+    await prisma.$transaction(async (prisma) => {
+      // First, delete all applications for this job
+      await prisma.application.deleteMany({
+        where: { jobId: jobId }
+      });
+
+      // Then delete all interviews for this job
+      await prisma.interview.deleteMany({
+        where: { jobId: jobId }
+      });
+
+      // JobRequirements will be deleted automatically due to onDelete: Cascade
+      // Finally, delete the job itself
+      await prisma.job.delete({
+        where: { id: jobId }
+      });
     });
+
     res.json({ message: 'Job deleted successfully' });
   } catch (error) {
+    console.error('Error deleting job:', error);
     res.status(500).json({ error: 'Failed to delete job' });
   }
 };

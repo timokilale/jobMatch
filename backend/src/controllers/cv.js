@@ -16,7 +16,11 @@ exports.getCVData = async (req, res) => {
         },
         experiences: true,
         languages: true,
-        skills: true,
+        skills: {
+          include: {
+            skillMaster: true
+          }
+        },
         categories: true,
         generalSkills: true,
       },
@@ -35,7 +39,11 @@ exports.getCVData = async (req, res) => {
           },
           experiences: true,
           languages: true,
-          skills: true,
+          skills: {
+          include: {
+            skillMaster: true
+          }
+        },
           categories: true,
           generalSkills: true,
         },

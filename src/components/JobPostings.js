@@ -74,12 +74,12 @@ const JobPostingsSection = ({ employerId }) => {
   }
 
   return(
-    <div className="bg-white rounded-lg shadow-sm p-6">
+    <div className="bg-white rounded-lg shadow-sm p-6 mb-20">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">Posted Jobs</h2>
         <button
           onClick={() => toggleJobModal(true)}
-          className="bg-green-600 hover:bg-green-700 text-white rounded-full w-10 h-10 flex items-center justify-center"
+          className="bg-green-600 hover:bg-green-700 text-white rounded-full w-10 h-10 flex items-center justify-center relative z-10"
         >
           <i className="fas fa-plus text-xl"></i>
         </button>
@@ -91,7 +91,7 @@ const JobPostingsSection = ({ employerId }) => {
           <p className="text-gray-600 font-medium">No jobs posted yet</p>
           <button
             onClick={() => toggleJobModal(true)}
-            className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
+            className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 relative z-10"
           >
             Add Your First Job
           </button>

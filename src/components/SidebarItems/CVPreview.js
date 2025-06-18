@@ -97,26 +97,76 @@ const CVPreview = ({ applicantId, applicationId, isEmployerView = false, onDecis
             <h3 className="flex items-center text-lg font-semibold text-green-600 mb-2">
               <i className="fas fa-star mr-2"></i> Skills
             </h3>
-            {cv?.generalSkills?.length ? (
-              <div className="space-y-3">
-                {/* Group skills by category */}
-                {['Computer Skills', 'Technical', 'Soft Skills', 'Other'].map(category => {
-                  const categorySkills = cv.generalSkills.filter(s => s.description === category || (!s.description && category === 'Other'));
-                  if (categorySkills.length === 0) return null;
+{(() => {
+              // Combine both skills and generalSkills arrays
+              const allSkills = [
+                ...(cv?.generalSkills || []),
+                ...(cv?.skills || [])
+              ];
 
-                  return (
-                    <div key={category}>
-                      <h4 className="text-sm font-medium text-green-700 mb-1">{category}</h4>
-                      <ul className="list-disc list-inside text-sm text-gray-700 ml-2">
-                        {categorySkills.map((s, idx) => (
-                          <li key={s?.id}>{safeRender(s?.skill)} - <span className="text-gray-500">{safeRender(s?.proficiency)}</span></li>
-                        ))}
-                      </ul>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : <p className="text-gray-500 text-sm">No skills found</p>}
+              // Debug: Log the first skill to see its structure
+              if (allSkills.length > 0) {
+                console.log('First skill object:', allSkills[0]);
+                console.log('All skill field names:', Object.keys(allSkills[0]));
+              }
+
+              return allSkills.length ? (
+                <div className="space-y-3">
+                  {/* Group skills by category */}
+                  {['Computer Skills', 'Technical', 'Soft Skills', 'Other'].map(category => {
+                    const categorySkills = allSkills.filter(s => {
+                      // Handle different data structures:
+                      // - ApplicantSkill (from cv.skills) has skillMaster.category
+                      // - GeneralSkill (from cv.generalSkills) has description field
+                      let skillCategory = '';
+
+                      if (s.skillMaster) {
+                        // This is an ApplicantSkill with skillMaster relation
+                        skillCategory = s.skillMaster.category || '';
+                      } else {
+                        // This is a GeneralSkill or legacy skill
+                        skillCategory = s.description || s.category || '';
+                      }
+
+                      // Map "Soft" to "Soft Skills" for display
+                      const normalizedCategory = skillCategory === 'Soft' ? 'Soft Skills' : skillCategory;
+                      return normalizedCategory === category || (!skillCategory && category === 'Other');
+                    });
+
+                    if (categorySkills.length === 0) return null;
+
+                    return (
+                      <div key={category}>
+                        <h4 className="text-sm font-medium text-green-700 mb-1">{category}</h4>
+                        <ul className="list-disc list-inside text-sm text-gray-700 ml-2">
+                          {categorySkills.map((s, idx) => {
+                            // Handle different data structures for skill names:
+                            let skillName = 'Unknown Skill';
+                            let proficiency = 'Unknown';
+
+                            if (s.skillMaster) {
+                              // This is an ApplicantSkill with skillMaster relation
+                              skillName = s.skillMaster.name || 'Unknown Skill';
+                              proficiency = s.proficiency || 'Unknown';
+                            } else {
+                              // This is a GeneralSkill or legacy skill
+                              skillName = s.skill || s.name || s.skillName || 'Unknown Skill';
+                              proficiency = s.proficiency || s.level || 'Unknown';
+                            }
+
+                            return (
+                              <li key={s?.id || idx}>
+                                {safeRender(skillName)} - <span className="text-gray-500">{safeRender(proficiency)}</span>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : <p className="text-gray-500 text-sm">No skills found</p>;
+            })()}
           </section>
 
           <section>

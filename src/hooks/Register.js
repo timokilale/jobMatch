@@ -95,7 +95,7 @@ const useRegister = () => {
     }
   };
 
-  // Handle NIDA input with formatting
+  // Handle NIDA input - digits only, no formatting
   const handleNidaChange = (value) => {
     // Remove all non-digits
     const digitsOnly = value.replace(/\D/g, '');
@@ -103,10 +103,7 @@ const useRegister = () => {
     // Limit to 20 digits
     const limitedDigits = digitsOnly.slice(0, 20);
 
-    // Format with spaces every 4 digits for better readability
-    const formatted = limitedDigits.replace(/(\d{4})(?=\d)/g, '$1 ');
-
-    setFormData({ ...formData, nida: formatted });
+    setFormData({ ...formData, nida: limitedDigits });
 
     // Clear validation error when user starts typing
     if (validationErrors.nida) {

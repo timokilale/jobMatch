@@ -140,7 +140,7 @@ code {
 
   /* Chat widget mobile optimization */
   .chat-widget-mobile {
-    @apply fixed bottom-4 right-4 z-50;
+    @apply fixed bottom-20 right-4 z-40;
   }
 
   @screen sm {
