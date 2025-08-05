@@ -9,49 +9,31 @@ const path = require('path');
 
 class CsvForecastingService {
   constructor() {
-    this.pythonServiceUrl = 'http://localhost:5002';
+    // Point to the correct, manually started Python service
+    this.pythonServiceUrl = 'http://localhost:5001';
     this.pythonServicePath = path.join(__dirname, '../../python_services');
     this.serviceProcess = null;
   }
 
+  // This function is now disabled. We start the service manually.
   async startService() {
-    return new Promise((resolve, reject) => {
-      console.log('Starting CSV-based Python forecasting service...');
-      
-      this.serviceProcess = spawn('python', ['csv_forecasting.py'], {
-        cwd: this.pythonServicePath,
-        stdio: 'pipe',
-      });
-
-      this.serviceProcess.stdout.on('data', (data) => {
-        console.log(`Python Service: ${data}`);
-        if (data.toString().includes('Starting Flask server')) {
-          resolve(true);
-        }
-      });
-
-      this.serviceProcess.stderr.on('data', (data) => {
-        console.error(`Python Service Error: ${data}`);
-      });
-
-      this.serviceProcess.on('close', (code) => {
-        console.log(`CSV forecasting service exited with code ${code}`);
-        this.serviceProcess = null;
-      });
-
-      this.serviceProcess.on('error', (err) => {
-        console.error('Failed to start CSV forecasting service:', err);
-        reject(err);
-      });
-    });
+    console.log('Manual Python forecasting service is in use. Skipping auto-start.');
+    return Promise.resolve(true);
   }
 
-  async getForecast() {
+  async getForecast(durationDays = 365) {
     try {
-      const response = await axios.get(`${this.pythonServiceUrl}/forecast`);
+      // The new service expects a POST request to /trends
+      const response = await axios.post(`${this.pythonServiceUrl}/trends`, {
+        duration_days: durationDays,
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching forecast from CSV service:', error.message);
+      if (error.code === 'ECONNREFUSED') {
+        console.error(`Connection to Python service at ${this.pythonServiceUrl} failed. Please ensure the service is running manually.`);
+        return { error: `Forecasting service is unavailable. Please ensure it is running on port 5001.` };
+      }
       return { error: 'Failed to fetch forecast' };
     }
   }

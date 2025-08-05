@@ -3,17 +3,22 @@ const config = require('../config.js');
 
 class MLForecastingService {
   constructor() {
-    this.baseUrl = config.ML_SERVICE_URL || 'http://localhost:5000';
+    // Point to the correct, manually started Python service on port 5001
+    this.baseUrl = 'http://localhost:5001';
   }
 
-  async getEmploymentTrends(daysBack = 180) {
+  async getEmploymentTrends(daysBack = 365) {
     try {
-      const response = await axios.get(`${this.baseUrl}/forecast/trends`, {
-        params: { days: daysBack }
+      // The new service expects a POST request to /trends with duration_days in the body
+      const response = await axios.post(`${this.baseUrl}/trends`, {
+        duration_days: daysBack,
       });
       return this._formatTrendsResponse(response.data);
     } catch (error) {
       console.error('Error fetching ML employment trends:', error.message);
+      if (error.code === 'ECONNREFUSED') {
+        console.error(`Connection to Python service at ${this.baseUrl} failed. Please ensure the service is running manually.`);
+      }
       throw new Error('Failed to fetch ML employment trends');
     }
   }
@@ -50,7 +55,7 @@ class MLForecastingService {
       name: category,
       trend: data.trend,
       growthRate: data.growth_rate,
-      confidence: data.confidence,
+      confidence: data.forecast_confidence, // Corrected property name
       forecast: data.forecast || []
     }));
 

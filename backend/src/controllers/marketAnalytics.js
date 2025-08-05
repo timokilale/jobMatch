@@ -125,25 +125,30 @@ exports.getJobMarketForecast = async (req, res) => {
     
     // Get ML-based forecast
     const forecastData = await mlForecastingService.getEmploymentTrends(365);
-    
-    // Filter by industry if specified
+
+    // The new service returns category_trends. We'll use that.
+    const trends = forecastData.category_trends || {};
     let industryData = {};
-    if (industry) {
-      industryData = forecastData.industries.find(i => 
-        i.name.toLowerCase() === industry.toLowerCase()
-      ) || {};
+    let industryName = industry;
+
+    if (industryName && trends[industryName]) {
+      industryData = trends[industryName];
     } else {
-      // Get overall trends if no specific industry
-      industryData = forecastData.industries[0] || {};
+      // If no specific industry or industry not found, get the first available one as a default.
+      const firstIndustryName = Object.keys(trends)[0];
+      if (firstIndustryName) {
+        industryData = trends[firstIndustryName];
+        industryName = firstIndustryName;
+      }
     }
     
-    // Format the response
+    // Format the response, mapping snake_case from Python to camelCase for JS
     const response = {
-      industry: industry || 'All Industries',
+      industry: industryName || 'All Industries',
       forecast: (industryData.forecast || []).slice(0, parseInt(months)),
       trend: industryData.trend || 'stable',
-      growthRate: industryData.growthRate || 0,
-      confidence: industryData.confidence || 0.5,
+      growthRate: industryData.growth_rate || 0,
+      confidence: industryData.forecast_confidence || 0.5,
       lastUpdated: new Date().toISOString()
     };
     
