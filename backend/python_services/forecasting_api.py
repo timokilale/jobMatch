@@ -252,6 +252,35 @@ def get_market_insights():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/forecast/cached', methods=['GET'])
+def get_cached_forecasts():
+    """Get pre-computed forecasts from cache"""
+    try:
+        cache_file = os.path.join(os.path.dirname(__file__), 'cached_forecasts.json')
+        
+        if os.path.exists(cache_file):
+            with open(cache_file, 'r') as f:
+                cached_data = json.load(f)
+                
+            return jsonify({
+                'success': True,
+                'data': cached_data,
+                'source': 'cache',
+                'timestamp': datetime.now().isoformat()
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': 'No cached forecasts available',
+                'message': 'Run precompute_forecasts.py to generate forecasts'
+            }), 503
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.route('/forecast/update', methods=['POST'])
 def update_forecasts():
     """Trigger forecast update and store results"""

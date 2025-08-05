@@ -1,5 +1,5 @@
 import pandas as pd
-from flask import Flask, jsonify, request
+from flask import Flask, json, jsonify, request
 from datetime import datetime, timedelta
 import pmdarima as pm
 import numpy as np
@@ -7,6 +7,7 @@ import os
 import logging
 import warnings
 from sklearn.exceptions import ConvergenceWarning
+from datetime import datetime, timedelta
 
 # --- Setup logging and suppress warnings ---
 logging.basicConfig(level=logging.INFO)
@@ -170,23 +171,37 @@ def _analyze_trends_for_column(df, column_name):
 @app.route('/trends', methods=['POST'])
 def analyze_trends():
     """
-    Main endpoint to analyze trends and generate forecasts for job categories and skills.
+    Fast endpoint - returns pre-computed results from cache
     """
-    data = request.get_json()
-    duration = data.get('duration_days', 365) # Default to 1 year of historical data
-
-    df = load_and_prepare_data()
-    if df is None:
-        return jsonify({"error": "Could not load or process data file."}), 500
-
-    # Analyze trends for the 'industry' and 'function' columns, as they exist in the CSV.
-    category_trends = _analyze_trends_for_column(df, 'industry')
-    skill_trends = _analyze_trends_for_column(df, 'function')
-
-    return jsonify({
-        "category_trends": category_trends,
-        "skill_trends": skill_trends
-    })
+    try:
+        # Try to load cached forecasts
+        cache_file = os.path.join(os.path.dirname(__file__), 'cached_forecasts.json')
+        
+        if os.path.exists(cache_file):
+            with open(cache_file, 'r') as f:
+                cached_forecasts = json.load(f)
+                
+            # Check if cache is fresh (less than 24 hours old)
+            last_updated = datetime.fromisoformat(cached_forecasts.get('last_updated', '1970-01-01'))
+            if datetime.now() - last_updated < timedelta(hours=24):
+                return jsonify(cached_forecasts)
+            else:
+                logging.warning("Cache is stale, but returning it anyway")
+                return jsonify(cached_forecasts)
+        else:
+            return jsonify({
+                "error": "Forecasts not available", 
+                "message": "Please run precompute_forecasts.py to generate forecasts",
+                "status": "cache_missing"
+            }), 503
+            
+    except Exception as e:
+        logging.error(f"Error serving cached forecasts: {e}")
+        return jsonify({
+            "error": "Failed to load cached forecasts",
+            "message": str(e),
+            "status": "error"
+        }), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

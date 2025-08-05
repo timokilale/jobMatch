@@ -32,6 +32,15 @@ class PythonForecastingService {
     }
   }
 
+  async getCachedForecasts() {
+    try {
+      return await this.makeRequest('/forecast/cached');
+    } catch (error) {
+      console.error('Error getting cached forecasts:', error);
+      return { error: error.message };
+    }
+  }
+
   async checkHealth() {
     try {
       const response = await axios.get(`${this.pythonServiceUrl}/health`, {

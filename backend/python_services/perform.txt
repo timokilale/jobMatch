@@ -1,0 +1,33 @@
+Current Performance Issues
+
+Real-time ARIMA model training: Fitting pm.auto_arima models for each category/skill during the API call - this is computationally expensive
+Multiple model fits: For top 10 items across 2 columns, we're potentially fitting 20 ARIMA models per request
+Data processing: Loading, parsing, and grouping data happens on every request
+
+Best Engineering Practices
+1. Pre-compute and Cache Approach 
+python# Background job (run periodically, e.g., daily)
+def precompute_forecasts():
+    """Run this as a scheduled job, not during API calls"""
+    df = load_and_prepare_data()
+    forecasts = {
+        "category_trends": _analyze_trends_for_column(df, 'industry'),
+        "skill_trends": _analyze_trends_for_column(df, 'function'),
+        "last_updated": datetime.now().isoformat()
+    }
+    
+    # Store in Redis, database, or file
+    redis_client.set("job_forecasts", json.dumps(forecasts))
+    # Or save to database/file
+
+@app.route('/trends', methods=['POST'])
+def analyze_trends():
+    """Fast endpoint - just return pre-computed results"""
+    try:
+        cached_forecasts = redis_client.get("job_forecasts")
+        if cached_forecasts:
+            return jsonify(json.loads(cached_forecasts))
+        else:
+            return jsonify({"error": "Forecasts not available, try again later"}), 503
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
