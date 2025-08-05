@@ -120,10 +120,23 @@ exports.getSalaryTrends = async (req, res) => {
 
 // Get job market forecast using ML service
 exports.getJobMarketForecast = async (req, res) => {
+  // Ensure we only send one response
+  let responseSent = false;
+  
+  const sendResponse = (data, status = 200) => {
+    if (!responseSent) {
+      responseSent = true;
+      return status === 200 ? res.json(data) : res.status(status).json(data);
+    } else {
+      console.warn('Attempted to send multiple responses');
+    }
+  };
+
+  const { industry, months = 6 } = req.query;
+  
   try {
-    const { industry, months = 6 } = req.query;
-    
     // Get ML-based forecast
+    console.log('Fetching ML-based forecast...');
     const forecastData = await mlForecastingService.getEmploymentTrends(365);
 
     // The new service returns category_trends. We'll use that.
@@ -142,6 +155,10 @@ exports.getJobMarketForecast = async (req, res) => {
       }
     }
     
+    if (!industryData || Object.keys(industryData).length === 0) {
+      throw new Error('No industry data available for forecast');
+    }
+    
     // Format the response, mapping snake_case from Python to camelCase for JS
     const response = {
       industry: industryName || 'All Industries',
@@ -152,14 +169,14 @@ exports.getJobMarketForecast = async (req, res) => {
       lastUpdated: new Date().toISOString()
     };
     
-    res.json(response);
+    return sendResponse(response);
+
   } catch (error) {
-    console.error('Error generating ML forecast:', error);
+    console.error('Error generating ML forecast:', error.message);
     
     // Fallback to simple forecast if ML service is unavailable
     try {
       console.log('Falling back to simple forecast...');
-      const { industry, months = 6 } = req.query;
       
       const historicalData = await prisma.marketTrend.findMany({
         where: {
@@ -170,20 +187,26 @@ exports.getJobMarketForecast = async (req, res) => {
         take: 12
       });
       
+      if (!historicalData || historicalData.length === 0) {
+        throw new Error('No historical data available for fallback forecast');
+      }
+      
       const forecast = generateSimpleForecast(historicalData, parseInt(months));
       
-      res.json({
+      return sendResponse({
         historical: historicalData,
         forecast: forecast,
         industry: industry || 'All Industries',
         fallback: true
       });
+      
     } catch (fallbackError) {
       console.error('Fallback forecast failed:', fallbackError);
-      res.status(500).json({ 
+      return sendResponse({
         error: 'Failed to generate forecast',
-        details: error.message 
-      });
+        details: fallbackError.message,
+        fallback: true
+      }, 500);
     }
   }
 };

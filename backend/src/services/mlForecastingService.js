@@ -9,9 +9,15 @@ class MLForecastingService {
 
   async getEmploymentTrends(daysBack = 365) {
     try {
-      // The new service expects a POST request to /trends with duration_days in the body
-      const response = await axios.post(`${this.baseUrl}/trends`, {
-        duration_days: daysBack,
+      // Ensure we're sending a POST request with the correct content type
+      const response = await axios({
+        method: 'post',
+        url: `${this.baseUrl}/trends`,
+        data: { duration_days: daysBack },
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        timeout: 120000 // 2 minutes
       });
       return this._formatTrendsResponse(response.data);
     } catch (error) {
