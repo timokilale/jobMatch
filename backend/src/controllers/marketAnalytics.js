@@ -120,38 +120,38 @@ exports.getSalaryTrends = async (req, res) => {
 
 // Get job market forecast using ML service
 exports.getJobMarketForecast = async (req, res) => {
-  // Ensure we only send one response
   let responseSent = false;
   
   const sendResponse = (data, status = 200) => {
     if (!responseSent) {
       responseSent = true;
       return status === 200 ? res.json(data) : res.status(status).json(data);
-    } else {
-      console.warn('Attempted to send multiple responses');
     }
   };
 
   const { industry, months = 6 } = req.query;
   
   try {
-    // Get ML-based forecast
-    console.log('Fetching ML-based forecast...');
+    console.log('🔍 Fetching ML-based forecast...');
     const forecastData = await mlForecastingService.getEmploymentTrends(365);
 
-    // The new service returns category_trends. We'll use that.
+    console.log('✅ ML forecast data received:', Object.keys(forecastData));
+    
+    // Use the original category_trends format
     const trends = forecastData.category_trends || {};
     let industryData = {};
     let industryName = industry;
 
+    // Find the requested industry or use the first available
     if (industryName && trends[industryName]) {
       industryData = trends[industryName];
+      console.log(`✅ Found data for industry: ${industryName}`);
     } else {
-      // If no specific industry or industry not found, get the first available one as a default.
-      const firstIndustryName = Object.keys(trends)[0];
-      if (firstIndustryName) {
-        industryData = trends[firstIndustryName];
-        industryName = firstIndustryName;
+      const availableIndustries = Object.keys(trends);
+      if (availableIndustries.length > 0) {
+        industryName = availableIndustries[0];
+        industryData = trends[industryName];
+        console.log(`✅ Using default industry: ${industryName}`);
       }
     }
     
@@ -159,24 +159,29 @@ exports.getJobMarketForecast = async (req, res) => {
       throw new Error('No industry data available for forecast');
     }
     
-    // Format the response, mapping snake_case from Python to camelCase for JS
+    // Format the response with proper error handling
     const response = {
       industry: industryName || 'All Industries',
-      forecast: (industryData.forecast || []).slice(0, parseInt(months)),
+      forecast: Array.isArray(industryData.forecast) 
+        ? industryData.forecast.slice(0, parseInt(months))
+        : [],
       trend: industryData.trend || 'stable',
-      growthRate: industryData.growth_rate || 0,
-      confidence: industryData.forecast_confidence || 0.5,
-      lastUpdated: new Date().toISOString()
+      growthRate: parseFloat(industryData.growth_rate) || 0,
+      confidence: parseFloat(industryData.forecast_confidence) || 0.5,
+      lastUpdated: forecastData.last_updated || new Date().toISOString(),
+      dataPeriod: forecastData.data_period || 'Last 365 days',
+      success: true
     };
     
+    console.log('✅ Sending formatted response to frontend');
     return sendResponse(response);
 
   } catch (error) {
-    console.error('Error generating ML forecast:', error.message);
+    console.error('❌ Error generating ML forecast:', error.message);
     
-    // Fallback to simple forecast if ML service is unavailable
+    // Fallback to simple forecast
     try {
-      console.log('Falling back to simple forecast...');
+      console.log('🔄 Falling back to simple forecast...');
       
       const historicalData = await prisma.marketTrend.findMany({
         where: {
@@ -197,15 +202,17 @@ exports.getJobMarketForecast = async (req, res) => {
         historical: historicalData,
         forecast: forecast,
         industry: industry || 'All Industries',
-        fallback: true
+        fallback: true,
+        success: true
       });
       
     } catch (fallbackError) {
-      console.error('Fallback forecast failed:', fallbackError);
+      console.error('❌ Fallback forecast failed:', fallbackError);
       return sendResponse({
         error: 'Failed to generate forecast',
         details: fallbackError.message,
-        fallback: true
+        fallback: true,
+        success: false
       }, 500);
     }
   }

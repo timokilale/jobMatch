@@ -3,13 +3,13 @@ const config = require('../config.js');
 
 class MLForecastingService {
   constructor() {
-    // Point to the correct, manually started Python service on port 5001
-    this.baseUrl = 'http://localhost:5001';
+    this.baseUrl = 'http://127.0.0.1:5001';
   }
 
   async getEmploymentTrends(daysBack = 365) {
     try {
-      // Ensure we're sending a POST request with the correct content type
+      console.log(`🔍 Fetching ML employment trends from ${this.baseUrl}/trends`);
+      
       const response = await axios({
         method: 'post',
         url: `${this.baseUrl}/trends`,
@@ -17,22 +17,37 @@ class MLForecastingService {
         headers: {
           'Content-Type': 'application/json'
         },
-        timeout: 120000 // 2 minutes
+        timeout: 30000 // 30 seconds
       });
-      return this._formatTrendsResponse(response.data);
+
+      console.log('✅ Python service response received');
+      
+      // Return the original format that the controller expects
+      return {
+        category_trends: response.data.category_trends || {},
+        skill_trends: response.data.skill_trends || {},
+        last_updated: response.data.last_updated,
+        data_period: response.data.data_period
+      };
+      
     } catch (error) {
-      console.error('Error fetching ML employment trends:', error.message);
+      console.error('❌ Error fetching ML employment trends:', error.message);
+      
       if (error.code === 'ECONNREFUSED') {
-        console.error(`Connection to Python service at ${this.baseUrl} failed. Please ensure the service is running manually.`);
+        console.error(`❌ Connection to Python service at ${this.baseUrl} failed`);
+      } else if (error.response) {
+        console.error(`❌ Python service error: ${error.response.status} - ${error.response.data}`);
       }
-      throw new Error('Failed to fetch ML employment trends');
+      
+      throw new Error(`Failed to fetch ML employment trends: ${error.message}`);
     }
   }
 
   async getSkillForecasts(daysBack = 90) {
     try {
       const response = await axios.get(`${this.baseUrl}/forecast/skills`, {
-        params: { days: daysBack }
+        params: { days: daysBack },
+        timeout: 30000
       });
       return response.data;
     } catch (error) {
@@ -43,43 +58,14 @@ class MLForecastingService {
 
   async getMarketInsights() {
     try {
-      const response = await axios.get(`${this.baseUrl}/insights`);
+      const response = await axios.get(`${this.baseUrl}/insights`, {
+        timeout: 30000
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching ML market insights:', error.message);
       throw new Error('Failed to fetch ML market insights');
     }
-  }
-
-  _formatTrendsResponse(mlData) {
-    if (!mlData || !mlData.category_trends) {
-      return { industries: [], skills: [] };
-    }
-
-    // Format industry trends
-    const industries = Object.entries(mlData.category_trends).map(([category, data]) => ({
-      name: category,
-      trend: data.trend,
-      growthRate: data.growth_rate,
-      confidence: data.forecast_confidence, // Corrected property name
-      forecast: data.forecast || []
-    }));
-
-    // Format skill trends
-    const skills = [];
-    if (mlData.skill_trends) {
-      Object.entries(mlData.skill_trends).forEach(([skill, data]) => {
-        skills.push({
-          name: skill,
-          category: data.category,
-          demandScore: data.demand_score,
-          growth: data.growth_rate,
-          forecast: data.forecast || []
-        });
-      });
-    }
-
-    return { industries, skills };
   }
 }
 

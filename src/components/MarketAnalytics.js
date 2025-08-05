@@ -39,31 +39,48 @@ const MarketAnalytics = () => {
       setForecastingLoading(true);
       setForecastingError(null);
       
-      // Fetch ML-based forecast
+      console.log('🔍 Fetching forecast data from /market/forecast');
+      
       const forecastResponse = await api.get('/market/forecast', {
         params: { months: 6 }
       });
       
-      // If we have a fallback response (simple forecast), show a warning
+      console.log('✅ Forecast response received:', forecastResponse.data);
+      
+      // Check if it's a fallback response
       if (forecastResponse.data.fallback) {
-        console.warn('Using fallback forecast data');
+        console.warn('⚠️ Using fallback forecast data');
         setForecastingError('ML service unavailable. Using simplified forecast.');
+      }
+      
+      // Validate response data
+      if (!forecastResponse.data.success) {
+        throw new Error(forecastResponse.data.error || 'Invalid response from server');
       }
       
       setMlForecast(forecastResponse.data);
       
-      // Update trend summary for the overview tab
+      // Update trend summary with proper validation
       setTrendSummary({
         trend: forecastResponse.data.trend || 'stable',
-        growthRate: forecastResponse.data.growthRate || 0,
-        confidence: forecastResponse.data.confidence || 0.5,
+        growthRate: parseFloat(forecastResponse.data.growthRate) || 0,
+        confidence: parseFloat(forecastResponse.data.confidence) || 0.5,
         lastUpdated: forecastResponse.data.lastUpdated || new Date().toISOString()
       });
       
       return forecastResponse.data;
     } catch (error) {
-      console.error('Error fetching forecast data:', error);
-      setForecastingError('Failed to load forecast data. Please try again later.');
+      console.error('❌ Error fetching forecast data:', error);
+      
+      // Set appropriate error message
+      if (error.response?.status === 503) {
+        setForecastingError('Forecasting service temporarily unavailable. Please try again later.');
+      } else if (error.response?.data?.error) {
+        setForecastingError(`Forecast error: ${error.response.data.error}`);
+      } else {
+        setForecastingError('Failed to load forecast data. Please try again later.');
+      }
+      
       return null;
     } finally {
       setForecastingLoading(false);
