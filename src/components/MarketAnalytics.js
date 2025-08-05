@@ -18,6 +18,8 @@ const MarketAnalytics = () => {
   const [forecastingLoading, setForecastingLoading] = useState(false);
   const [forecastingError, setForecastingError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const [mlForecast, setMlForecast] = useState(null);
+  const [selectedForecastIndustry, setSelectedForecastIndustry] = useState('All Industries');
 
   const { user } = useSelector((state) => state.auth);
 
@@ -25,14 +27,47 @@ const MarketAnalytics = () => {
     fetchMarketData();
     fetchForecastingData();
   }, []);
+  
+  // Handle industry filter change for forecasts
+  const handleIndustryChange = (e) => {
+    setSelectedForecastIndustry(e.target.value);
+    fetchForecastingData({ industry: e.target.value });
+  };
 
   const fetchForecastingData = async () => {
-    // Forecasting data disabled - using only real market data
-    console.log('🚫 Forecasting data disabled - Market Insights uses only real job posting data');
-    setForecastingLoading(false);
-    setForecastingError(null);
-    setTrendSummary(null);
-    setForecastingData(null);
+    try {
+      setForecastingLoading(true);
+      setForecastingError(null);
+      
+      // Fetch ML-based forecast
+      const forecastResponse = await api.get('/market/forecast', {
+        params: { months: 6 }
+      });
+      
+      // If we have a fallback response (simple forecast), show a warning
+      if (forecastResponse.data.fallback) {
+        console.warn('Using fallback forecast data');
+        setForecastingError('ML service unavailable. Using simplified forecast.');
+      }
+      
+      setMlForecast(forecastResponse.data);
+      
+      // Update trend summary for the overview tab
+      setTrendSummary({
+        trend: forecastResponse.data.trend || 'stable',
+        growthRate: forecastResponse.data.growthRate || 0,
+        confidence: forecastResponse.data.confidence || 0.5,
+        lastUpdated: forecastResponse.data.lastUpdated || new Date().toISOString()
+      });
+      
+      return forecastResponse.data;
+    } catch (error) {
+      console.error('Error fetching forecast data:', error);
+      setForecastingError('Failed to load forecast data. Please try again later.');
+      return null;
+    } finally {
+      setForecastingLoading(false);
+    }
   };
 
   const fetchMarketData = async () => {
@@ -382,297 +417,146 @@ const MarketAnalytics = () => {
             )}
 
             {activeTab === 'forecasts' && (
-              <div className="space-y-4 sm:space-y-6">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-4">
-                  <i className="fas fa-crystal-ball mr-2 text-purple-600"></i>
-                  <span className="hidden sm:inline">Market Forecasts & Predictions</span>
-                  <span className="sm:hidden">Forecasts</span>
-                </h2>
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                  <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-4">
+                    <i className="fas fa-crystal-ball mr-2 text-purple-600"></i>
+                    <span className="hidden sm:inline">Market Forecasts & Predictions</span>
+                    <span className="sm:hidden">Forecasts</span>
+                  </h2>
+                  <div className="mb-3 sm:mb-0">
+                    <select
+                      value={selectedForecastIndustry}
+                      onChange={handleIndustryChange}
+                      className="text-sm border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    >
+                      <option value="All Industries">All Industries</option>
+                      {mlForecast?.industries?.map((industry, i) => (
+                        <option key={i} value={industry.name}>
+                          {industry.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
 
-                {skillDemand?.skills && skillDemand.skills.length > 0 ? (
-                  <>
-                    {/* Real Market Summary Cards */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                      <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-3 sm:p-6 border-l-4 border-blue-500">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1 min-w-0 pr-2">
-                            <p className="text-xs sm:text-sm text-blue-600 font-medium break-words">Market Health</p>
-                            <p className="text-lg sm:text-2xl font-bold text-blue-800 break-words">
-                              {marketHealth?.status || (skillDemand.metadata?.totalJobs > 5 ? 'Good' : 'Fair')}
-                            </p>
-                            <p className="text-xs text-blue-600 mt-1 break-words">Based on real data</p>
-                          </div>
-                          <i className="fas fa-chart-line text-xl sm:text-3xl text-blue-500 flex-shrink-0"></i>
-                        </div>
+                {forecastingLoading ? (
+                  <div className="text-center py-12">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading forecast data...</p>
+                  </div>
+                ) : forecastingError ? (
+                  <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <i className="fas fa-exclamation-triangle text-yellow-400"></i>
                       </div>
-
-                      <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-3 sm:p-6 border-l-4 border-green-500">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1 min-w-0 pr-2">
-                            <p className="text-xs sm:text-sm text-green-600 font-medium break-words">Top Category</p>
-                            <p className="text-sm sm:text-lg font-bold text-green-800 break-words">
-                              {skillDemand.skills[0]?.category || 'Technical'}
-                            </p>
-                            <p className="text-xs text-green-600 mt-1 break-words">Most in demand</p>
-                          </div>
-                          <i className="fas fa-crown text-xl sm:text-3xl text-green-500 flex-shrink-0"></i>
-                        </div>
+                      <div className="ml-3">
+                        <p className="text-sm text-yellow-700">
+                          {forecastingError}
+                        </p>
                       </div>
-
-                      <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-3 sm:p-6 border-l-4 border-purple-500">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1 min-w-0 pr-2">
-                            <p className="text-xs sm:text-sm text-purple-600 font-medium break-words">Top Skill</p>
-                            <p className="text-sm sm:text-lg font-bold text-purple-800 break-words">
-                              {skillDemand.skills[0]?.skillName || skillDemand.skills[0]?.skill || 'No Data'}
-                            </p>
-                            <p className="text-xs text-purple-600 mt-1 break-words">Most in demand</p>
+                    </div>
+                  </div>
+                ) : mlForecast ? (
+                  <div className="space-y-6">
+                    {/* ML Forecast Summary Card */}
+                    <div className="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+                      <div className="px-4 py-5 sm:p-6">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                          {mlForecast.industry} Forecast Summary
+                        </h3>
+                        <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+                          <div className="px-4 py-5 bg-gray-50 rounded-lg overflow-hidden sm:p-6">
+                            <dt className="text-sm font-medium text-gray-500 truncate">
+                              Market Trend
+                            </dt>
+                            <dd className="mt-1 text-3xl font-semibold text-gray-900 capitalize">
+                              {mlForecast.trend}
+                            </dd>
                           </div>
-                          <i className="fas fa-fire text-xl sm:text-3xl text-purple-500 flex-shrink-0"></i>
-                        </div>
-                      </div>
-
-                      <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-3 sm:p-6 border-l-4 border-orange-500">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1 min-w-0 pr-2">
-                            <p className="text-xs sm:text-sm text-orange-600 font-medium break-words">Active Jobs</p>
-                            <p className="text-lg sm:text-2xl font-bold text-orange-800 break-words">
-                              {skillDemand.metadata?.totalJobs || marketData?.overview?.activeJobs || 0}
-                            </p>
-                            <p className="text-xs text-orange-600 mt-1 break-words">Real job postings</p>
+                          <div className="px-4 py-5 bg-gray-50 rounded-lg overflow-hidden sm:p-6">
+                            <dt className="text-sm font-medium text-gray-500 truncate">
+                              Growth Rate
+                            </dt>
+                            <dd className={`mt-1 text-3xl font-semibold ${
+                              mlForecast.growthRate > 0 ? 'text-green-600' : 'text-red-600'
+                            }`}>
+                              {mlForecast.growthRate > 0 ? '+' : ''}{mlForecast.growthRate}%
+                            </dd>
                           </div>
-                          <i className="fas fa-briefcase text-xl sm:text-3xl text-orange-500 flex-shrink-0"></i>
+                          <div className="px-4 py-5 bg-gray-50 rounded-lg overflow-hidden sm:p-6">
+                            <dt className="text-sm font-medium text-gray-500 truncate">
+                              Forecast Confidence
+                            </dt>
+                            <dd className="mt-1 text-3xl font-semibold text-blue-600">
+                              {Math.round(mlForecast.confidence * 100)}%
+                            </dd>
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Real Market Analysis */}
-                    {skillDemand?.skills && skillDemand.skills.length > 0 && (
-                      <div className="bg-white rounded-lg border p-4 sm:p-6">
-                        <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">
-                          <i className="fas fa-industry mr-2 text-blue-600"></i>
-                          <span className="hidden sm:inline">Real Market Analysis - Current Demand</span>
-                          <span className="sm:hidden">Market Analysis</span>
+                    {/* Forecast Data Table */}
+                    <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+                      <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                          Forecasted Job Market Trends
                         </h3>
-                        <div className="space-y-3 sm:space-y-4">
-                          {skillDemand.skills.slice(0, 6).map((skill, index) => {
-                            // Get category-specific insights
-                            const getCategoryInsight = (category, demand) => {
-                              const insights = {
-                                'Technical': {
-                                  icon: '💻',
-                                  description: 'Programming, software development, and technical skills',
-                                  trend: demand > 3 ? 'High demand for technical specialists' : 'Steady demand for technical skills'
-                                },
-                                'Healthcare': {
-                                  icon: '🏥',
-                                  description: 'Medical, nursing, and healthcare support positions',
-                                  trend: 'Growing need for healthcare workers and medical professionals'
-                                },
-                                'Soft': {
-                                  icon: '🤝',
-                                  description: 'Communication, leadership, and interpersonal skills',
-                                  trend: 'Essential skills valued across all industries'
-                                },
-                                'Language': {
-                                  icon: '🗣️',
-                                  description: 'Communication and language proficiency skills',
-                                  trend: 'Important for global business and communication'
-                                },
-                                'Industry-Specific': {
-                                  icon: '🏭',
-                                  description: 'Specialized skills for specific industries',
-                                  trend: 'Targeted expertise for specialized roles'
-                                }
-                              };
-                              return insights[category] || {
-                                icon: '💼',
-                                description: 'Professional skills and expertise',
-                                trend: 'Market demand for specialized skills'
-                              };
-                            };
-
-                            const categoryInfo = getCategoryInsight(skill.category, skill.demand || skill.jobCount);
-
-                            return (
-                              <div key={index} className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-4 sm:p-5 border-l-4 border-blue-500">
-                                <div className="flex items-start justify-between mb-3">
-                                  <div className="flex items-start flex-1 min-w-0">
-                                    <span className="text-xl sm:text-2xl mr-2 sm:mr-3 flex-shrink-0">{categoryInfo.icon}</span>
-                                    <div className="min-w-0 flex-1 pr-2">
-                                      <h4 className="font-semibold text-gray-800 text-base sm:text-lg break-words">{skill.skillName || skill.skill}</h4>
-                                      <p className="text-xs sm:text-sm text-gray-600 break-words leading-relaxed">{categoryInfo.description}</p>
-                                    </div>
-                                  </div>
-                                  <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium flex-shrink-0 whitespace-nowrap ${
-                                    skill.trend === 'increasing'
-                                      ? 'bg-green-100 text-green-800'
-                                      : 'bg-blue-100 text-blue-800'
+                        <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                          Predicted job market changes for the next {mlForecast.forecast?.length || 6} months
+                        </p>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Period
+                              </th>
+                              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Jobs
+                              </th>
+                              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Change
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200">
+                            {mlForecast.forecast?.map((item, index) => (
+                              <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                  {item.period || `Month ${index + 1}`}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  {item.value?.toLocaleString() || 'N/A'}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                    item.change >= 0 
+                                      ? 'bg-green-100 text-green-800' 
+                                      : 'bg-red-100 text-red-800'
                                   }`}>
-                                    <span className="hidden sm:inline">
-                                      {skill.trend === 'increasing' ? '📈 Growing' : '📊 Stable'}
-                                    </span>
-                                    <span className="sm:hidden">
-                                      {skill.trend === 'increasing' ? '📈' : '📊'}
-                                    </span>
+                                    {item.change >= 0 ? '↑' : '↓'} {Math.abs(item.change)}%
                                   </span>
-                                </div>
-
-                                <div className="grid grid-cols-3 gap-2 sm:gap-4 text-xs sm:text-sm mb-3">
-                                  <div className="text-center">
-                                    <p className="text-gray-600 break-words">Job Mentions</p>
-                                    <p className="font-bold text-lg sm:text-xl text-gray-800 break-words">{skill.demand || skill.jobCount}</p>
-                                  </div>
-                                  <div className="text-center">
-                                    <p className="text-gray-600 break-words">Demand Score</p>
-                                    <p className="font-bold text-lg sm:text-xl text-blue-600 break-words">{skill.demandScore?.toFixed(1) || 0}%</p>
-                                  </div>
-                                  <div className="text-center">
-                                    <p className="text-gray-600 break-words">Category</p>
-                                    <p className="font-bold text-sm sm:text-base text-purple-600 break-words">{skill.category}</p>
-                                  </div>
-                                </div>
-
-                                <div className="bg-white rounded-lg p-3 mt-3">
-                                  <p className="text-xs sm:text-sm text-gray-700 font-medium mb-1 break-words">Market Insight:</p>
-                                  <p className="text-xs sm:text-sm text-gray-600 break-words leading-relaxed">{categoryInfo.trend}</p>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
-                    )}
-
-                    {/* Real Skills Analysis */}
-                    {skillDemand?.skills && skillDemand.skills.length > 0 && (
-                      <div className="bg-white rounded-lg border p-4 sm:p-6">
-                        <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">
-                          <i className="fas fa-brain mr-2 text-purple-600"></i>
-                          <span className="hidden sm:inline">Skills in High Demand - Real Market Data</span>
-                          <span className="sm:hidden">Skills in Demand</span>
-                        </h3>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                          <div>
-                            <h4 className="font-medium text-gray-700 mb-3 text-sm sm:text-base">🔥 Top Skills from Real Jobs</h4>
-                            <div className="space-y-2 sm:space-y-3">
-                              {skillDemand.skills.slice(0, 8).map((skill, index) => {
-                                // Get skill-specific insights from real data
-                                const getSkillInsight = (skillName, category, demand) => {
-                                  const categoryIcons = {
-                                    'Technical': '💻',
-                                    'Soft': '🤝',
-                                    'Language': '🗣️',
-                                    'Industry-Specific': '🏭'
-                                  };
-
-                                  return {
-                                    icon: categoryIcons[category] || '💼',
-                                    trend: `${category} skill in high demand`,
-                                    growth: demand > 3 ? 'High' : demand > 1 ? 'Medium' : 'Low'
-                                  };
-                                };
-
-                                const skillInfo = getSkillInsight(skill.skillName || skill.skill, skill.category, skill.demand || skill.jobCount);
-
-                                return (
-                                  <div key={index} className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-3 sm:p-4 border-l-4 border-purple-400">
-                                    <div className="flex items-start justify-between mb-2">
-                                      <div className="flex items-start flex-1 min-w-0">
-                                        <span className="text-base sm:text-lg mr-2 flex-shrink-0">{skillInfo.icon}</span>
-                                        <div className="min-w-0 flex-1 pr-2">
-                                          <p className="font-semibold text-gray-800 text-sm sm:text-base break-words">{skill.skillName || skill.skill}</p>
-                                          <p className="text-xs text-gray-600 break-words">{skill.category}</p>
-                                        </div>
-                                      </div>
-                                      <div className="text-right flex-shrink-0">
-                                        <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
-                                          skillInfo.growth === 'High' ? 'bg-red-100 text-red-800' :
-                                          skillInfo.growth === 'Medium' ? 'bg-orange-100 text-orange-800' :
-                                          'bg-yellow-100 text-yellow-800'
-                                        }`}>
-                                          <span className="hidden sm:inline">{skillInfo.growth} Demand</span>
-                                          <span className="sm:hidden">{skillInfo.growth}</span>
-                                        </span>
-                                      </div>
-                                    </div>
-                                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start text-xs sm:text-sm space-y-2 sm:space-y-0">
-                                      <p className="text-gray-600 flex-1 break-words leading-relaxed pr-2">{skillInfo.trend}</p>
-                                      <div className="text-right flex-shrink-0">
-                                        <p className="font-bold text-purple-600 whitespace-nowrap">{skill.demand || skill.jobCount} mentions</p>
-                                        <p className="text-xs text-gray-500 whitespace-nowrap">{skill.demandScore?.toFixed(1) || 0}% of jobs</p>
-                                      </div>
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-
-                          <div>
-                            <h4 className="font-medium text-gray-700 mb-3 text-sm sm:text-base">📊 Real Market Intelligence</h4>
-                            <div className="space-y-3 sm:space-y-4">
-                             {/* <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-3 sm:p-4">
-                                <div className="flex items-center mb-2">
-                                  <i className="fas fa-database text-blue-600 mr-2"></i>
-                                  <span className="font-medium text-blue-800 text-sm sm:text-base">Data Source</span>
-                                </div>
-                                <p className="text-xs sm:text-sm text-blue-700">
-                                  All insights based on <strong>{skillDemand.metadata?.totalJobs || 0} real job postings</strong> with
-                                  <strong> {skillDemand.metadata?.totalRequirements || 0} skill requirements</strong> from actual employers.
-                                </p>
-                              </div>*/}
-                              <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-3 sm:p-4">
-                                <div className="flex items-center mb-2">
-                                  <i className="fas fa-star text-green-600 mr-2"></i>
-                                  <span className="font-medium text-green-800 text-sm sm:text-base">Top Skill</span>
-                                </div>
-                                <p className="text-xs sm:text-sm text-green-700">
-                                  <strong>{skillDemand.skills[0]?.skillName || skillDemand.skills[0]?.skill || 'No data'}</strong> is the most in-demand skill with
-                                  <strong> {skillDemand.skills[0]?.demand || skillDemand.skills[0]?.jobCount || 0} mentions</strong> across job postings.
-                                </p>
-                              </div>
-
-                              <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-3 sm:p-4">
-                                <div className="flex items-center mb-2">
-                                  <i className="fas fa-chart-line text-purple-600 mr-2"></i>
-                                  <span className="font-medium text-purple-800 text-sm sm:text-base">Market Health</span>
-                                </div>
-                                <p className="text-xs sm:text-sm text-purple-700">
-                                  Market shows <strong>{marketHealth?.status || 'Good'}</strong> health with
-                                  <strong> {skillDemand.skills?.length || 0} unique skills</strong> in demand across various categories.
-                                </p>
-                              </div>
-
-                              {/*<div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-3 sm:p-4">
-                                <div className="flex items-center mb-2">
-                                  <i className="fas fa-lightbulb text-orange-600 mr-2"></i>
-                                  <span className="font-medium text-orange-800 text-sm sm:text-base">Real Insights</span>
-                                </div>
-                                <p className="text-xs sm:text-sm text-orange-700">
-                                  No mock data - all statistics reflect actual employer requirements and
-                                  <strong> real market demand</strong> from {skillDemand.metadata?.dataSource || 'job postings'}.
-                                </p>
-                              </div>*/}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </>
+                    </div>
+                  </div>
                 ) : (
-                  <div className="text-center py-8 sm:py-12 px-4">
-                    <i className="fas fa-database text-4xl sm:text-6xl text-gray-300 mb-4"></i>
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-600 mb-2">No Real Market Data Available</h3>
-                    <p className="text-sm sm:text-base text-gray-500 mb-6 max-w-md mx-auto">
-                      Market insights require active job postings with skill requirements. Add jobs to see real market analysis.
-                    </p>
+                  <div className="text-center py-12">
+                    <i className="fas fa-chart-line text-4xl text-gray-300 mb-4"></i>
+                    <p className="text-gray-500">No forecast data available</p>
                     <button
-                      onClick={fetchMarketData}
-                      className="w-full sm:w-auto bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors text-sm sm:text-base"
+                      onClick={fetchForecastingData}
+                      className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                     >
                       <i className="fas fa-sync-alt mr-2"></i>
-                      Refresh Market Data
+                      Refresh Forecast
                     </button>
                   </div>
                 )}

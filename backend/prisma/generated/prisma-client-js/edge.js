@@ -674,7 +674,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\MSA WIN10 G\\Desktop\\jobMatch\\backend\\prisma\\generated\\prisma-client-js",
+      "value": "D:\\jobMatch\\backend\\prisma\\generated\\prisma-client-js",
       "fromEnvVar": null
     },
     "config": {
@@ -688,7 +688,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\MSA WIN10 G\\Desktop\\jobMatch\\backend\\prisma\\schema.prisma",
+    "sourceFilePath": "D:\\jobMatch\\backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

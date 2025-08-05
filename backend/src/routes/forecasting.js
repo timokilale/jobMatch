@@ -6,6 +6,7 @@
 const express = require('express');
 const router = express.Router();
 const { getPythonForecastingService } = require('../services/pythonForecastingService');
+const csvForecastingService = require('../services/csvForecastingService');
 
 let prisma = null;
 let forecastingService = null;
@@ -418,6 +419,29 @@ router.get('/categories', async (req, res) => {
       success: false,
       error: 'Failed to fetch categories',
       details: error.message
+    });
+  }
+});
+
+// Get forecast from CSV-trained model
+router.get('/csv-forecast', async (req, res) => {
+  try {
+    const forecast = await csvForecastingService.getForecast();
+    if (forecast.error) {
+      return res.status(503).json({
+        success: false,
+        error: 'CSV forecasting service unavailable',
+      });
+    }
+    res.json({
+      success: true,
+      data: forecast,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch CSV forecast',
+      details: error.message,
     });
   }
 });

@@ -1,4 +1,5 @@
 const MarketAnalyticsService = require('../services/marketAnalytics');
+const mlForecastingService = require('../services/mlForecastingService');
 const prisma = require('../prisma');
 
 const marketService = new MarketAnalyticsService();
@@ -117,32 +118,68 @@ exports.getSalaryTrends = async (req, res) => {
   }
 };
 
-// Get job market forecast
+// Get job market forecast using ML service
 exports.getJobMarketForecast = async (req, res) => {
   try {
     const { industry, months = 6 } = req.query;
     
-    // Get historical data
-    const historicalData = await prisma.marketTrend.findMany({
-      where: {
-        industry: industry || undefined,
-        metric: 'job_postings'
-      },
-      orderBy: { date: 'desc' },
-      take: 12
-    });
+    // Get ML-based forecast
+    const forecastData = await mlForecastingService.getEmploymentTrends(365);
     
-    // Simple forecasting logic (in production, use more sophisticated ML models)
-    const forecast = generateSimpleForecast(historicalData, parseInt(months));
+    // Filter by industry if specified
+    let industryData = {};
+    if (industry) {
+      industryData = forecastData.industries.find(i => 
+        i.name.toLowerCase() === industry.toLowerCase()
+      ) || {};
+    } else {
+      // Get overall trends if no specific industry
+      industryData = forecastData.industries[0] || {};
+    }
     
-    res.json({
-      historical: historicalData,
-      forecast: forecast,
-      industry: industry || 'All Industries'
-    });
+    // Format the response
+    const response = {
+      industry: industry || 'All Industries',
+      forecast: (industryData.forecast || []).slice(0, parseInt(months)),
+      trend: industryData.trend || 'stable',
+      growthRate: industryData.growthRate || 0,
+      confidence: industryData.confidence || 0.5,
+      lastUpdated: new Date().toISOString()
+    };
+    
+    res.json(response);
   } catch (error) {
-    console.error('Error generating forecast:', error);
-    res.status(500).json({ error: 'Failed to generate forecast' });
+    console.error('Error generating ML forecast:', error);
+    
+    // Fallback to simple forecast if ML service is unavailable
+    try {
+      console.log('Falling back to simple forecast...');
+      const { industry, months = 6 } = req.query;
+      
+      const historicalData = await prisma.marketTrend.findMany({
+        where: {
+          industry: industry || undefined,
+          metric: 'job_postings'
+        },
+        orderBy: { date: 'desc' },
+        take: 12
+      });
+      
+      const forecast = generateSimpleForecast(historicalData, parseInt(months));
+      
+      res.json({
+        historical: historicalData,
+        forecast: forecast,
+        industry: industry || 'All Industries',
+        fallback: true
+      });
+    } catch (fallbackError) {
+      console.error('Fallback forecast failed:', fallbackError);
+      res.status(500).json({ 
+        error: 'Failed to generate forecast',
+        details: error.message 
+      });
+    }
   }
 };
 

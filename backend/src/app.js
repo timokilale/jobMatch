@@ -8,6 +8,7 @@ const routes = require('./routes');
 const cookieParser = require('cookie-parser');
 const qualificationRouter = require('./routes/qualifications');
 const ChatService = require('./services/chatService');
+const csvForecastingService = require('./services/csvForecastingService');
 
 const app = express();
 const server = http.createServer(app);
@@ -96,5 +97,10 @@ server.listen(PORT, () => {
   prisma.$connect()
     .then(() => console.log('Connected to database'))
     .catch(err => console.error('Database connection error:', err));
+  
+  // Start the CSV forecasting service
+  csvForecastingService.startService().catch(err => {
+    console.error('Failed to start CSV forecasting service:', err);
+  });
 });
 
