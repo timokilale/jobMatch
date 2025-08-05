@@ -15,7 +15,7 @@ import numpy as np
 # Add current directory to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from csv_forecasting_service import load_and_prepare_data, _analyze_trends_for_column
+from csv_forecasting_service import load_and_prepare_data, _analyze_trends_for_column_full
 
 # Configure logging
 logging.basicConfig(
@@ -40,14 +40,20 @@ def precompute_forecasts():
             
         logging.info(f"Loaded {len(df)} records for analysis")
         
-        # Generate forecasts
+        # Generate forecasts using FULL analysis with enhanced error handling
+        logging.info("Starting industry analysis...")
+        category_trends = _analyze_trends_for_column_full(df, 'industry')
+        
+        logging.info("Starting skill analysis...")
+        skill_trends = _analyze_trends_for_column_full(df, 'function')
+        
         forecasts = {
-            "category_trends": _analyze_trends_for_column(df, 'industry'),
-            "skill_trends": _analyze_trends_for_column(df, 'function'),
+            "category_trends": category_trends,
+            "skill_trends": skill_trends,
             "last_updated": datetime.now().isoformat(),
             "data_period": "Last 365 days",
-            "total_categories": len(_analyze_trends_for_column(df, 'industry')),
-            "total_skills": len(_analyze_trends_for_column(df, 'function'))
+            "total_categories": len(category_trends),
+            "total_skills": len(skill_trends)
         }
         
         # Save to JSON file (primary cache)

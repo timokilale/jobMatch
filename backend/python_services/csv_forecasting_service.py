@@ -63,50 +63,64 @@ def load_and_prepare_data():
 def generate_forecast(series, periods):
     """
     Generates a forecast for a given time series using auto_arima.
-    
-    Args:
-        series (pd.Series): The time series data to forecast.
-        periods (int): The number of periods to forecast into the future.
-
-    Returns:
-        tuple: A tuple containing the forecasted values (list) and the model confidence (float).
+    Enhanced with robust error handling for NaN and edge cases.
     """
-    if len(series) < 14: # Need at least 2 weeks of data to be meaningful
-        logging.warning(f"Not enough data points ({len(series)}) to generate a reliable forecast. Returning empty forecast.")
-        return [], 0.5 # Return a default confidence of 50%
+    try:
+        # Clean the series - remove NaN and infinite values
+        series_clean = series.replace([np.inf, -np.inf], np.nan).dropna()
+        
+        if len(series_clean) < 14:  # Need at least 2 weeks of data
+            logging.warning(f"Not enough data points ({len(series_clean)}) to generate a reliable forecast.")
+            return [], 0.5
+        
+        # Check if all values are zero or very small
+        if series_clean.sum() < 1:
+            logging.warning(f"Series has no meaningful data (sum: {series_clean.sum()})")
+            return [], 0.5
+        
+        # Check for constant series (no variation)
+        if series_clean.std() == 0:
+            logging.warning(f"Series has no variation (std: {series_clean.std()})")
+            return [], 0.5
+        
+        # Ensure all values are non-negative
+        series_clean = np.maximum(0, series_clean)
+        
+        # Fit the model with enhanced error handling
+        model = pm.auto_arima(series_clean,
+                              start_p=1, start_q=1,
+                              test='adf',
+                              max_p=3, max_q=3,
+                              m=7,  # weekly seasonality
+                              d=None,
+                              seasonal=True,
+                              start_P=0, 
+                              D=1, 
+                              trace=False,
+                              error_action='ignore',  
+                              suppress_warnings=True, 
+                              stepwise=True,
+                              random_state=42)  # Add random state for reproducibility
 
-    # Fit the model
-    model = pm.auto_arima(series,
-                          start_p=1, start_q=1,
-                          test='adf',       # use adftest to find optimal 'd'
-                          max_p=3, max_q=3, # maximum p and q
-                          m=7,              # weekly seasonality
-                          d=None,           # let model determine 'd'
-                          seasonal=True,    # Seasonality is present
-                          start_P=0, 
-                          D=1, 
-                          trace=False,
-                          error_action='ignore',  
-                          suppress_warnings=True, 
-                          stepwise=True)
+        # Generate forecast and confidence intervals
+        forecast_values, conf_int = model.predict(n_periods=periods, return_conf_int=True)
+        
+        # Ensure forecast values are non-negative integers
+        forecast_values = np.maximum(0, np.round(forecast_values)).astype(int)
+        
+        # Calculate confidence
+        avg_forecast = np.mean(forecast_values)
+        if avg_forecast > 0:
+            conf_width = np.mean(conf_int[:, 1] - conf_int[:, 0])
+            confidence = max(0.1, 1 - (conf_width / (2 * avg_forecast)))
+        else:
+            confidence = 0.5
 
-    # Generate forecast and confidence intervals
-    forecast_values, conf_int = model.predict(n_periods=periods, return_conf_int=True)
-    
-    # Ensure forecast values are non-negative integers
-    forecast_values = np.maximum(0, np.round(forecast_values)).astype(int)
-    
-    # Calculate confidence as 1 minus the relative width of the confidence interval
-    # A smaller interval means higher confidence
-    avg_forecast = np.mean(forecast_values)
-    if avg_forecast > 0:
-        conf_width = np.mean(conf_int[:, 1] - conf_int[:, 0])
-        confidence = max(0.1, 1 - (conf_width / (2 * avg_forecast))) # Ensure confidence is not too low
-    else:
-        confidence = 0.5 # Default confidence if forecast is zero
-
-    return forecast_values.tolist(), confidence
-
+        return forecast_values.tolist(), confidence
+        
+    except Exception as e:
+        logging.warning(f"Error generating forecast for series: {e}")
+        return [], 0.5
 
 def _analyze_trends_for_column(df, column_name):
     """
@@ -167,6 +181,78 @@ def _analyze_trends_for_column(df, column_name):
         }
     return trends
 
+def _analyze_trends_for_column_full(df, column_name):
+    """
+    Helper function to perform trend analysis on ALL items in a column.
+    Enhanced with robust error handling for edge cases.
+    """
+    trends = {}
+    if column_name not in df.columns:
+        logging.warning(f"Column '{column_name}' not found in CSV. Skipping its trend analysis.")
+        return trends
+
+    # Get all items with sufficient data
+    value_counts = df[column_name].value_counts()
+    # Filter out items with very few occurrences (less than 5)
+    valid_items = value_counts[value_counts >= 5].index
+    logging.info(f"Analyzing {len(valid_items)} items for '{column_name}' (filtered from {len(value_counts)} total)")
+
+    # Group by date and column
+    counts = df.groupby([pd.Grouper(key='date_posted', freq='D'), column_name]).size().unstack(fill_value=0)
+    
+    # Only process items that have sufficient data
+    available_items = [item for item in valid_items if item in counts.columns]
+    
+    for item in available_items:
+        try:
+            series = counts[item]
+            
+            # Skip if series is empty or has no variation
+            if series.empty or series.sum() == 0:
+                logging.debug(f"Skipping {item} - no data")
+                continue
+            
+            # Generate forecast
+            forecast_values, confidence = generate_forecast(series, FORECAST_PERIOD_DAYS)
+            
+            # Format forecast output
+            forecast_list = []
+            if forecast_values:
+                last_known_value = series.iloc[-1] if not series.empty else 0
+                start_date = series.index.max() + timedelta(days=1)
+                
+                for i, val in enumerate(forecast_values):
+                    current_date = start_date + timedelta(days=i)
+                    change = ((val - last_known_value) / last_known_value * 100) if last_known_value > 0 else 0
+                    forecast_list.append({
+                        "period": current_date.strftime('%Y-%m-%d'),
+                        "value": int(val),
+                        "change": round(change, 2)
+                    })
+
+            # Determine overall trend
+            overall_trend = "stable"
+            if forecast_list:
+                start_val = forecast_list[0]['value']
+                end_val = forecast_list[-1]['value']
+                if end_val > start_val * 1.1:
+                    overall_trend = "growing"
+                elif end_val < start_val * 0.9:
+                    overall_trend = "declining"
+
+            trends[item] = {
+                "trend": overall_trend,
+                "growth_rate": round(forecast_list[-1]['change'], 2) if forecast_list else 0,
+                "forecast_confidence": round(confidence, 2),
+                "forecast": forecast_list
+            }
+            
+        except Exception as e:
+            logging.warning(f"Error processing {item}: {e}")
+            continue
+    
+    logging.info(f"Successfully analyzed {len(trends)} {column_name} items")
+    return trends
 
 @app.route('/trends', methods=['POST'])
 def analyze_trends():

@@ -34,15 +34,19 @@ const MarketAnalytics = () => {
     fetchForecastingData({ industry: e.target.value });
   };
 
-  const fetchForecastingData = async () => {
+  const fetchForecastingData = async (options = {}) => {
     try {
       setForecastingLoading(true);
       setForecastingError(null);
       
-      console.log('🔍 Fetching forecast data from /market/forecast');
+      const industryParam = options.industry || selectedForecastIndustry;
+      console.log('🔍 Fetching forecast data for industry:', industryParam);
       
       const forecastResponse = await api.get('/market/forecast', {
-        params: { months: 6 }
+        params: { 
+          months: 6,
+          industry: industryParam === 'All Industries' ? undefined : industryParam
+        }
       });
       
       console.log('✅ Forecast response received:', forecastResponse.data);
@@ -59,6 +63,11 @@ const MarketAnalytics = () => {
       }
       
       setMlForecast(forecastResponse.data);
+      
+      // Update the selected industry to match what was actually returned
+      if (forecastResponse.data.industry && forecastResponse.data.industry !== 'All Industries') {
+        setSelectedForecastIndustry(forecastResponse.data.industry);
+      }
       
       // Update trend summary with proper validation
       setTrendSummary({
@@ -448,9 +457,9 @@ const MarketAnalytics = () => {
                       className="text-sm border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                     >
                       <option value="All Industries">All Industries</option>
-                      {mlForecast?.industries?.map((industry, i) => (
-                        <option key={i} value={industry.name}>
-                          {industry.name}
+                      {mlForecast?.availableIndustries?.map((industry, index) => (
+                        <option key={index} value={industry}>
+                          {industry}
                         </option>
                       ))}
                     </select>

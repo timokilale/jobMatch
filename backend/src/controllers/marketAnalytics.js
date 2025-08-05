@@ -170,6 +170,7 @@ exports.getJobMarketForecast = async (req, res) => {
       confidence: parseFloat(industryData.forecast_confidence) || 0.5,
       lastUpdated: forecastData.last_updated || new Date().toISOString(),
       dataPeriod: forecastData.data_period || 'Last 365 days',
+      availableIndustries: Object.keys(forecastData.category_trends || {}),
       success: true
     };
     
