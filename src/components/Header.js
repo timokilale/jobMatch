@@ -10,7 +10,12 @@ const Header = () => {
       <nav className="container mx-auto flex justify-between items-center px-4">
         {/* Logo */}
         <div className="w-32 sm:w-40 lg:w-48">
-          <img src="/assets/logo.png" alt="Logo" className="w-full h-auto" />
+            <span
+              className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+              style={{ lineHeight: "1.1" }}
+            >
+              E-GovEICA
+            </span>
         </div>
 
         {/* Desktop Navigation */}

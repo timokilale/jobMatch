@@ -1,0 +1,111 @@
+Primary Dataset: Job Postings CSV
+    job_id,title,location,department,salary_range,company_profile,description,requirements,benefits,telecommuting,has_company_logo,has_questions,employment_type,required_experience,required_education,industry,function,fraudulent
+    1,Marketing Intern,"US, NY, New York",Marketing,,"We're Food52, and we've created a groundbreaking and award-winning cooking site...
+    2,Customer Service - Cloud Video Production,"NZ, , Auckland",Success,,"90 Seconds, the worlds Cloud Video Production Service...
+
+
+Dataset Characteristics:
+    Size: 17,881 job postings
+    Features: 18 columns including job_id, title, location, department, salary_range, company_profile, description, requirements, benefits, employment_type, required_experience, required_education, industry, function, and fraudulent flag
+    Data Sources: Real job posting data with comprehensive job market information
+    Temporal Component: Synthetic date generation for time series analysis (distributed over 30-day periods)
+
+
+Hyperparameter Tuning and Model Configuration
+1. Auto-ARIMA model
+    (in csv forecasting service)
+    model = pm.auto_arima(series_clean,
+                      start_p=1, start_q=1,
+                      test='adf',
+                      max_p=3, max_q=3,
+                      m=7,  # weekly seasonality
+                      d=None,
+                      seasonal=True,
+                      start_P=0, 
+                      D=1, 
+                      trace=False,
+                      error_action='ignore',  
+                      suppress_warnings=True, 
+                      stepwise=True,
+                      random_state=42)
+    
+        Hyperparameters Tuned:-
+            >start_p=1, start_q=1: Starting values for autoregressive and moving average terms
+            >max_p=3, max_q=3: Maximum values for AR and MA terms
+            >m=7: Seasonal period (weekly seasonality)
+            >seasonal=True: Enable seasonal components
+            >stepwise=True: Use stepwise algorithm for faster optimization
+            >random_state=42: Reproducibility
+
+2. Prophet model
+    (in trend forecasting)
+    model = Prophet(
+        daily_seasonality=False,
+        weekly_seasonality=True,
+        yearly_seasonality=False,
+        changepoint_prior_scale=0.05
+    )
+
+        Hyperparameters Tuned:
+            >daily_seasonality=False: Disable daily patterns
+            >weekly_seasonality=True: Enable weekly patterns
+            >yearly_seasonality=False: Disable yearly patterns
+            >changepoint_prior_scale=0.05: Controls flexibility of trend changes
+
+3. Random Forest Regressor
+    (in csv forecasting)
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    model.fit(X, y)
+
+        Hyperparameters:
+            >n_estimators=100: Number of trees in the forest
+            ?random_state=42: Reproducibility
+
+4. K-Means clustering
+    (in trend analyzer)
+    # Normalize features
+    features_scaled = self.scaler.fit_transform(
+        skill_features[['total_demand', 'avg_demand', 'demand_volatility', 'frequency']]
+    )
+
+    # Perform clustering
+    n_clusters = min(5, len(skill_features) // 2)
+
+        Hyperparameters:
+            >Dynamic cluster count: min(5, len(skill_features) // 2)
+            >Feature scaling using StandardScaler
+
+
+Model performance evaluation metrics
+1. Statistical metrics
+    (in trend analyzer.py)
+    'model_performance': {
+        'r_squared': round(model.score(X, y), 3),
+        'trend_slope': round(model.coef_[0] * 86400, 6),  # Daily change
+        'baseline': round(model.intercept_, 2)
+    }
+
+2. Confidence intervals and forecasting accuracy
+    (in csv forecasting service.py)
+    # Calculate confidence
+    avg_forecast = np.mean(forecast_values)
+    if avg_forecast > 0:
+        conf_width = np.mean(conf_int[:, 1] - conf_int[:, 0])
+        confidence = max(0.1, 1 - (conf_width / (2 * avg_forecast)))
+    else:
+        confidence = 0.5
+
+3. Data quality validation
+    The system implements several data quality checks:
+        >Minimum data points requirement (14+ for ARIMA, 30+ for Prophet)
+        >Series variation validation (standard deviation > 0)
+        >Non-negative value constraints
+        >Outlier handling and data cleaning
+
+
+Machine learning libraries and framework
+    The system uses a comprehensive ML stack:
+        >Core ML: scikit-learn (1.3.2), numpy (1.24.3), pandas (2.2.3)
+        >Time Series: Prophet (1.1.5), pmdarima (2.0.4), statsmodels (0.14.1)
+        >Model Persistence: joblib (1.3.2)
+        >Data Processing: StandardScaler for feature normalization

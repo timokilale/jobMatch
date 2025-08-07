@@ -268,7 +268,12 @@ const AcademicQualifications = () => {
         ) : (
           <div className="text-center py-12">
             <div className="mb-4">
-              <img src="/logo.png" alt="Job Match" className="mx-auto h-16 w-16 opacity-50" />
+            <span
+              className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+              style={{ lineHeight: "1.1" }}
+            >
+              E-GovEICA
+            </span>
             </div>
             <p className="text-gray-500 text-lg">No academic qualifications added yet</p>
             <p className="text-gray-400 text-sm mt-2">Click "Add Qualification" to get started</p>

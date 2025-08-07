@@ -496,11 +496,12 @@ const Skills = () => {
             </div>
           ) : filteredSkills.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 space-y-4">
-              <img
-                src="assets/logo.png"
-                alt="Job Match"
-                className="w-16 h-auto opacity-60"
-              />
+              <span
+                className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+                style={{ lineHeight: "1.1" }}
+              >
+                E-GovEICA
+              </span>
               <h3 className="text-lg font-semibold text-gray-600">
                 {activeTab === 'all' ? 'No skills added yet' :
                  `No ${activeTab === 'computer' ? 'computer' : activeTab} skills added yet`}

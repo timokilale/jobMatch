@@ -172,9 +172,9 @@ class NotificationService {
 
       // Send email notification
       if (settings.emailEnabled && settings.emailJobMatches && email) {
-        const subject = `New Job Match: ${jobTitle} at ${companyName}`;
+        const subject = `New E-GovEICA Match: ${jobTitle} at ${companyName}`;
         const htmlContent = `
-          <h2>🎯 New Job Match Found!</h2>
+          <h2>🎯 New E-GovEICA Match Found!</h2>
           <p>Hi ${applicant.fullName},</p>
           <p>We found a job that matches your skills and preferences:</p>
           <div style="border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 5px;">
@@ -182,7 +182,7 @@ class NotificationService {
             <p><strong>Company:</strong> ${companyName}</p>
             <p><a href="${process.env.FRONTEND_URL}/jobs/${jobId}" style="background: #16a34a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">View Job Details</a></p>
           </div>
-          <p>Best regards,<br>Job Match Team</p>
+          <p>Best regards,<br>E-GovEICA Team</p>
         `;
         
         await this.sendEmail(email, subject, htmlContent);
@@ -190,7 +190,7 @@ class NotificationService {
 
       // Send SMS notification
       if (settings.smsEnabled && phone) {
-        const message = `Job Match Alert: ${jobTitle} at ${companyName}. View details at ${process.env.FRONTEND_URL}/jobs/${jobId}`;
+        const message = `E-GovEICA Alert: ${jobTitle} at ${companyName}. View details at ${process.env.FRONTEND_URL}/jobs/${jobId}`;
         await this.sendSMS(phone, message);
       }
 
@@ -233,7 +233,7 @@ class NotificationService {
             <p><strong>Company:</strong> ${companyName}</p>
             <p><strong>Status:</strong> <span style="color: ${status === 'ACCEPTED' ? '#16a34a' : '#dc2626'}; font-weight: bold;">${status}</span></p>
           </div>
-          <p>Best regards,<br>Job Match Team</p>
+          <p>Best regards,<br>E-GovEICA Team</p>
         `;
         
         await this.sendEmail(email, subject, htmlContent);
@@ -290,7 +290,7 @@ class NotificationService {
             ${interview.location ? `<p><strong>Location:</strong> ${interview.location}</p>` : ''}
             ${interview.notes ? `<p><strong>Notes:</strong> ${interview.notes}</p>` : ''}
           </div>
-          <p>Best regards,<br>Job Match Team</p>
+          <p>Best regards,<br>E-GovEICA Team</p>
         `;
         
         await this.sendEmail(email, subject, htmlContent);

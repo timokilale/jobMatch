@@ -161,11 +161,12 @@ const SkillsAnalysis = ({ applicantId }) => {
             <div className="space-y-6">
               {analysis.summary?.selectedCategories === 0 ? (
                 <div className="text-center py-12">
-                  <img
-                    src="assets/logo.png"
-                    alt="Job Match"
-                    className="w-16 h-auto mx-auto opacity-60 mb-4"
-                  />
+                  <span
+                    className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+                    style={{ lineHeight: "1.1" }}
+                  >
+                    E-GovEICA
+                  </span>
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">Select Job Categories First</h3>
                   <p className="text-gray-500 max-w-md mx-auto mb-4">
                     {analysis.message || 'Please select job categories in Settings to see personalized skill gap analysis.'}
@@ -231,11 +232,12 @@ const SkillsAnalysis = ({ applicantId }) => {
             <div className="space-y-6">
               {analysis.summary?.selectedCategories === 0 ? (
                 <div className="text-center py-12">
-                  <img
-                    src="assets/logo.png"
-                    alt="Job Match"
-                    className="w-16 h-auto mx-auto opacity-60 mb-4"
-                  />
+                  <span
+                    className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+                    style={{ lineHeight: "1.1" }}
+                  >
+                    E-GovEICA
+                  </span>
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">Select Job Categories First</h3>
                   <p className="text-gray-500 max-w-md mx-auto mb-4">
                     Choose your preferred job categories to get personalized training recommendations.
@@ -324,11 +326,12 @@ const SkillsAnalysis = ({ applicantId }) => {
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <img
-                    src="assets/logo.png"
-                    alt="Job Match"
-                    className="w-16 h-auto mx-auto opacity-60 mb-4"
-                  />
+                  <span
+                    className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+                    style={{ lineHeight: "1.1" }}
+                  >
+                    E-GovEICA
+                  </span>
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">No Training Needed</h3>
                   <p className="text-gray-500 max-w-md mx-auto">
                     Excellent! Your skills perfectly match the market demand. Keep learning to stay ahead.
@@ -343,11 +346,12 @@ const SkillsAnalysis = ({ applicantId }) => {
             <div className="space-y-6">
               {analysis.summary?.selectedCategories === 0 ? (
                 <div className="text-center py-12">
-                  <img
-                    src="assets/logo.png"
-                    alt="Job Match"
-                    className="w-16 h-auto mx-auto opacity-60 mb-4"
-                  />
+                  <span
+                    className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+                    style={{ lineHeight: "1.1" }}
+                  >
+                    E-GovEICA
+                  </span>
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">Select Job Categories First</h3>
                   <p className="text-gray-500 max-w-md mx-auto mb-4">
                     Choose your preferred job categories to see career path recommendations.
@@ -432,11 +436,12 @@ const SkillsAnalysis = ({ applicantId }) => {
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <img
-                    src="assets/logo.png"
-                    alt="Job Match"
-                    className="w-16 h-auto mx-auto opacity-60 mb-4"
-                  />
+                  <span
+                    className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+                    style={{ lineHeight: "1.1" }}
+                  >
+                    E-GovEICA
+                  </span>
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">No Career Data Available</h3>
                   <p className="text-gray-500 max-w-md mx-auto">
                     Add more jobs in your selected categories to see career path recommendations.
@@ -518,11 +523,12 @@ const SkillsAnalysis = ({ applicantId }) => {
                 </>
               ) : (
                 <div className="text-center py-12">
-                  <img
-                    src="assets/logo.png"
-                    alt="Job Match"
-                    className="w-16 h-auto mx-auto opacity-60 mb-4"
-                  />
+                  <span
+                    className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+                    style={{ lineHeight: "1.1" }}
+                  >
+                    E-GovEICA
+                  </span>
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">No Skills Added Yet</h3>
                   <p className="text-gray-500 max-w-md mx-auto mb-4">
                     Add your skills to your profile to see personalized analysis and recommendations.

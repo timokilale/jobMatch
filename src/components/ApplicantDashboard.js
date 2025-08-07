@@ -217,11 +217,12 @@ const ApplicantDashboard = () => {
                   : (sidebarOpen ? "fa-chevron-left" : "fa-bars")
               } text-xl`}></i>
             </button>
-            <img
-              src="assets/logo.png"
-              alt="Logo"
-              className="h-10 w-auto"
-            />
+            <span
+              className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+              style={{ lineHeight: "1.1" }}
+            >
+              E-GovEICA
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -266,14 +267,12 @@ const ApplicantDashboard = () => {
             {isMobile && (
               <div className="drawer-header flex-shrink-0 h-16 flex items-center justify-between px-4">
                 <div className="flex items-center">
-                  <img
-                    src="assets/logo.png"
-                    alt="Logo"
-                    className="h-10 w-auto object-contain"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
-                  />
+                  <span
+                    className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+                    style={{ lineHeight: "1.1" }}
+                  >
+                    E-GovEICA
+                  </span>
                 </div>
                 <button
                   onClick={() => setSidebarOpen(false)}

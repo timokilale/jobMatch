@@ -1,10 +1,10 @@
-# Job Match - Employment Facilitation Platform
+# E-GovEICA - Employment Facilitation Platform
 
 A comprehensive job matching system built for the Tanzanian job market, connecting job seekers with employers through intelligent matching algorithms and comprehensive profile management.
 
 ## System Overview
 
-Job Match is a full-stack web application that facilitates employment connections through advanced job matching, skills analysis, and market insights. The system serves both job applicants and employers with role-based dashboards and features.
+E-GovEICA is a full-stack web application that facilitates employment connections through advanced job matching, skills analysis, and market insights. The system serves both job applicants and employers with role-based dashboards and features.
 
 ## Core Features
 

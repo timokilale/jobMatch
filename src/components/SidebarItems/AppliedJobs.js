@@ -297,11 +297,12 @@ const AppliedJobs = () => {
       {filteredApplications.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-6 px-4">
           <div className="flex flex-col items-center space-y-4">
-            <img
-              src="assets/logo.png"
-              alt="Job Match"
-              className="w-24 h-auto mx-auto opacity-60"
-            />
+            <span
+              className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+              style={{ lineHeight: "1.1" }}
+            >
+              E-GovEICA
+            </span>
             <h3 className="text-xl font-semibold text-gray-600 text-center">
               {filterStatus === 'all'
                 ? 'No applications yet'

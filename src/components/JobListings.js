@@ -173,11 +173,12 @@ const JobListings = ({ category }) => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 px-4">
         <div className="flex flex-col items-center space-y-4">
-          <img
-            src="assets/logo.png"
-            alt="Job Match"
-            className="w-32 h-auto mx-auto opacity-60"
-          />
+           <span
+            className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+            style={{ lineHeight: "1.1" }}
+          >
+            E-GovEICA
+          </span>
           <h2 className="text-2xl font-semibold text-gray-600 text-center">
             No matching jobs yet
           </h2>

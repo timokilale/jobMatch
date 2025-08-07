@@ -23,7 +23,12 @@ const LoginPage = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 pt-16 sm:pt-20 page-container">
       <nav className="fixed top-0 left-0 right-0 flex items-center justify-between px-4 sm:px-6 lg:px-10 py-3 sm:py-4 bg-white shadow-sm z-50">
         <div className="logo-container">
-          <img src="assets/logo.png" alt="Logo" className="h-8 sm:h-10 lg:h-12 w-auto" />
+          <span
+            className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+            style={{ lineHeight: "1.1" }}
+          >
+            E-GovEICA
+          </span>
         </div>
 
         {/* Desktop Navigation */}
@@ -62,8 +67,13 @@ const LoginPage = () => {
         <div className="w-full max-w-6xl mx-4 sm:mx-6 md:flex rounded-lg shadow-2xl bg-green-700 overflow-hidden mt-4 sm:mt-6">
           <div className="flex-1 bg-white p-4 sm:p-6 lg:p-8 flex flex-col justify-between rounded-l-lg md:rounded-l-lg rounded-t-lg md:rounded-t-none overflow-auto">
             <div className="flex flex-col gap-4 sm:gap-5 items-start overflow-auto">
-              <img src="assets/logo.png" alt="Logo" className="w-20 h-8 sm:w-25 sm:h-10" />
-              <div className="w-full">
+            <span
+              className="h-auto ml-0 opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-left select-none"
+              style={{ lineHeight: "1.1" }}
+            >
+              E-GovEICA
+            </span>
+            <div className="w-full">
                 <h1 className="text-xl sm:text-2xl font-bold text-green-700">
                   Welcome back!
                 </h1>

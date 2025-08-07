@@ -141,7 +141,7 @@ class AIService {
   buildSystemPrompt(context) {
     const { userRole, userName, chatHistory } = context;
     
-    return `You are a helpful AI assistant for a job matching system in Tanzania. Your role is to help users with:
+    return `You are a helpful AI assistant for E-GovEICA system in Tanzania. Your role is to help users with:
 
 1. Job applications and search
 2. Profile management and updates
@@ -158,7 +158,7 @@ Guidelines:
 - Provide specific, actionable advice
 - Keep responses concise but informative
 - If you don't know something, suggest contacting human support
-- Focus on job matching system features and functionality
+- Focus on E-GovEICA system features and functionality
 - Use simple language suitable for users in Tanzania
 
 Available system features:
@@ -196,7 +196,7 @@ Respond in a helpful, conversational tone.`;
       },
       {
         keywords: ['hello', 'hi', 'hey', 'greetings'],
-        response: "Hello! 👋 I'm here to help you with the job matching system. I can assist you with job applications, profile updates, CV downloads, and more. What would you like to know?"
+        response: "Hello! 👋 I'm here to help you with the E-GovEICA system. I can assist you with job applications, profile updates, CV downloads, and more. What would you like to know?"
       },
       {
         keywords: ['help', 'support', 'assist', 'what can you do'],
@@ -204,7 +204,7 @@ Respond in a helpful, conversational tone.`;
       },
       {
         keywords: ['thank', 'thanks', 'appreciate'],
-        response: "You're very welcome! 😊 I'm glad I could help. Is there anything else you'd like to know about the job matching system?"
+        response: "You're very welcome! 😊 I'm glad I could help. Is there anything else you'd like to know about the E-GovEICA system?"
       },
       {
         keywords: ['bye', 'goodbye', 'see you', 'farewell'],
@@ -225,7 +225,7 @@ Respond in a helpful, conversational tone.`;
     }
 
     // Default helpful response
-    return "I'm here to help you with the job matching system! 🚀\n\nI can assist with job applications, profile updates, CV downloads, and more. Type 'help' to see all the ways I can assist you, or just ask me a specific question!";
+    return "I'm here to help you with the E-GovEICA system! 🚀\n\nI can assist with job applications, profile updates, CV downloads, and more. Type 'help' to see all the ways I can assist you, or just ask me a specific question!";
   }
 }
 
