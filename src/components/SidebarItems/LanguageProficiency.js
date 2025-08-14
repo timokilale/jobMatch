@@ -164,7 +164,7 @@ const LanguageProficiency = () => {
                 className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
                 style={{ lineHeight: "1.1" }}
               >
-                E-GovEICA
+                E-GovEp
               </span>
             </div>
             <p className="text-gray-500 text-lg">No language proficiencies added yet</p>

@@ -132,7 +132,7 @@ export const AnalyticsConsentPrompt = ({ onConsentGranted, onConsentDenied, show
 export const JobMatchingConsentPrompt = ({ onConsentGranted, onConsentDenied, showModal }) => (
   <ConsentPrompt
     consentType="job_matching"
-    title="E-GovEICA Matching Consent Required"
+    title="E-GovEp Matching Consent Required"
     description="To provide personalized job recommendations and career suggestions, we need your consent to analyze your skills and preferences."
     onConsentGranted={onConsentGranted}
     onConsentDenied={onConsentDenied}

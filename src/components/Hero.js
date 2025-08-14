@@ -7,7 +7,7 @@ const Hero = () => {
       <div className="flex-1 animate-slideInLeft text-center md:text-left">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-green-700 mb-4 sm:mb-6 flex flex-col">
           <span className="font-[Arial Rounded MT Bold] text-2xl sm:text-3xl md:text-4xl lg:text-5xl">Welcome to</span>
-          <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl mt-1 sm:mt-2 font-[Arial Rounded MT Bold]">E-GovEICA</span>
+          <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl mt-1 sm:mt-2 font-[Arial Rounded MT Bold]">E-GovEp</span>
         </h1>
 
         <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-800 font-bold mb-4 sm:mb-6 relative inline-block">
@@ -46,7 +46,7 @@ const Hero = () => {
         <div className="relative w-full max-w-[300px] sm:max-w-[350px] md:max-w-[400px] lg:max-w-[450px] mx-auto">
           <img
             src="/assets/img1.jpg"
-            alt="E-GovEICA"
+            alt="E-GovEp"
             className="w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[450px] rounded-full object-cover
                        shadow-xl transition-transform duration-300 hover:scale-105"
           />

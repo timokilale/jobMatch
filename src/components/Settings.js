@@ -347,7 +347,7 @@ const Settings = () => {
           General Preferences
         </h2>
         <p className="text-gray-600 mb-6">
-          Customize your E-GovEICA experience and privacy settings.
+          Customize your E-GovEp experience and privacy settings.
         </p>
 
         <div className="space-y-4">

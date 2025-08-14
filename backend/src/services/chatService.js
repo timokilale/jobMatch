@@ -456,7 +456,7 @@ class ChatService {
 
     // Greeting responses
     if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
-      return "Hello! 👋 I'm here to help you with the E-GovEICA system. What can I assist you with today?";
+      return "Hello! 👋 I'm here to help you with the E-GovEp system. What can I assist you with today?";
     }
 
     // Help requests
@@ -480,7 +480,7 @@ class ChatService {
     }
 
     // Default response
-    return "I'm here to help you with the E-GovEICA system! 🚀 Type 'help' to see what I can assist you with, or just ask me a question!";
+    return "I'm here to help you with the E-GovEp system! 🚀 Type 'help' to see what I can assist you with, or just ask me a question!";
   }
   
   async sendBotMessage(roomId, message) {

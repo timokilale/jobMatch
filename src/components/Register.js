@@ -58,10 +58,10 @@ const RegisterPage = () => {
         <nav className="fixed top-0 left-0 right-0 flex items-center justify-between px-4 sm:px-6 lg:px-10 py-3 sm:py-4 bg-white shadow-sm z-50">
           <div className="logo-container">
             <span
-              className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
+              className="h-auto mx-auto opacity-60 text-3xl font-extrabold text-green-800 tracking-wide text-center select-none"
               style={{ lineHeight: "1.1" }}
             >
-              E-GovEICA
+              E-GovEp
             </span>
           </div>
 
@@ -96,10 +96,10 @@ const RegisterPage = () => {
           <div className="flex-1 bg-white p-4 sm:p-6 lg:p-8 flex flex-col justify-between rounded-l-lg md:rounded-l-lg rounded-t-lg md:rounded-t-none overflow-auto">
             <div className="flex flex-col gap-4 sm:gap-5 items-start overflow-auto">
             <span
-              className="h-auto ml-0 opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-left select-none"
+              className="h-auto ml-0 opacity-60 text-3xl font-extrabold text-green-800 tracking-wide text-left select-none"
               style={{ lineHeight: "1.1" }}
             >
-              E-GovEICA
+              E-GovEp
             </span>
               <div className="w-full">
                 <h1 className="text-xl sm:text-2xl font-bold text-green-700">

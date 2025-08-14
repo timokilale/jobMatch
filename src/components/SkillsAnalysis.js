@@ -165,7 +165,7 @@ const SkillsAnalysis = ({ applicantId }) => {
                     className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
                     style={{ lineHeight: "1.1" }}
                   >
-                    E-GovEICA
+                    E-GovEp
                   </span>
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">Select Job Categories First</h3>
                   <p className="text-gray-500 max-w-md mx-auto mb-4">
@@ -236,7 +236,7 @@ const SkillsAnalysis = ({ applicantId }) => {
                     className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
                     style={{ lineHeight: "1.1" }}
                   >
-                    E-GovEICA
+                    E-GovEp
                   </span>
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">Select Job Categories First</h3>
                   <p className="text-gray-500 max-w-md mx-auto mb-4">
@@ -330,7 +330,7 @@ const SkillsAnalysis = ({ applicantId }) => {
                     className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
                     style={{ lineHeight: "1.1" }}
                   >
-                    E-GovEICA
+                    E-GovEp
                   </span>
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">No Training Needed</h3>
                   <p className="text-gray-500 max-w-md mx-auto">
@@ -350,7 +350,7 @@ const SkillsAnalysis = ({ applicantId }) => {
                     className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
                     style={{ lineHeight: "1.1" }}
                   >
-                    E-GovEICA
+                    E-GovEp
                   </span>
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">Select Job Categories First</h3>
                   <p className="text-gray-500 max-w-md mx-auto mb-4">
@@ -440,7 +440,7 @@ const SkillsAnalysis = ({ applicantId }) => {
                     className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
                     style={{ lineHeight: "1.1" }}
                   >
-                    E-GovEICA
+                    E-GovEp
                   </span>
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">No Career Data Available</h3>
                   <p className="text-gray-500 max-w-md mx-auto">
@@ -527,7 +527,7 @@ const SkillsAnalysis = ({ applicantId }) => {
                     className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
                     style={{ lineHeight: "1.1" }}
                   >
-                    E-GovEICA
+                    E-GovEp
                   </span>
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">No Skills Added Yet</h3>
                   <p className="text-gray-500 max-w-md mx-auto mb-4">

@@ -301,7 +301,7 @@ const AppliedJobs = () => {
               className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
               style={{ lineHeight: "1.1" }}
             >
-              E-GovEICA
+              E-GovEp
             </span>
             <h3 className="text-xl font-semibold text-gray-600 text-center">
               {filterStatus === 'all'

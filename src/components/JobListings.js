@@ -177,7 +177,7 @@ const JobListings = ({ category }) => {
             className="h-auto mx-auto opacity-60 text-5xl font-extrabold text-green-800 tracking-wide text-center select-none"
             style={{ lineHeight: "1.1" }}
           >
-            E-GovEICA
+            E-GovEp
           </span>
           <h2 className="text-2xl font-semibold text-gray-600 text-center">
             No matching jobs yet
